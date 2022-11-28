@@ -376,7 +376,6 @@ namespace CSharpToJavaTranslator
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem просмотрСправкиToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
-        private CustomButton customButton21;
         private CustomButton saveCustomButton;
         private CustomButton translateCustomButton;
         private CustomButton openCustomButton;
