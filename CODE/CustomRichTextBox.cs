@@ -151,6 +151,14 @@ namespace CSharpToJavaTranslator
             this.Invalidate();
         }
 
+        public void highlightText(int startPosition, int length, Color color)
+        {
+            this.innerRichTextBox.SelectionStart = startPosition;
+            this.innerRichTextBox.SelectionLength = length;
+            this.innerRichTextBox.SelectionBackColor = color;
+            this.innerRichTextBox.SelectionLength = 0;
+        }
+
         public void appendText(string line, Color color)
         {
             if(this.isPlaceholder)

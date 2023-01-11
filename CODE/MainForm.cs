@@ -104,11 +104,19 @@ namespace CSharpToJavaTranslator
 
         private void translateCustomButton_Click(object sender, EventArgs e)
         {
-            //LexicalAnalyzer lexAn = new LexicalAnalyzer(this.consoleCustomRichTextBox);
-            //Token[] tokenArr = lexAn.parse(this.cSharpCustomRichTextBox).ToArray();
+            TranslationResultBus translationResultBus = 
+                new TranslationResultBus(this.consoleCustomRichTextBox);
 
-            //SyntaxAnalyzer syntAn = new SyntaxAnalyzer();
-            //SyntaxTree syntTree = syntAn.parse(ref tokenArr, this.consoleCustomRichTextBox);
+            LexicalAnalyzer lexAn = new LexicalAnalyzer(this.consoleCustomRichTextBox,
+                                                        translationResultBus);
+            Token[] tokenArr = lexAn.parse(this.cSharpCustomRichTextBox).ToArray();
+
+            SyntaxAnalyzer syntAn = new SyntaxAnalyzer(this.consoleCustomRichTextBox, 
+                                                       translationResultBus);
+            SyntaxTree syntTree = syntAn.parse(ref tokenArr);
+
+            translationResultBus.summarizeTranslation();
+            translationResultBus.highlight(this.cSharpCustomRichTextBox);
         }
 
         private void saveCustomButton_Click(object sender, EventArgs e)
