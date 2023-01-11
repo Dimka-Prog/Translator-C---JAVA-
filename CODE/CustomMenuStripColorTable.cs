@@ -11,12 +11,12 @@ namespace CSharpToJavaTranslator
     {
         public override Color MenuItemSelected
         {
-            get { return Color.LimeGreen; }
+            get { return Color.FromArgb(111, 221, 151); }
         }
 
         public override Color MenuBorder
         {
-            get { return Color.LimeGreen; }
+            get { return Color.FromArgb(111, 221, 151); }
         }
 
         public override Color MenuItemBorder

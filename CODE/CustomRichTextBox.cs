@@ -105,20 +105,28 @@ namespace CSharpToJavaTranslator
 
             if (this.innerRichTextBox.Focused)
             {
-                borderPen = new Pen(this.borderColorFocused, 2);
+                borderPen = new Pen(this.borderColorFocused, 1);
             }
             else
             {
-                borderPen = new Pen(this.borderColorUnfocused, 2);
+                borderPen = new Pen(this.borderColorUnfocused, 1);
             }
 
             g.DrawRectangle(borderPen, 1, 1, this.Width - 2, this.Height - 2);
             borderPen.Dispose();
+
+            //Brush lineNumberBrush = new SolidBrush(Color.Blue);
+            //for(int i = 0; i < this.innerRichTextBox.Lines.Count(); i++)
+            //{
+            //    g.DrawString();
+            //}
+            
+            //lineNumberBrush.Dispose();
         }
 
         private void innerRichTextBox_Enter(object sender, EventArgs e)
         {
-            if(this.isPlaceholder)
+            if (this.isPlaceholder)
             {
                 this.innerRichTextBox.Text = "";
                 this.isPlaceholder = false;
@@ -129,7 +137,7 @@ namespace CSharpToJavaTranslator
 
         private void innerRichTextBox_Leave(object sender, EventArgs e)
         {
-            if(this.innerRichTextBox.Text.Length == 0)
+            if (this.innerRichTextBox.Text.Length == 0)
             {
                 this.isPlaceholder = true;
                 this.innerRichTextBox.Text = this.placeholderText;
@@ -139,6 +147,41 @@ namespace CSharpToJavaTranslator
         }
 
         private void CustomRichTextBox_Resize(object sender, EventArgs e)
+        {
+            this.Invalidate();
+        }
+
+        public void appendText(string line, Color color)
+        {
+            if(this.isPlaceholder)
+            {
+                this.isPlaceholder = false;
+                this.innerRichTextBox.Clear();
+            }
+
+            this.innerRichTextBox.SelectionStart = this.innerRichTextBox.Text.Length;
+            this.innerRichTextBox.SelectionLength = 0;
+            this.innerRichTextBox.SelectionColor = color;
+            this.innerRichTextBox.AppendText(line);
+        }
+
+        public void setText(string[] lines, Color color)
+        {
+            if (this.isPlaceholder)
+            {
+                this.isPlaceholder = false;
+            }
+
+            this.innerRichTextBox.Clear();
+            this.innerRichTextBox.ForeColor = color;
+
+            foreach (string line in lines)
+            {
+                this.innerRichTextBox.AppendText(line + "\n");
+            }
+        }
+        
+        private void innerRichTextBox_TextChanged(object sender, EventArgs e)
         {
             this.Invalidate();
         }

@@ -199,7 +199,7 @@ namespace CSharpToJavaTranslator
             //}
 
             using (Brush br = new SolidBrush(this.BackColor))
-            using (Font f = new Font("Sans Serif", 8, FontStyle.Regular))
+            using (Font f = new Font("Segoe UI", 10, FontStyle.Regular))
             using (Brush sbr = new SolidBrush(this.ForeColor))
             using (Pen p = new Pen(new SolidBrush(this.currentBorderColor), this.borderWidth))
             {

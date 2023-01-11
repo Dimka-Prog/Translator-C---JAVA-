@@ -37,13 +37,15 @@ namespace CSharpToJavaTranslator
             this.innerRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.innerRichTextBox.BackColor = System.Drawing.Color.White;
             this.innerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.innerRichTextBox.Location = new System.Drawing.Point(7, 7);
+            this.innerRichTextBox.Location = new System.Drawing.Point(8, 7);
             this.innerRichTextBox.Name = "innerRichTextBox";
-            this.innerRichTextBox.Size = new System.Drawing.Size(136, 136);
+            this.innerRichTextBox.Size = new System.Drawing.Size(135, 136);
             this.innerRichTextBox.TabIndex = 0;
             this.innerRichTextBox.Text = "";
             this.innerRichTextBox.WordWrap = false;
+            this.innerRichTextBox.TextChanged += new System.EventHandler(this.innerRichTextBox_TextChanged);
             this.innerRichTextBox.Enter += new System.EventHandler(this.innerRichTextBox_Enter);
             this.innerRichTextBox.Leave += new System.EventHandler(this.innerRichTextBox_Leave);
             // 

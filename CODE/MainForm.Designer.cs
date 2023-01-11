@@ -30,7 +30,7 @@ namespace CSharpToJavaTranslator
         private void InitializeComponent()
         {
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,66 +41,66 @@ namespace CSharpToJavaTranslator
             this.просмотрСправкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.openCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.clearInputCustomButton = new CSharpToJavaTranslator.CustomButton();
             this.cSharpCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
             this.javaCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
+            this.clearConsoleCustomButton = new CSharpToJavaTranslator.CustomButton();
             this.saveCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.openCustomButton = new CSharpToJavaTranslator.CustomButton();
             this.translateCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.clearCustomButton = new CSharpToJavaTranslator.CustomButton();
             this.consoleCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
-            this.tableLayoutPanel.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainSplitContainer
             // 
-            this.mainSplitContainer.BackColor = System.Drawing.Color.DimGray;
+            this.mainSplitContainer.BackColor = System.Drawing.Color.Gray;
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainSplitContainer.Location = new System.Drawing.Point(0, 30);
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 28);
             this.mainSplitContainer.Name = "mainSplitContainer";
             this.mainSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // mainSplitContainer.Panel1
             // 
             this.mainSplitContainer.Panel1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.mainSplitContainer.Panel1.Controls.Add(this.tableLayoutPanel);
+            this.mainSplitContainer.Panel1.Controls.Add(this.clearInputCustomButton);
+            this.mainSplitContainer.Panel1.Controls.Add(this.tableLayoutPanel1);
+            this.mainSplitContainer.Panel1.Controls.Add(this.clearConsoleCustomButton);
+            this.mainSplitContainer.Panel1.Controls.Add(this.saveCustomButton);
+            this.mainSplitContainer.Panel1.Controls.Add(this.openCustomButton);
+            this.mainSplitContainer.Panel1.Controls.Add(this.translateCustomButton);
             // 
             // mainSplitContainer.Panel2
             // 
             this.mainSplitContainer.Panel2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.mainSplitContainer.Panel2.Controls.Add(this.consoleCustomRichTextBox);
-            this.mainSplitContainer.Size = new System.Drawing.Size(852, 473);
-            this.mainSplitContainer.SplitterDistance = 259;
+            this.mainSplitContainer.Size = new System.Drawing.Size(852, 475);
+            this.mainSplitContainer.SplitterDistance = 395;
             this.mainSplitContainer.TabIndex = 0;
             this.mainSplitContainer.TabStop = false;
             // 
-            // tableLayoutPanel
+            // tableLayoutPanel1
             // 
-            this.tableLayoutPanel.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.tableLayoutPanel.ColumnCount = 5;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17F));
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17F));
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16F));
-            this.tableLayoutPanel.Controls.Add(this.openCustomButton, 0, 1);
-            this.tableLayoutPanel.Controls.Add(this.cSharpCustomRichTextBox, 0, 0);
-            this.tableLayoutPanel.Controls.Add(this.javaCustomRichTextBox, 2, 0);
-            this.tableLayoutPanel.Controls.Add(this.saveCustomButton, 4, 1);
-            this.tableLayoutPanel.Controls.Add(this.translateCustomButton, 1, 1);
-            this.tableLayoutPanel.Controls.Add(this.clearCustomButton, 2, 1);
-            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 2;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(852, 259);
-            this.tableLayoutPanel.TabIndex = 4;
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.cSharpCustomRichTextBox, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.javaCustomRichTextBox, 1, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 46);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 301);
+            this.tableLayoutPanel1.TabIndex = 8;
             // 
             // mainMenuStrip
             // 
@@ -111,7 +111,7 @@ namespace CSharpToJavaTranslator
             this.справкаToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mainMenuStrip.Name = "mainMenuStrip";
-            this.mainMenuStrip.Size = new System.Drawing.Size(852, 30);
+            this.mainMenuStrip.Size = new System.Drawing.Size(852, 28);
             this.mainMenuStrip.TabIndex = 1;
             this.mainMenuStrip.Text = "menuStrip1";
             // 
@@ -123,32 +123,32 @@ namespace CSharpToJavaTranslator
             this.sep1MenuItem,
             this.exitMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // openMenuItem
             // 
             this.openMenuItem.Name = "openMenuItem";
-            this.openMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.openMenuItem.Size = new System.Drawing.Size(224, 26);
             this.openMenuItem.Text = "Открыть...";
             this.openMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
             // 
             // saveMenuItem
             // 
             this.saveMenuItem.Name = "saveMenuItem";
-            this.saveMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.saveMenuItem.Size = new System.Drawing.Size(224, 26);
             this.saveMenuItem.Text = "Сохранить...";
             this.saveMenuItem.Click += new System.EventHandler(this.saveMenuItem_Click);
             // 
             // sep1MenuItem
             // 
             this.sep1MenuItem.Name = "sep1MenuItem";
-            this.sep1MenuItem.Size = new System.Drawing.Size(172, 6);
+            this.sep1MenuItem.Size = new System.Drawing.Size(221, 6);
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.exitMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exitMenuItem.Text = "Выход";
             this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
             // 
@@ -157,7 +157,7 @@ namespace CSharpToJavaTranslator
             this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.просмотрСправкиToolStripMenuItem});
             this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
+            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
             this.справкаToolStripMenuItem.Text = "Справка";
             // 
             // просмотрСправкиToolStripMenuItem
@@ -176,88 +176,113 @@ namespace CSharpToJavaTranslator
             this.saveFileDialog.Filter = "Файлы Java|*.java|Текстовые файлы|*.txt";
             this.saveFileDialog.Title = "Выберите файл для сохранения кода";
             // 
-            // openCustomButton
+            // clearInputCustomButton
             // 
-            this.openCustomButton.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.openCustomButton.BackgroundColorDisabled = System.Drawing.Color.Gainsboro;
-            this.openCustomButton.BackgroundColorFocused = System.Drawing.Color.LimeGreen;
-            this.openCustomButton.BackgroundColorMouseDown = System.Drawing.Color.Green;
-            this.openCustomButton.BackgroundColorUnfocused = System.Drawing.Color.DarkSeaGreen;
-            this.openCustomButton.BorderColorDisabled = System.Drawing.Color.Gray;
-            this.openCustomButton.BorderColorFocused = System.Drawing.Color.Green;
-            this.openCustomButton.BorderColorMouseDown = System.Drawing.Color.Black;
-            this.openCustomButton.BorderColorUnfocused = System.Drawing.Color.Green;
-            this.openCustomButton.BorderWidth = 2;
-            this.openCustomButton.FlatAppearance.BorderSize = 0;
-            this.openCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.openCustomButton.ForeColor = System.Drawing.Color.Black;
-            this.openCustomButton.Location = new System.Drawing.Point(3, 209);
-            this.openCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-            this.openCustomButton.Name = "openCustomButton";
-            this.openCustomButton.Size = new System.Drawing.Size(138, 40);
-            this.openCustomButton.TabIndex = 4;
-            this.openCustomButton.Text = "Открыть...";
-            this.openCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
-            this.openCustomButton.TextColorFocused = System.Drawing.Color.Black;
-            this.openCustomButton.TextColorUnfocused = System.Drawing.Color.Black;
-            this.openCustomButton.UseVisualStyleBackColor = false;
-            this.openCustomButton.Click += new System.EventHandler(this.openCustomButton_Click);
+            this.clearInputCustomButton.BackColor = System.Drawing.Color.White;
+            this.clearInputCustomButton.BackgroundColorDisabled = System.Drawing.Color.Gainsboro;
+            this.clearInputCustomButton.BackgroundColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.clearInputCustomButton.BackgroundColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.clearInputCustomButton.BackgroundColorUnfocused = System.Drawing.Color.White;
+            this.clearInputCustomButton.BorderColorDisabled = System.Drawing.Color.Gray;
+            this.clearInputCustomButton.BorderColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.clearInputCustomButton.BorderColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.clearInputCustomButton.BorderColorUnfocused = System.Drawing.Color.Silver;
+            this.clearInputCustomButton.BorderWidth = 1;
+            this.clearInputCustomButton.FlatAppearance.BorderSize = 0;
+            this.clearInputCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.clearInputCustomButton.ForeColor = System.Drawing.Color.Black;
+            this.clearInputCustomButton.Location = new System.Drawing.Point(139, 10);
+            this.clearInputCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.clearInputCustomButton.Name = "clearInputCustomButton";
+            this.clearInputCustomButton.Size = new System.Drawing.Size(130, 30);
+            this.clearInputCustomButton.TabIndex = 9;
+            this.clearInputCustomButton.Text = "Очистить ввод";
+            this.clearInputCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
+            this.clearInputCustomButton.TextColorFocused = System.Drawing.Color.Black;
+            this.clearInputCustomButton.TextColorUnfocused = System.Drawing.Color.Black;
+            this.clearInputCustomButton.UseVisualStyleBackColor = false;
+            this.clearInputCustomButton.Click += new System.EventHandler(this.clearInputCustomButton_Click);
             // 
             // cSharpCustomRichTextBox
             // 
             this.cSharpCustomRichTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.cSharpCustomRichTextBox.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.cSharpCustomRichTextBox.BorderColorFocused = System.Drawing.Color.LimeGreen;
-            this.cSharpCustomRichTextBox.BorderColorUnfocused = System.Drawing.Color.DimGray;
-            this.tableLayoutPanel.SetColumnSpan(this.cSharpCustomRichTextBox, 2);
+            this.cSharpCustomRichTextBox.BorderColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(176)))), ((int)(((byte)(96)))));
+            this.cSharpCustomRichTextBox.BorderColorUnfocused = System.Drawing.Color.Gray;
             this.cSharpCustomRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cSharpCustomRichTextBox.Editable = true;
-            this.cSharpCustomRichTextBox.Font = new System.Drawing.Font("Consolas", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.cSharpCustomRichTextBox.Font = new System.Drawing.Font("Consolas", 14F);
             this.cSharpCustomRichTextBox.Location = new System.Drawing.Point(3, 3);
             this.cSharpCustomRichTextBox.Name = "cSharpCustomRichTextBox";
             this.cSharpCustomRichTextBox.Padding = new System.Windows.Forms.Padding(5);
             this.cSharpCustomRichTextBox.PlaceholderText = "Введите сюда код на C#...";
-            this.cSharpCustomRichTextBox.Size = new System.Drawing.Size(420, 193);
+            this.cSharpCustomRichTextBox.Size = new System.Drawing.Size(420, 295);
             this.cSharpCustomRichTextBox.TabIndex = 2;
             // 
             // javaCustomRichTextBox
             // 
-            this.javaCustomRichTextBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.javaCustomRichTextBox.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            this.javaCustomRichTextBox.BorderColorFocused = System.Drawing.Color.LimeGreen;
-            this.javaCustomRichTextBox.BorderColorUnfocused = System.Drawing.Color.DimGray;
-            this.tableLayoutPanel.SetColumnSpan(this.javaCustomRichTextBox, 3);
+            this.javaCustomRichTextBox.BackColor = System.Drawing.Color.White;
+            this.javaCustomRichTextBox.BackgroundColor = System.Drawing.Color.White;
+            this.javaCustomRichTextBox.BorderColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(176)))), ((int)(((byte)(96)))));
+            this.javaCustomRichTextBox.BorderColorUnfocused = System.Drawing.Color.Gray;
             this.javaCustomRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.javaCustomRichTextBox.Editable = false;
-            this.javaCustomRichTextBox.Font = new System.Drawing.Font("Consolas", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.javaCustomRichTextBox.Font = new System.Drawing.Font("Consolas", 14F);
             this.javaCustomRichTextBox.Location = new System.Drawing.Point(429, 3);
             this.javaCustomRichTextBox.Name = "javaCustomRichTextBox";
             this.javaCustomRichTextBox.Padding = new System.Windows.Forms.Padding(5);
             this.javaCustomRichTextBox.PlaceholderText = "Здесь появится код на Java...";
-            this.javaCustomRichTextBox.Size = new System.Drawing.Size(420, 193);
+            this.javaCustomRichTextBox.Size = new System.Drawing.Size(420, 295);
             this.javaCustomRichTextBox.TabIndex = 3;
             this.javaCustomRichTextBox.TabStop = false;
             // 
+            // clearConsoleCustomButton
+            // 
+            this.clearConsoleCustomButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.clearConsoleCustomButton.BackColor = System.Drawing.Color.White;
+            this.clearConsoleCustomButton.BackgroundColorDisabled = System.Drawing.Color.Gainsboro;
+            this.clearConsoleCustomButton.BackgroundColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.clearConsoleCustomButton.BackgroundColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.clearConsoleCustomButton.BackgroundColorUnfocused = System.Drawing.Color.White;
+            this.clearConsoleCustomButton.BorderColorDisabled = System.Drawing.Color.Gray;
+            this.clearConsoleCustomButton.BorderColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.clearConsoleCustomButton.BorderColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.clearConsoleCustomButton.BorderColorUnfocused = System.Drawing.Color.Silver;
+            this.clearConsoleCustomButton.BorderWidth = 1;
+            this.clearConsoleCustomButton.FlatAppearance.BorderSize = 0;
+            this.clearConsoleCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.clearConsoleCustomButton.ForeColor = System.Drawing.Color.Black;
+            this.clearConsoleCustomButton.Location = new System.Drawing.Point(3, 357);
+            this.clearConsoleCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.clearConsoleCustomButton.Name = "clearConsoleCustomButton";
+            this.clearConsoleCustomButton.Size = new System.Drawing.Size(130, 30);
+            this.clearConsoleCustomButton.TabIndex = 6;
+            this.clearConsoleCustomButton.Text = "Очистить консоль";
+            this.clearConsoleCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
+            this.clearConsoleCustomButton.TextColorFocused = System.Drawing.Color.Black;
+            this.clearConsoleCustomButton.TextColorUnfocused = System.Drawing.Color.Black;
+            this.clearConsoleCustomButton.UseVisualStyleBackColor = false;
+            this.clearConsoleCustomButton.Click += new System.EventHandler(this.clearConsoleCustomButton_Click);
+            // 
             // saveCustomButton
             // 
-            this.saveCustomButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveCustomButton.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.saveCustomButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(205)))), ((int)(((byte)(112)))));
             this.saveCustomButton.BackgroundColorDisabled = System.Drawing.Color.Gainsboro;
-            this.saveCustomButton.BackgroundColorFocused = System.Drawing.Color.LimeGreen;
-            this.saveCustomButton.BackgroundColorMouseDown = System.Drawing.Color.Green;
-            this.saveCustomButton.BackgroundColorUnfocused = System.Drawing.Color.DarkSeaGreen;
-            this.saveCustomButton.BorderColorDisabled = System.Drawing.Color.Empty;
-            this.saveCustomButton.BorderColorFocused = System.Drawing.Color.Empty;
-            this.saveCustomButton.BorderColorMouseDown = System.Drawing.Color.Empty;
-            this.saveCustomButton.BorderColorUnfocused = System.Drawing.Color.Empty;
-            this.saveCustomButton.BorderWidth = 0;
+            this.saveCustomButton.BackgroundColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(111)))), ((int)(((byte)(221)))), ((int)(((byte)(151)))));
+            this.saveCustomButton.BackgroundColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(176)))), ((int)(((byte)(96)))));
+            this.saveCustomButton.BackgroundColorUnfocused = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(205)))), ((int)(((byte)(112)))));
+            this.saveCustomButton.BorderColorDisabled = System.Drawing.Color.Gray;
+            this.saveCustomButton.BorderColorFocused = System.Drawing.Color.Green;
+            this.saveCustomButton.BorderColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(126)))), ((int)(((byte)(29)))));
+            this.saveCustomButton.BorderColorUnfocused = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(152)))), ((int)(((byte)(83)))));
+            this.saveCustomButton.BorderWidth = 1;
             this.saveCustomButton.FlatAppearance.BorderSize = 0;
             this.saveCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.saveCustomButton.ForeColor = System.Drawing.Color.Black;
-            this.saveCustomButton.Location = new System.Drawing.Point(717, 209);
+            this.saveCustomButton.Location = new System.Drawing.Point(429, 10);
             this.saveCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.saveCustomButton.Name = "saveCustomButton";
-            this.saveCustomButton.Size = new System.Drawing.Size(132, 40);
+            this.saveCustomButton.Size = new System.Drawing.Size(130, 30);
             this.saveCustomButton.TabIndex = 7;
             this.saveCustomButton.Text = "Сохранить...";
             this.saveCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
@@ -266,73 +291,74 @@ namespace CSharpToJavaTranslator
             this.saveCustomButton.UseVisualStyleBackColor = false;
             this.saveCustomButton.Click += new System.EventHandler(this.saveCustomButton_Click);
             // 
+            // openCustomButton
+            // 
+            this.openCustomButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(205)))), ((int)(((byte)(112)))));
+            this.openCustomButton.BackgroundColorDisabled = System.Drawing.Color.Gainsboro;
+            this.openCustomButton.BackgroundColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(111)))), ((int)(((byte)(221)))), ((int)(((byte)(151)))));
+            this.openCustomButton.BackgroundColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(176)))), ((int)(((byte)(96)))));
+            this.openCustomButton.BackgroundColorUnfocused = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(205)))), ((int)(((byte)(112)))));
+            this.openCustomButton.BorderColorDisabled = System.Drawing.Color.Gray;
+            this.openCustomButton.BorderColorFocused = System.Drawing.Color.Green;
+            this.openCustomButton.BorderColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(126)))), ((int)(((byte)(29)))));
+            this.openCustomButton.BorderColorUnfocused = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(152)))), ((int)(((byte)(83)))));
+            this.openCustomButton.BorderWidth = 1;
+            this.openCustomButton.FlatAppearance.BorderSize = 0;
+            this.openCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.openCustomButton.ForeColor = System.Drawing.Color.Black;
+            this.openCustomButton.Location = new System.Drawing.Point(3, 10);
+            this.openCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.openCustomButton.Name = "openCustomButton";
+            this.openCustomButton.Size = new System.Drawing.Size(130, 30);
+            this.openCustomButton.TabIndex = 4;
+            this.openCustomButton.Text = "Открыть...";
+            this.openCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
+            this.openCustomButton.TextColorFocused = System.Drawing.Color.Black;
+            this.openCustomButton.TextColorUnfocused = System.Drawing.Color.Black;
+            this.openCustomButton.UseVisualStyleBackColor = false;
+            this.openCustomButton.Click += new System.EventHandler(this.openCustomButton_Click);
+            // 
             // translateCustomButton
             // 
-            this.translateCustomButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.translateCustomButton.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.translateCustomButton.BackColor = System.Drawing.Color.White;
             this.translateCustomButton.BackgroundColorDisabled = System.Drawing.Color.Gainsboro;
-            this.translateCustomButton.BackgroundColorFocused = System.Drawing.Color.LimeGreen;
-            this.translateCustomButton.BackgroundColorMouseDown = System.Drawing.Color.Green;
-            this.translateCustomButton.BackgroundColorUnfocused = System.Drawing.Color.DarkSeaGreen;
-            this.translateCustomButton.BorderColorDisabled = System.Drawing.Color.Empty;
-            this.translateCustomButton.BorderColorFocused = System.Drawing.Color.Empty;
-            this.translateCustomButton.BorderColorMouseDown = System.Drawing.Color.Empty;
-            this.translateCustomButton.BorderColorUnfocused = System.Drawing.Color.Empty;
-            this.translateCustomButton.BorderWidth = 0;
+            this.translateCustomButton.BackgroundColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(111)))), ((int)(((byte)(221)))), ((int)(((byte)(151)))));
+            this.translateCustomButton.BackgroundColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(176)))), ((int)(((byte)(96)))));
+            this.translateCustomButton.BackgroundColorUnfocused = System.Drawing.Color.White;
+            this.translateCustomButton.BorderColorDisabled = System.Drawing.Color.Gray;
+            this.translateCustomButton.BorderColorFocused = System.Drawing.Color.Green;
+            this.translateCustomButton.BorderColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(126)))), ((int)(((byte)(29)))));
+            this.translateCustomButton.BorderColorUnfocused = System.Drawing.Color.Silver;
+            this.translateCustomButton.BorderWidth = 1;
             this.translateCustomButton.FlatAppearance.BorderSize = 0;
             this.translateCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.translateCustomButton.ForeColor = System.Drawing.Color.Black;
-            this.translateCustomButton.Location = new System.Drawing.Point(285, 209);
+            this.translateCustomButton.Location = new System.Drawing.Point(293, 10);
             this.translateCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.translateCustomButton.Name = "translateCustomButton";
-            this.translateCustomButton.Size = new System.Drawing.Size(138, 40);
+            this.translateCustomButton.Size = new System.Drawing.Size(130, 30);
             this.translateCustomButton.TabIndex = 5;
             this.translateCustomButton.Text = "Транслировать";
             this.translateCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
             this.translateCustomButton.TextColorFocused = System.Drawing.Color.Black;
             this.translateCustomButton.TextColorUnfocused = System.Drawing.Color.Black;
             this.translateCustomButton.UseVisualStyleBackColor = false;
-            // 
-            // clearCustomButton
-            // 
-            this.clearCustomButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(155)))), ((int)(((byte)(157)))));
-            this.clearCustomButton.BackgroundColorDisabled = System.Drawing.Color.Gainsboro;
-            this.clearCustomButton.BackgroundColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(49)))), ((int)(((byte)(49)))));
-            this.clearCustomButton.BackgroundColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.clearCustomButton.BackgroundColorUnfocused = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(155)))), ((int)(((byte)(157)))));
-            this.clearCustomButton.BorderColorDisabled = System.Drawing.Color.Empty;
-            this.clearCustomButton.BorderColorFocused = System.Drawing.Color.Empty;
-            this.clearCustomButton.BorderColorMouseDown = System.Drawing.Color.Empty;
-            this.clearCustomButton.BorderColorUnfocused = System.Drawing.Color.Empty;
-            this.clearCustomButton.BorderWidth = 0;
-            this.clearCustomButton.FlatAppearance.BorderSize = 0;
-            this.clearCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.clearCustomButton.ForeColor = System.Drawing.Color.Black;
-            this.clearCustomButton.Location = new System.Drawing.Point(429, 209);
-            this.clearCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-            this.clearCustomButton.Name = "clearCustomButton";
-            this.clearCustomButton.Size = new System.Drawing.Size(132, 40);
-            this.clearCustomButton.TabIndex = 6;
-            this.clearCustomButton.Text = "Очистить консоль";
-            this.clearCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
-            this.clearCustomButton.TextColorFocused = System.Drawing.Color.Black;
-            this.clearCustomButton.TextColorUnfocused = System.Drawing.Color.Black;
-            this.clearCustomButton.UseVisualStyleBackColor = false;
+            this.translateCustomButton.Click += new System.EventHandler(this.translateCustomButton_Click);
             // 
             // consoleCustomRichTextBox
             // 
-            this.consoleCustomRichTextBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.consoleCustomRichTextBox.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            this.consoleCustomRichTextBox.BorderColorFocused = System.Drawing.Color.LimeGreen;
-            this.consoleCustomRichTextBox.BorderColorUnfocused = System.Drawing.Color.DimGray;
+            this.consoleCustomRichTextBox.BackColor = System.Drawing.Color.White;
+            this.consoleCustomRichTextBox.BackgroundColor = System.Drawing.Color.White;
+            this.consoleCustomRichTextBox.BorderColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(176)))), ((int)(((byte)(96)))));
+            this.consoleCustomRichTextBox.BorderColorUnfocused = System.Drawing.Color.Gray;
             this.consoleCustomRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.consoleCustomRichTextBox.Editable = false;
-            this.consoleCustomRichTextBox.Font = new System.Drawing.Font("Consolas", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.consoleCustomRichTextBox.Font = new System.Drawing.Font("Consolas", 14F);
             this.consoleCustomRichTextBox.Location = new System.Drawing.Point(0, 0);
             this.consoleCustomRichTextBox.Name = "consoleCustomRichTextBox";
             this.consoleCustomRichTextBox.Padding = new System.Windows.Forms.Padding(5);
             this.consoleCustomRichTextBox.PlaceholderText = "Здесь появятся сообщения от транслятора...";
-            this.consoleCustomRichTextBox.Size = new System.Drawing.Size(852, 210);
+            this.consoleCustomRichTextBox.Size = new System.Drawing.Size(852, 76);
             this.consoleCustomRichTextBox.TabIndex = 8;
             this.consoleCustomRichTextBox.TabStop = false;
             // 
@@ -347,13 +373,11 @@ namespace CSharpToJavaTranslator
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "mainForm";
             this.Text = "C# to Java Translator";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.mainSplitContainer.Panel1.ResumeLayout(false);
             this.mainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
             this.mainSplitContainer.ResumeLayout(false);
-            this.tableLayoutPanel.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.mainMenuStrip.ResumeLayout(false);
             this.mainMenuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -375,13 +399,14 @@ namespace CSharpToJavaTranslator
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem просмотрСправкиToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private CustomButton saveCustomButton;
         private CustomButton translateCustomButton;
         private CustomButton openCustomButton;
-        private CustomButton clearCustomButton;
+        private CustomButton clearConsoleCustomButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private CustomButton clearInputCustomButton;
     }
 }
 
