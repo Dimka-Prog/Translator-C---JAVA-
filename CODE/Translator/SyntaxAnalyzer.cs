@@ -294,7 +294,8 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseDeclaration(ref tokens);
+                        parseFieldOrDeclaration(ref tokens, false);
+                        syntaxTree.goToParent();
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                     }
                     else if (tokens[position].type == Constants.TokenType.CLASS)
@@ -332,10 +333,7 @@ namespace CSharpToJavaTranslator
                         Console.WriteLine("[SYNTAX][INFO] : обнаружен тип данных \"" + tokens[position].value + "\", переход к парсингу члена структуры/класса...");
                         syntaxTree.appendAndGoToChild(Constants.TreeNodeType.MEMBER);
                         syntaxTree.appendToken(new Token(Constants.TokenType.PRIVATE, "private"));
-                        syntaxTree.appendToken(tokens[position]);
-                        state = Constants.State.EXPECTING_IDENTIFIER;
-                        position++;
-                        parseMember(ref tokens);
+                        parseFieldOrMethod(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                         syntaxTree.goToParent();
                     }
@@ -370,7 +368,8 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseDeclaration(ref tokens);
+                        parseFieldOrDeclaration(ref tokens, false);
+                        syntaxTree.goToParent();
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                         syntaxTree.goToParent();
                     }
@@ -401,10 +400,7 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.IDENTIFIER)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружен тип данных \"" + tokens[position].value + "\", переход к парсингу члена структуры/класса...");
-                        syntaxTree.appendToken(tokens[position]);
-                        state = Constants.State.EXPECTING_IDENTIFIER;
-                        position++;
-                        parseMember(ref tokens);
+                        parseFieldOrMethod(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                         syntaxTree.goToParent();
                     }
@@ -420,10 +416,7 @@ namespace CSharpToJavaTranslator
                     if (tokens[position].type == Constants.TokenType.IDENTIFIER)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружен тип данных \"" + tokens[position].value + "\", переход к парсингу члена структуры/класса...");
-                        syntaxTree.appendToken(tokens[position]);
-                        state = Constants.State.EXPECTING_IDENTIFIER;
-                        position++;
-                        parseMember(ref tokens);
+                        parseFieldOrMethod(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                         syntaxTree.goToParent();
                     }
@@ -437,8 +430,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : ожидались тип данных или \"class\", встречено \"" + tokens[position].value + "\". Строка: "
-                                          + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { "тип данных", "class" }, tokens[position]);
                         position++;
                     }
                 }
@@ -447,10 +439,7 @@ namespace CSharpToJavaTranslator
                     if (tokens[position].type == Constants.TokenType.IDENTIFIER)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружен тип данных \"" + tokens[position].value + "\", переход к парсингу члена класса/структуры...");
-                        syntaxTree.appendToken(tokens[position]);
-                        state = Constants.State.EXPECTING_IDENTIFIER;
-                        position++;
-                        parseMember(ref tokens);
+                        parseFieldOrMethod(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                         syntaxTree.goToParent();
                     }
@@ -512,7 +501,7 @@ namespace CSharpToJavaTranslator
                     if (tokens[position].type == Constants.TokenType.IDENTIFIER)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено имя константы \"" + tokens[position].value + "\" в перечислении, ожидается \"=\", \",\" или \"}\"...");
-                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.MEMBER);
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.FIELD);
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_COMMA_OR_ASSIGNMENT_OR_CLOSING_CURLY_BRACKET;
                         position++;
@@ -622,69 +611,113 @@ namespace CSharpToJavaTranslator
         /// </summary>
         /// <param name="tokens">Указатель на массив токенов, 
         /// полученных из лексического анализатора.</param>
-        private void parseMember(ref Token[] tokens)
+        private void parseFieldOrMethod(ref Token[] tokens)
         {
-            while(position < tokens.Length)
+            bool isField = false;
+            int tempPosition = position;
+            while(tempPosition < tokens.Length)
             {
-                if (state == Constants.State.EXPECTING_IDENTIFIER)
+                if(tokens[tempPosition].type == Constants.TokenType.OPENING_CURLY_BRACKET)
                 {
-                    if (tokens[position].type == Constants.TokenType.IDENTIFIER)
-                    {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружено имя члена \"" + tokens[position].value + "\", ожидаются \";\" или \"(\"...");
-                        syntaxTree.appendToken(tokens[position]);
-                        state = Constants.State.EXPECTING_SEMICOLON_OR_OPENING_BRACKET_OR_EXPRESSION;
-                        position++;
-                    }
-                    else
-                    {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя члена" }, tokens[position]);
-                        return;
-                    }
+                    break;
                 }
-                else if(state == Constants.State.EXPECTING_SEMICOLON)
+                else if(tokens[tempPosition].type == Constants.TokenType.SEMICOLON)
                 {
-                    if (tokens[position].type == Constants.TokenType.SEMICOLON)
-                    {
-                        Console.WriteLine("[SYNTAX][INFO] : парсинг поля класса/структуры завершён.");
-                        position++;
-                        return;
-                    }
-                    else
-                    {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, tokens[position]);
-                        return;
-                    }
+                    isField = true;
+                    break;
                 }
-                else if (state == Constants.State.EXPECTING_SEMICOLON_OR_OPENING_BRACKET_OR_EXPRESSION)
+                tempPosition++;
+            }
+
+            if(isField)
+            {
+                parseFieldOrDeclaration(ref tokens, true);
+                syntaxTree.goToParent();
+                //TODO ожидается ;
+                position++;
+                return;
+            }
+            else
+            {
+                syntaxTree.appendAndGoToChild(Constants.TreeNodeType.METHOD);
+                syntaxTree.appendToken(tokens[position]);
+                position++;
+
+                state = Constants.State.EXPECTING_OPENING_SQUARE_BRACKET_OR_IDENTIFIER;
+
+                while (position < tokens.Length)
                 {
-                    if (tokens[position].type == Constants.TokenType.SEMICOLON)
+                    if (state == Constants.State.EXPECTING_OPENING_SQUARE_BRACKET_OR_IDENTIFIER)
                     {
-                        Console.WriteLine("[SYNTAX][INFO] : парсинг поля класса/структуры завершён.");
-                        position++;
-                        return;
+                        if (tokens[position].type == Constants.TokenType.IDENTIFIER)
+                        {
+                            Console.WriteLine("[SYNTAX][INFO] : обнаружено имя метода \"" + tokens[position].value + "\", ожидается \"(\"...");
+                            syntaxTree.appendToken(tokens[position]);
+                            state = Constants.State.EXPECTING_OPENING_BRACKET;
+                            position++;
+                        }
+                        if (tokens[position].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
+                        {
+                            Console.WriteLine("[SYNTAX][INFO] : обнаружена \"[\", ожидается \"]\"...");
+                            syntaxTree.appendToken(tokens[position]);
+                            state = Constants.State.EXPECTING_CLOSING_SQUARE_BRACKET;
+                            position++;
+                        }
+                        else
+                        {
+                            translationResultBus.registerUnexpectedTokenError(new string[2] { "]", "имя метода" }, tokens[position]);
+                            return;
+                        }
                     }
-                    else if (tokens[position].type == Constants.TokenType.OPENING_BRACKET)
+                    else if (state == Constants.State.EXPECTING_CLOSING_SQUARE_BRACKET)
                     {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружена \"(\", переход к парсингу метода...");
-                        position++;
-                        state = Constants.State.EXPECTING_DATA_TYPE;
-                        parseFunctionParametersList(ref tokens);
-                        state = Constants.State.EXPECTING_OPENING_CURLY_BRACKET;
-                        parseCodeBlock(ref tokens);
-                        Console.WriteLine("[SYNTAX][INFO] : парсинг метода завершён.");
-                        return;
+                        if (tokens[position].type == Constants.TokenType.CLOSING_SQUARE_BRACKET)
+                        {
+                            Console.WriteLine("[SYNTAX][INFO] : обнаружена \"]\", ожидается имя метода...");
+                            syntaxTree.appendToken(tokens[position]);
+                            position++;
+                            state = Constants.State.EXPECTING_IDENTIFIER;
+                        }
+                        else
+                        {
+                            translationResultBus.registerUnexpectedTokenError(new string[1] { "]" }, tokens[position]);
+                            return;
+                        }
                     }
-                    else if (tokens[position].type == Constants.TokenType.ASSIGNMENT)
+                    if (state == Constants.State.EXPECTING_IDENTIFIER)
                     {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружено \"=\", переход к парсингу выражения...");
-                        position++;
-                        parseExpression(ref tokens);
-                        state = Constants.State.EXPECTING_SEMICOLON;
+                        if (tokens[position].type == Constants.TokenType.IDENTIFIER)
+                        {
+                            Console.WriteLine("[SYNTAX][INFO] : обнаружено имя метода \"" + tokens[position].value + "\", ожидается \"(\"...");
+                            syntaxTree.appendToken(tokens[position]);
+                            state = Constants.State.EXPECTING_OPENING_BRACKET;
+                            position++;
+                        }
+                        else
+                        {
+                            translationResultBus.registerUnexpectedTokenError(new string[1] { "имя метода" }, tokens[position]);
+                            return;
+                        }
                     }
-                    else
+                    else if (state == Constants.State.EXPECTING_OPENING_BRACKET)
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[3] { ";", "(", "=" }, tokens[position]);
-                        return;
+                        if (tokens[position].type == Constants.TokenType.OPENING_BRACKET)
+                        {
+                            Console.WriteLine("[SYNTAX][INFO] : обнаружена \"(\", переход к парсингу параметров и тела метода...");
+                            position++;
+                            state = Constants.State.EXPECTING_DATA_TYPE;
+                            parseFunctionParametersList(ref tokens);
+                            state = Constants.State.EXPECTING_OPENING_CURLY_BRACKET;
+                            parseCodeBlock(ref tokens);
+                            Console.WriteLine("[SYNTAX][INFO] : парсинг метода завершён.");
+                            syntaxTree.goToParent();
+                            return;
+                        }
+                        else
+                        {
+                            translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
+                            return;
+                        }
                     }
                 }
             }
@@ -699,6 +732,8 @@ namespace CSharpToJavaTranslator
         /// полученных из лексического анализатора.</param>
         private void parseFunctionParametersList(ref Token[] tokens)
         {
+            int parametersCount = 0;
+
             while(position < tokens.Length)
             {
                 if(state == Constants.State.EXPECTING_DATA_TYPE)
@@ -707,6 +742,7 @@ namespace CSharpToJavaTranslator
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружен тип данных параметра \"" + tokens[position].value + "\", ожидается \"[\" " +
                                           "или имя параметра...");
+                        parametersCount++;
                         syntaxTree.appendAndGoToChild(Constants.TreeNodeType.PARAMETER);
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_OPENING_SQUARE_BRACKET_OR_IDENTIFIER;
@@ -715,7 +751,10 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.CLOSING_BRACKET)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : парсинг параметров метода завершён.");
-                        syntaxTree.goToParent();
+                        if (parametersCount > 0)
+                        {
+                            syntaxTree.goToParent();
+                        }
                         position++;
                         return;
                     }
@@ -780,7 +819,10 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.CLOSING_BRACKET)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : парсинг параметров метода завершён.");
-                        syntaxTree.goToParent();
+                        if(parametersCount > 0)
+                        {
+                            syntaxTree.goToParent();
+                        }
                         position++;
                         return;
                     }
@@ -817,7 +859,10 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.CLOSING_BRACKET)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : парсинг параметров метода завершён.");
-                        syntaxTree.goToParent();
+                        if (parametersCount > 0)
+                        {
+                            syntaxTree.goToParent();
+                        }
                         position++;
                         return;
                     }
@@ -940,7 +985,8 @@ namespace CSharpToJavaTranslator
                         if (declarationFlag)
                         {
                             Console.WriteLine("[SYNTAX][INFO] : переход к парсингу объявления...");
-                            parseDeclaration(ref tokens);
+                            parseFieldOrDeclaration(ref tokens, false);
+                            syntaxTree.goToParent();
                             state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                             Console.WriteLine("[SYNTAX][INFO] : парсинг объявления завершён.");
                         }
@@ -951,8 +997,6 @@ namespace CSharpToJavaTranslator
                             this.state = Constants.State.EXPECTING_SEMICOLON;
                             Console.WriteLine("[SYNTAX][INFO] : парсинг выражения завершён.");
                         }
-
-                        if (!multiline) return;
                     }
                     else if (tokens[position].type == Constants.TokenType.IF)
                     {
@@ -965,8 +1009,7 @@ namespace CSharpToJavaTranslator
                     }
                     else if (tokens[position].type == Constants.TokenType.ELSE)
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : обнаружен оператор \"else\" без соответствующего оператора \"if\". Строка: "
-                                          + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                        translationResultBus.registerError("[SYNTAX][ERROR] : обнаружен оператор \"else\" без соответствующего оператора \"if\".", tokens[position]);
                         position++;
                     }
                     else if (tokens[position].type == Constants.TokenType.WHILE)
@@ -985,7 +1028,6 @@ namespace CSharpToJavaTranslator
                         position++;
                         parseDoWhile(ref tokens);
                         state = Constants.State.EXPECTING_SEMICOLON;
-                        if (!multiline) return;
                     }
                     else if (tokens[position].type == Constants.TokenType.FOR)
                     {
@@ -1046,8 +1088,7 @@ namespace CSharpToJavaTranslator
                         }
                         else
                         {
-                            Console.WriteLine("[SYNTAX][ERROR] : ожидалось \":\", встречено \"" + tokens[position].value + "\". Строка: "
-                                              + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                            translationResultBus.registerUnexpectedTokenError(new string[1] { ":" }, tokens[position]);
                         }
                     }
                     else if (tokens[position].type == Constants.TokenType.DEFAULT)
@@ -1064,8 +1105,7 @@ namespace CSharpToJavaTranslator
                         }
                         else
                         {
-                            Console.WriteLine("[SYNTAX][ERROR] : ожидалось \":\", встречено \"" + tokens[position].value + "\". Строка: "
-                                              + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                            translationResultBus.registerUnexpectedTokenError(new string[1] { ":" }, tokens[position]);
                         }
                     }
                     else if (tokens[position].type == Constants.TokenType.INCREMENT ||
@@ -1114,9 +1154,17 @@ namespace CSharpToJavaTranslator
         /// 
         /// </summary>
         /// <param name="tokens"></param>
-        private void parseDeclaration(ref Token[] tokens)
+        private void parseFieldOrDeclaration(ref Token[] tokens, bool isField)
         {
-            syntaxTree.appendAndGoToChild(Constants.TreeNodeType.DECLARATION);
+            if(isField)
+            {
+                syntaxTree.appendAndGoToChild(Constants.TreeNodeType.FIELD);
+            }
+            else
+            {
+                syntaxTree.appendAndGoToChild(Constants.TreeNodeType.DECLARATION);
+            }
+            
             state = Constants.State.EXPECTING_DATA_TYPE;
 
             while (position < tokens.Length)
@@ -1186,7 +1234,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "]" }, tokens[position]);
                         position++;
                     }
                 }
@@ -1225,13 +1273,12 @@ namespace CSharpToJavaTranslator
                              tokens[position].type == Constants.TokenType.IN)
                     {
                         syntaxTree.goToParent();
-                        position++;
-                        Console.WriteLine("[SYNTAX][INFO] : парсинг объявления завершён.");
+                        Console.WriteLine("[SYNTAX][INFO] : парсинг объявления завершён, потому что встречено \"" + tokens[position].value + "\".");
                         return;
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[4] { ",", ";", "in", "присваивание" }, tokens[position]);
                         position++;
                     }
                 }
@@ -1251,7 +1298,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { ",", ";" }, tokens[position]);
                         position++;
                     }
                 }
@@ -1425,7 +1472,7 @@ namespace CSharpToJavaTranslator
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружена \"(\", переход к парсингу объявления...");
                         position++;
-                        parseDeclaration(ref tokens);
+                        parseFieldOrDeclaration(ref tokens, false);
                         state = Constants.State.EXPECTING_IN;
                     }
                     else
@@ -1439,6 +1486,7 @@ namespace CSharpToJavaTranslator
                     if (tokens[position].type == Constants.TokenType.IN)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"in\", переход к парсингу выражения...");
+                        syntaxTree.goToParent();
                         position++;
                         parseExpression(ref tokens);
                         state = Constants.State.EXPECTING_CLOSING_BRACKET;
@@ -1455,6 +1503,7 @@ namespace CSharpToJavaTranslator
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружена \")\", переход к парсингу тела оператора...");
                         position++;
+                        state = Constants.State.EXPECTING_CONTENT_OR_OPENING_CURLY_BRACKET;
                         parseCodeBlock(ref tokens);
                         syntaxTree.goToParent();
                         return;
@@ -1469,7 +1518,7 @@ namespace CSharpToJavaTranslator
 
             translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция оператора \"foreach\".", tokens[tokens.Length - 1]);
         }
-
+        
         /// <summary>
         /// 
         /// </summary>

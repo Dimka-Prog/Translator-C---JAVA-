@@ -113,7 +113,8 @@
 
             UTILITY_TERNARY_CLOSED_IF,
             UTILITY_FUNCTION,
-            UTILITY_ARRAY_ELEMENT_ACCESS
+            UTILITY_ARRAY_ELEMENT_ACCESS,
+            UNKNOWN
         }
         
         public enum State
@@ -176,7 +177,10 @@
 
             USING,
             NAMESPACE,
-            
+            CLASS,
+            STRUCT,
+            ENUM,
+
             IF,
             ELSE,
             FOR,
@@ -191,6 +195,8 @@
             RETURN,
             
             DECLARATION,
+            METHOD,
+            FIELD,
             EXPRESSION,
             EXPRESSION_RPN,
             MEMBER,

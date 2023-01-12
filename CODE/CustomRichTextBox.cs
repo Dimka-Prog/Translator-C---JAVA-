@@ -114,14 +114,6 @@ namespace CSharpToJavaTranslator
 
             g.DrawRectangle(borderPen, 1, 1, this.Width - 2, this.Height - 2);
             borderPen.Dispose();
-
-            //Brush lineNumberBrush = new SolidBrush(Color.Blue);
-            //for(int i = 0; i < this.innerRichTextBox.Lines.Count(); i++)
-            //{
-            //    g.DrawString();
-            //}
-            
-            //lineNumberBrush.Dispose();
         }
 
         private void innerRichTextBox_Enter(object sender, EventArgs e)
@@ -161,10 +153,11 @@ namespace CSharpToJavaTranslator
 
         public void removeHighlight()
         {
-            this.innerRichTextBox.SelectionStart = 0;
-            this.innerRichTextBox.SelectionLength = this.innerRichTextBox.Text.Length;
-            this.innerRichTextBox.SelectionBackColor = Color.FromArgb(0, 255, 255, 255);
-            this.innerRichTextBox.SelectionLength = 0;
+            int i = this.innerRichTextBox.SelectionStart;
+            this.innerRichTextBox.SelectAll();
+            this.innerRichTextBox.SelectionBackColor = Color.White;
+            this.innerRichTextBox.DeselectAll();
+            this.innerRichTextBox.SelectionStart = i;
         }
 
         public void appendText(string line, Color color)

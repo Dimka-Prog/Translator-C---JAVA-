@@ -7,42 +7,6 @@ using System.Drawing;
 
 namespace CSharpToJavaTranslator
 {
-    public struct Token
-    {
-        public string value;
-        public Constants.TokenType type;
-        public int numberLine;
-        public int numberColumn;
-
-        public Token(Constants.TokenType type, string value)
-        {
-            this.value = value;
-            this.type = type;
-            this.numberLine = 0;
-            this.numberColumn = 0;
-        }
-
-        public Token(string text, Constants.TokenType type, int numberLine, int numberColumn)
-        {
-            this.value = text;
-            this.type = type;
-            this.numberLine = numberLine;
-            this.numberColumn = numberColumn;
-        }
-
-        public void Print()
-        {
-            Console.WriteLine(value + ' ' + type + ' ' + numberLine + ' ' + numberColumn);
-        }
-
-        public string GetToken()
-        {
-            string st = this.value + ' ' + type + ' ' + 
-                        this.numberLine.ToString() + ' ' + this.numberColumn.ToString();
-            return st;
-        }
-    }
-
     internal class LexicalAnalyzer
     {
         private char[] separators = { ';', '{', '}', '(', ')', 
@@ -703,8 +667,8 @@ namespace CSharpToJavaTranslator
             }
             else
             {
-                console.appendText("[LEX][ERROR] : обнаружена неизвестная лексема \"" + s + "\", лексема удалена из выходного потока. Строка: " 
-                                  + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                translatorOutputBus.registerError("[LEX][ERROR] : обнаружена неизвестная лексема \"" + s + "\", лексема удалена из выходного потока.", 
+                                                  new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             numberColumn++;
         }

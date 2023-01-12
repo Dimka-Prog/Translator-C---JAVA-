@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="CODE\test_source.txt" />
     <Content Include="proto.png" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +137,7 @@
     <Compile Include="CODE\Translator\LexicalAnalyzer.cs" />
     <Compile Include="CODE\Translator\SyntaxAnalyzer.cs" />
     <Compile Include="CODE\Translator\SyntaxTree.cs" />
+    <Compile Include="CODE\Translator\Token.cs" />
     <Compile Include="CODE\Translator\TranslationResultBus.cs" />
   </ItemGroup>
   <ItemGroup>

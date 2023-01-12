@@ -118,14 +118,20 @@ namespace CSharpToJavaTranslator
                                                         translationResultBus);
             Token[] tokenArr = lexAn.parse(this.cSharpCustomRichTextBox).ToArray();
 
-            SyntaxAnalyzer syntAn = new SyntaxAnalyzer(this.consoleCustomRichTextBox, 
+            if(tokenArr.Length > 0)
+            {
+                SyntaxAnalyzer syntAn = new SyntaxAnalyzer(this.consoleCustomRichTextBox,
                                                        translationResultBus);
-            SyntaxTree syntTree = syntAn.parse(ref tokenArr);
+                SyntaxTree syntTree = syntAn.parse(ref tokenArr);
+            }
+            else
+            {
+                this.consoleCustomRichTextBox.appendText("[INFO] : отсутствуют лексемы в выходном потоке лексического анализатора, дальнейший анализ отменён.\n", Color.Black);
+            }
 
             translationResultBus.summarizeTranslation();
             translationResultBus.highlight(this.cSharpCustomRichTextBox);
             this.highlighted = true;
-
         }
 
         private void saveCustomButton_Click(object sender, EventArgs e)
