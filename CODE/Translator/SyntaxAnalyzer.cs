@@ -157,7 +157,7 @@ namespace CSharpToJavaTranslator
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"class\", ожидается имя класса...");
                         syntaxTree.appendAndGoToChild(Constants.TreeNodeType.MEMBER);
                         syntaxTree.appendToken(new Token(Constants.TokenType.PRIVATE, "private"));
-                        syntaxTree.appendToken(tokens[position]);
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.CLASS);
                         position++;
                         parseClassOrStruct(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
@@ -187,7 +187,7 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.CLASS)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"class\", ожидается имя класса...");
-                        syntaxTree.appendToken(tokens[position]);
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.CLASS);
                         position++;
                         parseClassOrStruct(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
@@ -204,7 +204,7 @@ namespace CSharpToJavaTranslator
                     if (tokens[position].type == Constants.TokenType.CLASS)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"class\", ожидается имя класса...");
-                        syntaxTree.appendToken(tokens[position]);
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.CLASS);
                         position++;
                         parseClassOrStruct(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
@@ -303,7 +303,7 @@ namespace CSharpToJavaTranslator
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"class\", переход к парсингу класса...");
                         syntaxTree.appendAndGoToChild(Constants.TreeNodeType.MEMBER);
                         syntaxTree.appendToken(new Token(Constants.TokenType.PRIVATE, "private"));
-                        syntaxTree.appendToken(tokens[position]);
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.CLASS);
                         position++;
                         parseClassOrStruct(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
@@ -313,7 +313,7 @@ namespace CSharpToJavaTranslator
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"struct\", переход к парсингу структуры...");
                         syntaxTree.appendAndGoToChild(Constants.TreeNodeType.MEMBER);
                         syntaxTree.appendToken(new Token(Constants.TokenType.PRIVATE, "private"));
-                        syntaxTree.appendToken(tokens[position]);
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.STRUCT);
                         position++;
                         parseClassOrStruct(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
@@ -339,6 +339,7 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.CLOSING_CURLY_BRACKET)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружена \"}\", парсинг класса/структуры \"" + currentClassOrStructName + "\" завершён.");
+                        syntaxTree.goToParent();
                         syntaxTree.goToParent();
                         position++;
                         return;
@@ -374,16 +375,16 @@ namespace CSharpToJavaTranslator
                     }
                     else if (tokens[position].type == Constants.TokenType.CLASS)
                     {
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.CLASS);
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"class\", переход к парсингу класса...");
-                        syntaxTree.appendToken(tokens[position]);
                         position++;
                         parseClassOrStruct(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                     }
                     else if (tokens[position].type == Constants.TokenType.STRUCT)
                     {
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.STRUCT);
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"struct\", переход к парсингу структуры...");
-                        syntaxTree.appendToken(tokens[position]);
                         position++;
                         parseClassOrStruct(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
@@ -420,8 +421,8 @@ namespace CSharpToJavaTranslator
                     }
                     else if (tokens[position].type == Constants.TokenType.CLASS)
                     {
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.CLASS);
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"class\", переход к парсингу класса...");
-                        syntaxTree.appendToken(tokens[position]);
                         position++;
                         parseClassOrStruct(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
