@@ -30,7 +30,15 @@ namespace CSharpToJavaTranslator
         private void InitializeComponent()
         {
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.clearInputCustomButton = new CSharpToJavaTranslator.CustomButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.cSharpCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
+            this.javaCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
+            this.clearConsoleCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.saveCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.openCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.translateCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.consoleCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,14 +49,6 @@ namespace CSharpToJavaTranslator
             this.просмотрСправкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.clearInputCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.cSharpCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
-            this.javaCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
-            this.clearConsoleCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.saveCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.openCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.translateCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.consoleCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -84,98 +84,6 @@ namespace CSharpToJavaTranslator
             this.mainSplitContainer.TabIndex = 0;
             this.mainSplitContainer.TabStop = false;
             // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.cSharpCustomRichTextBox, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.javaCustomRichTextBox, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 46);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 301);
-            this.tableLayoutPanel1.TabIndex = 8;
-            // 
-            // mainMenuStrip
-            // 
-            this.mainMenuStrip.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.mainMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.файлToolStripMenuItem,
-            this.справкаToolStripMenuItem});
-            this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
-            this.mainMenuStrip.Name = "mainMenuStrip";
-            this.mainMenuStrip.Size = new System.Drawing.Size(852, 28);
-            this.mainMenuStrip.TabIndex = 1;
-            this.mainMenuStrip.Text = "menuStrip1";
-            // 
-            // файлToolStripMenuItem
-            // 
-            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openMenuItem,
-            this.saveMenuItem,
-            this.sep1MenuItem,
-            this.exitMenuItem});
-            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
-            this.файлToolStripMenuItem.Text = "Файл";
-            // 
-            // openMenuItem
-            // 
-            this.openMenuItem.Name = "openMenuItem";
-            this.openMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.openMenuItem.Text = "Открыть...";
-            this.openMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
-            // 
-            // saveMenuItem
-            // 
-            this.saveMenuItem.Name = "saveMenuItem";
-            this.saveMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.saveMenuItem.Text = "Сохранить...";
-            this.saveMenuItem.Click += new System.EventHandler(this.saveMenuItem_Click);
-            // 
-            // sep1MenuItem
-            // 
-            this.sep1MenuItem.Name = "sep1MenuItem";
-            this.sep1MenuItem.Size = new System.Drawing.Size(221, 6);
-            // 
-            // exitMenuItem
-            // 
-            this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.exitMenuItem.Text = "Выход";
-            this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
-            // 
-            // справкаToolStripMenuItem
-            // 
-            this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.просмотрСправкиToolStripMenuItem});
-            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
-            this.справкаToolStripMenuItem.Text = "Справка";
-            // 
-            // просмотрСправкиToolStripMenuItem
-            // 
-            this.просмотрСправкиToolStripMenuItem.Name = "просмотрСправкиToolStripMenuItem";
-            this.просмотрСправкиToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.просмотрСправкиToolStripMenuItem.Text = "Просмотр справки";
-            // 
-            // openFileDialog
-            // 
-            this.openFileDialog.Filter = "Файлы C#|*.cs|Текстовые файлы|*.txt";
-            this.openFileDialog.Title = "Выберите файл для загрузки кода";
-            // 
-            // saveFileDialog
-            // 
-            this.saveFileDialog.Filter = "Файлы Java|*.java|Текстовые файлы|*.txt";
-            this.saveFileDialog.Title = "Выберите файл для сохранения кода";
-            // 
             // clearInputCustomButton
             // 
             this.clearInputCustomButton.BackColor = System.Drawing.Color.White;
@@ -198,10 +106,28 @@ namespace CSharpToJavaTranslator
             this.clearInputCustomButton.TabIndex = 9;
             this.clearInputCustomButton.Text = "Очистить ввод";
             this.clearInputCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
-            this.clearInputCustomButton.TextColorFocused = System.Drawing.Color.Black;
+            this.clearInputCustomButton.TextColorFocused = System.Drawing.Color.White;
             this.clearInputCustomButton.TextColorUnfocused = System.Drawing.Color.Black;
             this.clearInputCustomButton.UseVisualStyleBackColor = false;
             this.clearInputCustomButton.Click += new System.EventHandler(this.clearInputCustomButton_Click);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.cSharpCustomRichTextBox, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.javaCustomRichTextBox, 1, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 46);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 301);
+            this.tableLayoutPanel1.TabIndex = 8;
             // 
             // cSharpCustomRichTextBox
             // 
@@ -259,7 +185,7 @@ namespace CSharpToJavaTranslator
             this.clearConsoleCustomButton.TabIndex = 6;
             this.clearConsoleCustomButton.Text = "Очистить консоль";
             this.clearConsoleCustomButton.TextColorDisabled = System.Drawing.Color.Gray;
-            this.clearConsoleCustomButton.TextColorFocused = System.Drawing.Color.Black;
+            this.clearConsoleCustomButton.TextColorFocused = System.Drawing.Color.White;
             this.clearConsoleCustomButton.TextColorUnfocused = System.Drawing.Color.Black;
             this.clearConsoleCustomButton.UseVisualStyleBackColor = false;
             this.clearConsoleCustomButton.Click += new System.EventHandler(this.clearConsoleCustomButton_Click);
@@ -361,6 +287,80 @@ namespace CSharpToJavaTranslator
             this.consoleCustomRichTextBox.Size = new System.Drawing.Size(852, 76);
             this.consoleCustomRichTextBox.TabIndex = 8;
             this.consoleCustomRichTextBox.TabStop = false;
+            // 
+            // mainMenuStrip
+            // 
+            this.mainMenuStrip.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.mainMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.файлToolStripMenuItem,
+            this.справкаToolStripMenuItem});
+            this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.mainMenuStrip.Name = "mainMenuStrip";
+            this.mainMenuStrip.Size = new System.Drawing.Size(852, 28);
+            this.mainMenuStrip.TabIndex = 1;
+            this.mainMenuStrip.Text = "menuStrip1";
+            // 
+            // файлToolStripMenuItem
+            // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openMenuItem,
+            this.saveMenuItem,
+            this.sep1MenuItem,
+            this.exitMenuItem});
+            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
+            this.файлToolStripMenuItem.Text = "Файл";
+            // 
+            // openMenuItem
+            // 
+            this.openMenuItem.Name = "openMenuItem";
+            this.openMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.openMenuItem.Text = "Открыть...";
+            this.openMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
+            // 
+            // saveMenuItem
+            // 
+            this.saveMenuItem.Name = "saveMenuItem";
+            this.saveMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.saveMenuItem.Text = "Сохранить...";
+            this.saveMenuItem.Click += new System.EventHandler(this.saveMenuItem_Click);
+            // 
+            // sep1MenuItem
+            // 
+            this.sep1MenuItem.Name = "sep1MenuItem";
+            this.sep1MenuItem.Size = new System.Drawing.Size(172, 6);
+            // 
+            // exitMenuItem
+            // 
+            this.exitMenuItem.Name = "exitMenuItem";
+            this.exitMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.exitMenuItem.Text = "Выход";
+            this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
+            // 
+            // справкаToolStripMenuItem
+            // 
+            this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.просмотрСправкиToolStripMenuItem});
+            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
+            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+            this.справкаToolStripMenuItem.Text = "Справка";
+            // 
+            // просмотрСправкиToolStripMenuItem
+            // 
+            this.просмотрСправкиToolStripMenuItem.Name = "просмотрСправкиToolStripMenuItem";
+            this.просмотрСправкиToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.просмотрСправкиToolStripMenuItem.Text = "Просмотр справки";
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "Файлы C#|*.cs|Текстовые файлы|*.txt";
+            this.openFileDialog.Title = "Выберите файл для загрузки кода";
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.Filter = "Файлы Java|*.java|Текстовые файлы|*.txt";
+            this.saveFileDialog.Title = "Выберите файл для сохранения кода";
             // 
             // mainForm
             // 

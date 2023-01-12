@@ -29,7 +29,7 @@ namespace CSharpToJavaTranslator
                         state = Constants.State.EXPECTING_IDENTIFIER;
                         position++;
                     }
-                    else if(tokens[position].type == Constants.TokenType.NAMESPACE)
+                    else if (tokens[position].type == Constants.TokenType.NAMESPACE)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"namespace\", ожидается имя пространства имён...");
                         syntaxTree.appendAndGoToChild(Constants.TreeNodeType.NAMESPACE);
@@ -40,7 +40,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[2]{"using", "namespace"}, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { "using", "namespace" }, tokens[position]);
                         position++;
                     }
                 }
@@ -55,7 +55,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя пространства имён" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя пространства имён" }, tokens[position]);
                         position++;
                     }
                 }
@@ -65,10 +65,10 @@ namespace CSharpToJavaTranslator
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружена \".\", ожидается имя пространства имён...");
                         syntaxTree.appendToken(tokens[position]);
-                        state = Constants.State.EXPECTING_IDENTIFIER;  
+                        state = Constants.State.EXPECTING_IDENTIFIER;
                         position++;
                     }
-                    else if(tokens[position].type == Constants.TokenType.SEMICOLON)
+                    else if (tokens[position].type == Constants.TokenType.SEMICOLON)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружена \";\", ожидается \"using\" или \"namespace\"...");
                         syntaxTree.goToParent();
@@ -77,13 +77,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, tokens[position]);
                         position++;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция подключения пространств имён.");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция подключения пространств имён.", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя пространства имён" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя пространства имён" }, tokens[position]);
                         position++;
                     }
                 }
@@ -125,7 +125,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, tokens[position]);
                         position++;
                     }
                 }
@@ -136,7 +136,7 @@ namespace CSharpToJavaTranslator
                         tokens[position].type == Constants.TokenType.PRIVATE ||
                         tokens[position].type == Constants.TokenType.INTERNAL)
                     {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"" + tokens[position].value 
+                        Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"" + tokens[position].value
                                           + "\", ожидаются \"static\" или \"class\"...");
                         syntaxTree.appendAndGoToChild(Constants.TreeNodeType.MEMBER);
                         syntaxTree.appendToken(tokens[position]);
@@ -170,8 +170,8 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[7] { "public", "protected", "private", "internal", "static", "class", "}" }, 
-                                                     ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[7] { "public", "protected", "private", "internal", "static", "class", "}" },
+                                                     tokens[position]);
                         position++;
                     }
                 }
@@ -195,7 +195,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[2] { "static", "class" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { "static", "class" }, tokens[position]);
                         position++;
                     }
                 }
@@ -212,13 +212,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "class" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "class" }, tokens[position]);
                         position++;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция пространства имён \"" + currentNamespaceName + "\".");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция пространства имён \"" + currentNamespaceName + "\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -245,8 +245,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : ожидалось имя класса, встречено \"" + tokens[position].value + "\". Строка: "
-                                          + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя класса" }, tokens[position]);
                         position++;
                     }
                 }
@@ -260,8 +259,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : ожидалась \"{\", встречено \"" + tokens[position].value + "\". Строка: "
-                                          + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, tokens[position]);
                         position++;
                     }
                 }
@@ -296,7 +294,7 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseConstant(ref tokens);
+                        parseDeclaration(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                     }
                     else if (tokens[position].type == Constants.TokenType.CLASS)
@@ -350,11 +348,9 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : ожидались \"public\", \"protected\"," +
-                                          " \"private\", \"internal\", \"static\", \"const\", " +
-                                          "\"class\", \"struct\", \"enum\", идетификатор или \"}\"," +
-                                          "встречено \"" + tokens[position].value + "\". Строка: "
-                                          + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                        translationResultBus.registerUnexpectedTokenError(new string[11] { "public", "protected", "private",
+                                                                          "internal", "static", "const", "class",
+                                                                          "struct", "enum", "идентификатор", "}" }, tokens[position]);
                         position++;
                     }
                 }
@@ -374,7 +370,7 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseConstant(ref tokens);
+                        parseDeclaration(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                         syntaxTree.goToParent();
                     }
@@ -414,10 +410,8 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : ожидались \"static\", \"const\", " +
-                                          "\"class\", \"struct\", \"enum\" или идентификатор," +
-                                          " встречено \"" + tokens[position].value + "\". Строка: "
-                                          + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                        translationResultBus.registerUnexpectedTokenError(new string[6] { "static", "const", "class",
+                                                                          "struct", "enum", "идентификатор" }, tokens[position]);
                         position++;
                     }
                 }
@@ -462,14 +456,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : ожидался тип данных, встречено \"" + tokens[position].value + "\". Строка: "
-                                          + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "тип данных" }, tokens[position]);
                         position++;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция класса/структуры \"" + currentClassOrStructName + "\".");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция класса/структуры \"" + currentClassOrStructName + "\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -496,7 +489,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя перечисления" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя перечисления" }, tokens[position]);
                         return;
                     }
                 }
@@ -510,7 +503,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, tokens[position]);
                         return;
                     }
                 }
@@ -533,7 +526,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[2] { "имя константы", "}" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { "имя константы", "}" }, tokens[position]);
                         return;
                     }
                 }
@@ -576,7 +569,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[3] { "=", ",", "}" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[3] { "=", ",", "}" }, tokens[position]);
                         return;
                     }
                 }
@@ -592,7 +585,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя константы" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя константы" }, tokens[position]);
                         return;
                     }
                 }
@@ -614,100 +607,18 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[2] { ",", "}" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { ",", "}" }, tokens[position]);
                         return;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция перечисления \"" + currentEnumName + "\".");
-        }
-
-        /// <summary>
-        /// Этот метод выполняет парсинг константных полей
-        /// классов и структур.
-        /// </summary>
-        /// <param name="tokens">Указатель на массив токенов, 
-        /// полученных из лексического анализатора.</param>
-        private void parseConstant(ref Token[] tokens)
-        {
-            while (position < tokens.Length)
-            {
-                if (state == Constants.State.EXPECTING_DATA_TYPE)
-                {
-                    if (tokens[position].type == Constants.TokenType.IDENTIFIER)
-                    {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружен тип данных \"" + tokens[position].value + "\", ожидается имя константы...");
-                        syntaxTree.appendToken(tokens[position]);
-                        state = Constants.State.EXPECTING_IDENTIFIER;
-                        position++;
-                    }
-                    else
-                    {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "тип данных" }, ref tokens[position]);
-                        return;
-                    }
-                }
-                else if (state == Constants.State.EXPECTING_IDENTIFIER)
-                {
-                    if (tokens[position].type == Constants.TokenType.IDENTIFIER)
-                    {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружено имя константы \"" + tokens[position].value + "\", ожидается \"=\"...");
-                        syntaxTree.appendToken(tokens[position]);
-                        state = Constants.State.EXPECTING_ASSIGNMENT;
-                        position++;
-                    }
-                    else if (tokens[position].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
-                    {
-                        Console.WriteLine("[SYNTAX][ERROR] : массив не может быть константой. Строка: " + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
-                        position++;
-                    }
-                    else
-                    {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя константы" }, ref tokens[position]);
-                        return;
-                    }
-                }
-                else if (state == Constants.State.EXPECTING_ASSIGNMENT)
-                {
-                    if (tokens[position].type == Constants.TokenType.ASSIGNMENT)
-                    {
-                        //Переход к парсингу выражения.
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружено \"=\", переход к парсингу выражения...");
-                        position++;
-                        parseExpression(ref tokens);
-                        state = Constants.State.EXPECTING_SEMICOLON;
-                    }
-                    else
-                    {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "=" }, ref tokens[position]); 
-                        return;
-                    }
-                }
-                else if (state == Constants.State.EXPECTING_SEMICOLON)
-                {
-                    if (tokens[position].type == Constants.TokenType.SEMICOLON)
-                    {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружена \";\", парсинг константы завершён.");
-                        position++;
-                        syntaxTree.goToParent();
-                        return;
-                    }
-                    else
-                    {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, ref tokens[position]);
-                        return;
-                    }
-                }
-            }
-
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция константного поля.");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция перечисления \"" + currentEnumName + "\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
         /// Этот метод выполняет парсинг членов классов/структур, не являющихся
-        /// константами. Метод не объединён с parseConstant 
-        /// для упрощения структуры кода.
+        /// константами.
         /// </summary>
         /// <param name="tokens">Указатель на массив токенов, 
         /// полученных из лексического анализатора.</param>
@@ -726,7 +637,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя члена" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя члена" }, tokens[position]);
                         return;
                     }
                 }
@@ -740,7 +651,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, tokens[position]);
                         return;
                     }
                 }
@@ -772,13 +683,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[3] { ";", "(", "=" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[3] { ";", "(", "=" }, tokens[position]);
                         return;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция члена класса/структуры.");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция члена класса/структуры.", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -810,7 +721,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "тип данных" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "тип данных" }, tokens[position]);
                         return;
                     }
                 }
@@ -825,7 +736,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя параметра" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя параметра" }, tokens[position]);
                         return;
                     }
                 }
@@ -847,7 +758,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[2] { "имя параметра", "[" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { "имя параметра", "[" }, tokens[position]);
                         return;
                     }
                 }
@@ -875,7 +786,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[3] { ",", "=", ")" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[3] { ",", "=", ")" }, tokens[position]);
                         return;
                     }
                 }
@@ -890,7 +801,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "]" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "]" }, tokens[position]);
                         return;
                     }
                 }
@@ -912,13 +823,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[2] { ",", ")" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { ",", ")" }, tokens[position]);
                         return;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция параметров метода.");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция параметров метода.", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -948,7 +859,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, tokens[position]);
                         position++;
                     }
                     multiline = true;
@@ -978,7 +889,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, tokens[position]);
                         position++;
                     }
                 }
@@ -1190,13 +1101,13 @@ namespace CSharpToJavaTranslator
                                                                       "break", "continue", "switch", 
                                                                       "case", "break", "continue", 
                                                                       "++", "--", "return"}, 
-                                                     ref tokens[position]);
+                                                     tokens[position]);
                         position++;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция.");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция.", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -1221,7 +1132,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "тип данных" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "тип данных" }, tokens[position]);
                         position++;
                     }
                 }
@@ -1260,7 +1171,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[3] { "[", ".", "имя типа данных" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[3] { "[", ".", "имя типа данных" }, tokens[position]);
                         return;
                     }
                 }
@@ -1275,7 +1186,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, tokens[position]);
                         position++;
                     }
                 }
@@ -1291,7 +1202,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя переменной" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "имя переменной" }, tokens[position]);
                         position++;
                     }
                 }
@@ -1320,7 +1231,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, tokens[position]);
                         position++;
                     }
                 }
@@ -1340,13 +1251,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { " TODO " }, tokens[position]);
                         position++;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция объявления.");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция объявления.", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -1373,7 +1284,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
                         return;
                     }
                 }
@@ -1401,13 +1312,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
                         return;
                     }
                 }
             }
-            
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция оператора \"if\".");
+
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция оператора \"if\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -1434,7 +1345,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
                         return;
                     }
                 }
@@ -1462,7 +1373,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "," }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "," }, tokens[position]);
                         return;
                     }
                 }
@@ -1488,13 +1399,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
                         return;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция цикла \"for\".");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция оператора \"for\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -1519,7 +1430,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
                         return;
                     }
                 }
@@ -1534,7 +1445,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "in" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "in" }, tokens[position]);
                         return;
                     }
                 }
@@ -1550,13 +1461,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
                         return;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция цикла \"foreach\".");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция оператора \"foreach\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -1581,7 +1492,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
                         return;
                     }
                 }
@@ -1599,13 +1510,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
                         return;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция цикла \"while\".");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция оператора \"while\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -1629,7 +1540,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
                         return;
                     }
                 }
@@ -1643,7 +1554,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "while" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "while" }, tokens[position]);
                         return;
                     }
                 }
@@ -1658,7 +1569,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
                         return;
                     }
                 }
@@ -1673,13 +1584,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
                         return;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция цикла \"do-while\".");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция оператора \"do-while\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -1703,7 +1614,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
                         return;
                     }
                 }
@@ -1720,13 +1631,13 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, ref tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
                         return;
                     }
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённая конструкция оператора \"switch\".");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция оператора \"switch\".", tokens[tokens.Length - 1]);
         }
 
         /// <summary>
@@ -2285,13 +2196,6 @@ namespace CSharpToJavaTranslator
             return true;
         }
 
-        /// <summary>
-        /// Этот метод запоминает запоминает ошибки, возникающие
-        /// при обнаружении токена, тип которого не соответствует
-        /// ожидаемому.
-        /// </summary>
-        
-
         //Этот метод используется только для дебага.
         private void printSourceCode(ref Token[] tokens)
         {
@@ -2382,9 +2286,10 @@ namespace CSharpToJavaTranslator
 
             //После парсинга всего входного потока лескем он должен быть пустым.
             //Всё, что осталось за пределами главного пространства имён - ошибка.
-            if(position < tokens.Length)
+            while (position < tokens.Length)
             {
-                Console.WriteLine("[SYNTAX][ERROR] : остались лексемы за пределами пространства имён.");
+                translationResultBus.registerError("[SYNTAX][ERROR] : лексема за пределами пространства имён.", tokens[position]);
+                position++;
             }
 
             Console.WriteLine("==============================");

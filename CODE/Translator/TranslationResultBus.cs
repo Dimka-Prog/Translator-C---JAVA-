@@ -18,7 +18,7 @@ namespace CSharpToJavaTranslator
             this.warnings = null;
         }
 
-        public void registerUnexpectedTokenError(string[] expectedValues, ref Token token)
+        public void registerUnexpectedTokenError(string[] expectedValues, Token token)
         {
             string message = "[SYNTAX][ERROR] : ожидалось ";
 
@@ -27,12 +27,18 @@ namespace CSharpToJavaTranslator
                 message += "\"" + s + "\", ";
             }
 
-            message += "встречено: \"" + token.value + "\". Строка: " + token.numberLine +
-                       ", столбец: " + token.numberColumn + ".\n";
+            message += "встречено: \"" + token.value + "\".";
 
+            registerError(message, token);
+        }
+
+        public void registerError(string message, Token token)
+        {
+            message += " Строка: " + token.numberLine +
+                       ", столбец: " + token.numberColumn + ".\n";
             console.appendText(message, Color.Red);
 
-            if(errors == null)
+            if (errors == null)
             {
                 errors = new List<Token>();
             }

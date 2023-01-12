@@ -655,7 +655,7 @@ namespace CSharpToJavaTranslator
             }
             else if (s == "extern")
             {
-                console.appendText("[LEX][ERROR] : межфайловые объекты и функции не поддерживаются данной грамматикой. Строка: "
+                console.appendText("[LEX][ERROR] : межфайловые объекты и методы не поддерживаются данной грамматикой. Строка: "
                                   + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
             }
             else if (s == "out" || s == "ref")
@@ -665,7 +665,7 @@ namespace CSharpToJavaTranslator
             }
             else if (s == "params")
             {
-                console.appendText("[LEX][ERROR] : вариационные функции не поддерживаются данной грамматикой. Строка: "
+                console.appendText("[LEX][ERROR] : вариационные методы не поддерживаются данной грамматикой. Строка: "
                                   + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
             }
             else if (s == "as" || s == "is" || s == "checked" || 
@@ -687,7 +687,7 @@ namespace CSharpToJavaTranslator
             else if (s == "nuint" || s == "nint" || s == "uint")
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
-                translatorOutputBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" будет заменена на \"int\".", 
+                translatorOutputBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" будет заменена на \"int\".",
                                                     tokens.Last());
             }
             else if (s == "ulong")

@@ -17,6 +17,7 @@ namespace CSharpToJavaTranslator
         {
             InitializeComponent();
             this.hasUnsavedChanges = false;
+            this.highlighted = false;
 
             this.cSharpCustomRichTextBox.getInnerTextBox().TextChanged += new EventHandler(ehCSharpCustomTextBox_TextChanged);
             this.consoleCustomRichTextBox.getInnerTextBox().TextChanged += new EventHandler(ehConsoleCustomTextBox_TextChanged);
@@ -29,9 +30,15 @@ namespace CSharpToJavaTranslator
         }
 
         private bool hasUnsavedChanges;
-
+        private bool highlighted;
         private void ehCSharpCustomTextBox_TextChanged(object sender, EventArgs e)
         {
+            if(highlighted)
+            {
+                this.cSharpCustomRichTextBox.removeHighlight();
+                this.highlighted = false;
+            }
+
             if (this.cSharpCustomRichTextBox.getInnerTextBox().Text.Length == 0 ||
                 this.cSharpCustomRichTextBox.isInPlaceholderMode())
             {
@@ -117,6 +124,8 @@ namespace CSharpToJavaTranslator
 
             translationResultBus.summarizeTranslation();
             translationResultBus.highlight(this.cSharpCustomRichTextBox);
+            this.highlighted = true;
+
         }
 
         private void saveCustomButton_Click(object sender, EventArgs e)

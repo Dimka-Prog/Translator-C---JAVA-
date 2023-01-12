@@ -159,6 +159,14 @@ namespace CSharpToJavaTranslator
             this.innerRichTextBox.SelectionLength = 0;
         }
 
+        public void removeHighlight()
+        {
+            this.innerRichTextBox.SelectionStart = 0;
+            this.innerRichTextBox.SelectionLength = this.innerRichTextBox.Text.Length;
+            this.innerRichTextBox.SelectionBackColor = Color.FromArgb(0, 255, 255, 255);
+            this.innerRichTextBox.SelectionLength = 0;
+        }
+
         public void appendText(string line, Color color)
         {
             if(this.isPlaceholder)
