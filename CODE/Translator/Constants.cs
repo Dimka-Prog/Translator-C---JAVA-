@@ -56,64 +56,64 @@
             TRUE,
             FALSE,
 
-            DOT,
-            COMMA,
-            COLON,
-            SEMICOLON,
-            QUESTION_MARK,
-            OPENING_CURLY_BRACKET,
-            CLOSING_CURLY_BRACKET,
-            OPENING_BRACKET,
-            CLOSING_BRACKET,
-            OPENING_SQUARE_BRACKET,
-            CLOSING_SQUARE_BRACKET,
-            SLASH,
-            QUOTATION_MARK,
-            DOUBLE_QUOTATION_MARK,
+            DOT, // .
+            COMMA, // ,
+            COLON, // :
+            SEMICOLON, // ;
+            QUESTION_MARK, // ?
+            OPENING_CURLY_BRACKET, // {
+            CLOSING_CURLY_BRACKET, // }
+            OPENING_BRACKET, // (
+            CLOSING_BRACKET, // )
+            OPENING_SQUARE_BRACKET, // [
+            CLOSING_SQUARE_BRACKET, // ]
+            SLASH, // /
+            QUOTATION_MARK, // '
+            DOUBLE_QUOTATION_MARK, // "
 
-            PLUS,
-            MINUS,
-            MULTIPLICATION,
-            DIVISION,
-            MODULO,
-            UNARY_MINUS,
-            INCREMENT,
-            DECREMENT,
+            PLUS, // +
+            MINUS, // -
+            MULTIPLICATION, // *
+            DIVISION, // /
+            MODULO, // %
+            UNARY_MINUS, // -
+            INCREMENT, // ++
+            DECREMENT, // --
 
-            NOT,
-            AND,
-            OR,
-            EQUAL,
-            NOT_EQUAL,
-            GREATER,
-            LESS,
-            GREATER_OR_EQUAL,
-            LESS_OR_EQUAL,
+            NOT, // !
+            AND, // &&
+            OR, // ||
+            EQUAL, // ==
+            NOT_EQUAL, // !=
+            GREATER, // >
+            LESS, // <
+            GREATER_OR_EQUAL, // >=
+            LESS_OR_EQUAL, // <=
 
-            BIT_TILDA,
-            BIT_EXCLUSIVE_OR,
-            BIT_AND,
-            BIT_OR,
-            BIT_ARITHMETIC_SHIFT_TO_RIGHT,
-            BIT_ARITHMETIC_SHIFT_TO_LEFT,
-            BIT_SHIFT_TO_RIGHT,
+            BIT_TILDA, // ~
+            BIT_EXCLUSIVE_OR, // ^
+            BIT_AND, // &
+            BIT_OR, // |
+            BIT_ARITHMETIC_SHIFT_TO_RIGHT, // <<
+            BIT_ARITHMETIC_SHIFT_TO_LEFT, // >>
+            BIT_SHIFT_TO_RIGHT, // >>>
 
-            ASSIGNMENT,
-            PLUS_ASSIGNMENT,
-            MINUS_ASSIGNMENT,
-            MULTIPLICATION_ASSIGNMENT,
-            DIVISION_ASSIGNMENT,
-            MODULO_ASSIGNMENT,
-            AND_ASSIGNMENT,
-            EXCLUSIVE_OR_ASSIGNMENT,
-            OR_ASSIGNMENT,
-            ARITHMETIC_SHIFT_TO_RIGHT_ASSIGNMENT,
-            ARITHMETIC_SHIFT_TO_LEFT_ASSIGNMENT,
-            SHIFT_TO_RIGHT_ASSIGNMENT,
+            ASSIGNMENT, // =
+            PLUS_ASSIGNMENT, // +=
+            MINUS_ASSIGNMENT, // -=
+            MULTIPLICATION_ASSIGNMENT, // *=
+            DIVISION_ASSIGNMENT, // /=
+            MODULO_ASSIGNMENT, // %=
+            AND_ASSIGNMENT, // &=
+            EXCLUSIVE_OR_ASSIGNMENT, // ^=
+            OR_ASSIGNMENT, // |=
+            ARITHMETIC_SHIFT_TO_RIGHT_ASSIGNMENT, // >>=
+            ARITHMETIC_SHIFT_TO_LEFT_ASSIGNMENT, // <<=
+            SHIFT_TO_RIGHT_ASSIGNMENT, // >>>=
 
             UTILITY_TERNARY_CLOSED_IF,
-            UTILITY_FUNCTION,
-            UTILITY_ARRAY_ELEMENT_ACCESS,
+            UTILITY_FUNCTION, // имя функции
+            UTILITY_ARRAY_ELEMENT_ACCESS, // []
             UNKNOWN
         }
         
