@@ -656,7 +656,7 @@ namespace CSharpToJavaTranslator
                             state = Constants.State.EXPECTING_OPENING_BRACKET;
                             position++;
                         }
-                        if (tokens[position].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
+                        else if (tokens[position].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                         {
                             Console.WriteLine("[SYNTAX][INFO] : обнаружена \"[\", ожидается \"]\"...");
                             syntaxTree.appendToken(tokens[position]);
