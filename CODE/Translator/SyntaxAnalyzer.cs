@@ -323,7 +323,6 @@ namespace CSharpToJavaTranslator
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"enum\", переход к парсингу перечисления...");
                         syntaxTree.appendAndGoToChild(Constants.TreeNodeType.MEMBER);
                         syntaxTree.appendToken(new Token(Constants.TokenType.PRIVATE, "private"));
-                        syntaxTree.appendToken(tokens[position]);
                         position++;
                         parseEnum(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
@@ -392,7 +391,6 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.ENUM)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено ключевое слово \"enum\", переход к парсингу перечисления...");
-                        syntaxTree.appendToken(tokens[position]);
                         position++;
                         parseEnum(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
@@ -464,6 +462,8 @@ namespace CSharpToJavaTranslator
             string currentEnumName = "";
             state = Constants.State.EXPECTING_NAME_OF_SELF;
 
+            syntaxTree.appendAndGoToChild(Constants.TreeNodeType.ENUM);
+
             while (position < tokens.Length)
             {
                 if (state == Constants.State.EXPECTING_NAME_OF_SELF)
@@ -511,6 +511,7 @@ namespace CSharpToJavaTranslator
                         Console.WriteLine("[SYNTAX][INFO] : обнаружена \"}\", парсинг перечисления \"" + currentEnumName + "\" завершён.");
                         position++;
                         syntaxTree.goToParent();
+                        syntaxTree.goToParent();
                         return;
                     }
                     else
@@ -536,6 +537,7 @@ namespace CSharpToJavaTranslator
                         {
                             position++;
                             syntaxTree.goToParent();
+                            syntaxTree.goToParent();
                             return;
                         }
 
@@ -554,6 +556,7 @@ namespace CSharpToJavaTranslator
                         Console.WriteLine("[SYNTAX][INFO] : обнаружена \"}\", парсинг перечисления \"" + currentEnumName + "\" завершён.");
                         position++;
                         syntaxTree.goToParent();
+                        syntaxTree.goToParent();
                         return;
                     }
                     else
@@ -567,7 +570,7 @@ namespace CSharpToJavaTranslator
                     if (tokens[position].type == Constants.TokenType.IDENTIFIER)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено имя константы \"" + tokens[position].value + "\", ожидается \"=\", \",\" или \"}\"...");
-                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.MEMBER);
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.FIELD);
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_COMMA_OR_ASSIGNMENT_OR_CLOSING_CURLY_BRACKET;
                         position++;
@@ -591,6 +594,7 @@ namespace CSharpToJavaTranslator
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружена \"}\", парсинг перечисления \"" + currentEnumName + "\" завершён.");
                         position++;
+                        syntaxTree.goToParent();
                         syntaxTree.goToParent();
                         return;
                     }
