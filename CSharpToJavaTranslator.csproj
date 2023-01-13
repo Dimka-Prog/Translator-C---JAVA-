@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -6,8 +6,9 @@
     <OutputType>WinExe</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>WindowsApplication</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -19,6 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace>CSharpToJavaTranslator</RootNamespace>
@@ -40,6 +43,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
@@ -49,6 +53,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -97,6 +102,7 @@
     <None Include=".vs\ProjectSettings.json" />
     <None Include=".vs\slnx.sqlite" />
     <None Include=".vs\VSWorkspaceState.json" />
+    <None Include="app.config" />
     <None Include="CODE\README.md" />
     <None Include="DOCS\CODING\README.md" />
     <None Include="DOCS\CODING\Указания по оформлению кода.docx" />
@@ -135,6 +141,7 @@
     <Compile Include="CODE\Program.cs" />
     <Compile Include="CODE\Translator\Constants.cs" />
     <Compile Include="CODE\Translator\LexicalAnalyzer.cs" />
+    <Compile Include="CODE\Translator\SemanticAnalyzer.cs" />
     <Compile Include="CODE\Translator\SyntaxAnalyzer.cs" />
     <Compile Include="CODE\Translator\SyntaxTree.cs" />
     <Compile Include="CODE\Translator\Token.cs" />
