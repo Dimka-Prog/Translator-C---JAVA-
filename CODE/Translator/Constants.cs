@@ -94,8 +94,8 @@
             BIT_EXCLUSIVE_OR, // ^
             BIT_AND, // &
             BIT_OR, // |
-            BIT_ARITHMETIC_SHIFT_TO_RIGHT, // <<
-            BIT_ARITHMETIC_SHIFT_TO_LEFT, // >>
+            BIT_ARITHMETIC_SHIFT_TO_RIGHT, // >>
+            BIT_ARITHMETIC_SHIFT_TO_LEFT, // <<
             BIT_SHIFT_TO_RIGHT, // >>>
 
             ASSIGNMENT, // =
