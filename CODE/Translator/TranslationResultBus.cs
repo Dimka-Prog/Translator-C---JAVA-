@@ -67,12 +67,13 @@ namespace CSharpToJavaTranslator
             console.appendText("[INFO] : ошибок: " + errorsCount + ", предупреждений: " + warningsCount + ".\n", Color.Black);
             if(errorsCount > 0)
             {
-                console.appendText("[INFO] : трансляция завершилась с ошибками.\n", Color.Black);
+                console.appendText("[INFO] : " + System.DateTime.Now + " - трансляция завершилась с ошибками.\n", Color.Black);
             }
             else
             {
-                console.appendText("[INFO] : трансляция завершилась успешно.\n", Color.Black);
+                console.appendText("[INFO] : " + System.DateTime.Now + " - трансляция завершилась успешно.\n", Color.Black);
             }
+            console.appendText("=======================================================\n", Color.Black);
         }
 
         public void highlight(CustomRichTextBox input)

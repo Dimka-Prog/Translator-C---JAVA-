@@ -480,7 +480,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "имя перечисления" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_OPENING_CURLY_BRACKET)
@@ -494,7 +494,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_ENUM_CONTENT_OR_CLOSING_CURLY_BRACKET)
@@ -518,7 +518,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { "имя константы", "}" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_ASSIGNMENT_OR_CLOSING_CURLY_BRACKET)
@@ -563,7 +563,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[3] { "=", ",", "}" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_IDENTIFIER)
@@ -579,7 +579,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "имя константы" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_CLOSING_CURLY_BRACKET)
@@ -602,7 +602,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { ",", "}" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -638,8 +638,20 @@ namespace CSharpToJavaTranslator
             {
                 parseFieldOrDeclaration(ref tokens, true);
                 syntaxTree.goToParent();
-                //TODO ожидается ;
-                position++;
+
+                while (position < tokens.Length)
+                {
+                    if(tokens[position].type == Constants.TokenType.SEMICOLON)
+                    {
+                        position++;
+                        break;
+                    }
+                    else
+                    {
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "," }, tokens[position]);
+                    }
+                    position++;
+                }
                 return;
             }
             else
@@ -671,7 +683,7 @@ namespace CSharpToJavaTranslator
                         else
                         {
                             translationResultBus.registerUnexpectedTokenError(new string[2] { "]", "имя метода" }, tokens[position]);
-                            return;
+                            position++;
                         }
                     }
                     else if (state == Constants.State.EXPECTING_CLOSING_SQUARE_BRACKET)
@@ -686,7 +698,7 @@ namespace CSharpToJavaTranslator
                         else
                         {
                             translationResultBus.registerUnexpectedTokenError(new string[1] { "]" }, tokens[position]);
-                            return;
+                            position++;
                         }
                     }
                     if (state == Constants.State.EXPECTING_IDENTIFIER)
@@ -701,7 +713,7 @@ namespace CSharpToJavaTranslator
                         else
                         {
                             translationResultBus.registerUnexpectedTokenError(new string[1] { "имя метода" }, tokens[position]);
-                            return;
+                            position++;
                         }
                     }
                     else if (state == Constants.State.EXPECTING_OPENING_BRACKET)
@@ -721,7 +733,7 @@ namespace CSharpToJavaTranslator
                         else
                         {
                             translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                            return;
+                            position++;
                         }
                     }
                 }
@@ -766,7 +778,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "тип данных" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_IDENTIFIER)
@@ -781,7 +793,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "имя параметра" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_OPENING_SQUARE_BRACKET_OR_IDENTIFIER)
@@ -803,7 +815,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { "имя параметра", "[" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_ASSIGNMENT_OR_CLOSING_BRACKET)
@@ -834,7 +846,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[3] { ",", "=", ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_SQUARE_BRACKET)
@@ -849,7 +861,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "]" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_CLOSING_BRACKET)
@@ -874,7 +886,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { ",", ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1195,7 +1207,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[3] { "[", ".", "имя типа данных" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_SQUARE_BRACKET)
@@ -1307,7 +1319,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1335,7 +1347,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1382,7 +1394,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_SEMICOLON)
@@ -1399,7 +1411,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_SEMICOLON)
@@ -1427,7 +1439,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { ",", ";" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET_OR_COMMA)
@@ -1453,7 +1465,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1484,7 +1496,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_IN)
@@ -1500,7 +1512,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "in" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1517,7 +1529,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1548,7 +1560,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1566,7 +1578,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1596,7 +1608,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if( state == Constants.State.EXPECTING_WHILE)
@@ -1610,7 +1622,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "while" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_OPENING_BRACKET)
@@ -1625,7 +1637,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1640,7 +1652,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1670,7 +1682,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1687,7 +1699,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1738,13 +1750,11 @@ namespace CSharpToJavaTranslator
                     {
                         if(stack.First().type == Constants.TokenType.OPENING_BRACKET)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\".");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\".", stack.First());
                         }
                         else if (stack.First().type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"]\".");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"]\".", stack.First());
                         }
                         else
                         {
@@ -1755,6 +1765,12 @@ namespace CSharpToJavaTranslator
                             Console.Write(" " + stack.First().value);
                         }
                         stack.Pop();
+                    }
+
+                    if(tokens[position - 1].type >= Constants.TokenType.ASSIGNMENT &&
+                       tokens[position - 1].type <= Constants.TokenType.SHIFT_TO_RIGHT_ASSIGNMENT)
+                    {
+                        translationResultBus.registerError("[SYNTAX][ERROR] : ожидалось выражение.", tokens[position]);
                     }
 
                     Console.WriteLine();
@@ -1784,7 +1800,7 @@ namespace CSharpToJavaTranslator
                         if(stack.Count() == 0)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\" или \",\", разделяющая аргументы функции.");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\" или \",\", разделяющая аргументы функции.", tokens[position]);
                         }
 
                         position++;
@@ -1909,7 +1925,12 @@ namespace CSharpToJavaTranslator
                         if (stack.First().type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"]\".");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"]\".", stack.First());
+                        }
+                        if (stack.First().type == Constants.TokenType.OPENING_BRACKET)
+                        {
+                            Console.WriteLine();
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\".", stack.First());
                         }
 
                         syntaxTree.goToChild(0);
@@ -1957,7 +1978,7 @@ namespace CSharpToJavaTranslator
                         if (stack.First().type == Constants.TokenType.OPENING_BRACKET)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\".");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\".", stack.First());
                         }
 
                         syntaxTree.goToChild(0);
@@ -1980,7 +2001,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         Console.WriteLine();
-                        Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"[\".");
+                        translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"[\".", stack.First());
                     }
 
                     position++;
@@ -2010,7 +2031,7 @@ namespace CSharpToJavaTranslator
                             if (stack.First().type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                             {
                                 Console.WriteLine();
-                                Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"]\".");
+                                translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"]\".", stack.First());
                             }
 
                             syntaxTree.goToChild(0);
@@ -2058,7 +2079,7 @@ namespace CSharpToJavaTranslator
                 {
                     if(functionDepth > 0)
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\" в конце перечисления аргументов метода.");
+                        translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\" в конце перечисления аргументов метода.", tokens[position]);
                     }
 
                     while(stack.Count != 0)
@@ -2079,8 +2100,6 @@ namespace CSharpToJavaTranslator
                 {
                     syntaxTree.appendToken(tokens[position]);
                    
-                    //После одинарной кавычки обязательно должна следовать
-                    //лексема символа и ещё одна кавычка, иначе это синтаксическая ошибка.
                     if(position < tokens.Length - 2)
                     {
                         if (tokens[position + 1].type == Constants.TokenType.CHAR &&
@@ -2135,13 +2154,12 @@ namespace CSharpToJavaTranslator
                 }
                 else
                 {
-                    Console.WriteLine("[SYNTAX][ERROR] : лексема \"" + tokens[position].value + "\" не может находиться в выражении. Строка: "
-                                      + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                    translationResultBus.registerUnexpectedTokenError(new string[2] { "арифметические или логические операторы", "new" }, tokens[position]);
                     position++;
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённое выражение.");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённое выражение.", tokens[position - 1]);
         }
 
         /// <summary>

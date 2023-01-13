@@ -111,6 +111,8 @@ namespace CSharpToJavaTranslator
 
         private void translateCustomButton_Click(object sender, EventArgs e)
         {
+            this.consoleCustomRichTextBox.appendText("[INFO] : " + System.DateTime.Now + "- трансляция начата.\n", Color.Black);
+
             TranslationResultBus translationResultBus = 
                 new TranslationResultBus(this.consoleCustomRichTextBox);
 
