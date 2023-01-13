@@ -334,7 +334,12 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(new Token(Constants.TokenType.PRIVATE, "private"));
                         parseFieldOrMethod(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
-                        syntaxTree.goToParent();
+                        //Костыль.
+                        if (syntaxTree.getCurrentNodeType() != Constants.TreeNodeType.CLASS &&
+                            syntaxTree.getCurrentNodeType() != Constants.TreeNodeType.STRUCT)
+                        {
+                            syntaxTree.goToParent();
+                        }
                     }
                     else if (tokens[position].type == Constants.TokenType.CLOSING_CURLY_BRACKET)
                     {

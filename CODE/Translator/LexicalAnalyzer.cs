@@ -604,33 +604,33 @@ namespace CSharpToJavaTranslator
             else if (s == "abstract" || s == "base" || s == "interface" || 
                      s == "override" || s == "sealed" || s == "virtual")
             {
-                console.appendText("[LEX][ERROR] : наследование не поддерживается данной грамматикой. Строка: " 
-                                  + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                translatorOutputBus.registerError("[LEX][ERROR] : наследование не поддерживается данной грамматикой.",
+                                                  new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "try" || s == "throw" || s == "catch" || s == "finally")
             {
-                console.appendText("[LEX][ERROR] : исключения не поддерживаются данной грамматикой. Строка: "
-                                  + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                translatorOutputBus.registerError("[LEX][ERROR] : исключения не поддерживаются данной грамматикой.",
+                                                  new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "operator")
             {
-                console.appendText("[LEX][ERROR] : перегрузка операторов не поддерживается данной грамматикой. Строка: "
-                                  + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                translatorOutputBus.registerError("[LEX][ERROR] : перегрузка операторов не поддерживается данной грамматикой.",
+                                                  new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "extern")
             {
-                console.appendText("[LEX][ERROR] : межфайловые объекты и методы не поддерживаются данной грамматикой. Строка: "
-                                  + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                translatorOutputBus.registerError("[LEX][ERROR] : межфайловые объекты и методы не поддерживаются данной грамматикой.",
+                                                  new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "out" || s == "ref")
             {
-                console.appendText("[LEX][ERROR] : ссылки не поддерживаются данной грамматикой. Строка: "
-                                  + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                translatorOutputBus.registerError("[LEX][ERROR] : ссылки не поддерживаются данной грамматикой.",
+                                                  new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "params")
             {
-                console.appendText("[LEX][ERROR] : вариационные методы не поддерживаются данной грамматикой. Строка: "
-                                  + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                translatorOutputBus.registerError("[LEX][ERROR] : вариационные методы не поддерживаются данной грамматикой.",
+                                                  new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "as" || s == "is" || s == "checked" || 
                      s == "delegate" || s == "event" || s == "explicit" || s == "fixed" ||
@@ -638,8 +638,8 @@ namespace CSharpToJavaTranslator
                      s == "sizeof" || s == "stackalloc" || s == "typeof" || s == "unchecked" ||
                      s == "unsafe" || s == "volatile")
             {
-                console.appendText("[LEX][ERROR] : ключевое слово \"" + s + "\" не поддерживается данной грамматикой. Строка: "
-                                  + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                translatorOutputBus.registerError("[LEX][ERROR] : ключевое слово \"" + s + "\" не поддерживается данной грамматикой.", 
+                                                  new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (this.contextKeywords.Contains(s))
             {
