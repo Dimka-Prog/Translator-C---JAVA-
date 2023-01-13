@@ -82,56 +82,61 @@ namespace CSharpToJavaTranslator
 
         public SyntaxTree()
         {
-            this.root = new SyntaxTreeNode(Constants.TreeNodeType.PROGRAM_BEGINNING);
-            this.root.parentNode = null;
-            this.root.childNodes = null;
-            this.root.tokens = null;
+            root = new SyntaxTreeNode(Constants.TreeNodeType.PROGRAM_BEGINNING);
+            root.parentNode = null;
+            root.childNodes = null;
+            root.tokens = null;
 
-            this.ptr = this.root;
+            ptr = root;
         }
 
         public void goToParent()
         {
-            if (this.ptr.parentNode == null)
+            if (ptr.parentNode == null)
             {
                 return;
             }
-            this.ptr = this.ptr.parentNode;
+            ptr = ptr.parentNode;
         }
 
         public void goToChild(int number)
         {
-            if (this.ptr.childNodes == null) return;
-            if (number > this.ptr.childNodes.Count - 1) return;
+            if (ptr.childNodes == null) return;
+            if (number > ptr.childNodes.Count - 1) return;
 
-            this.ptr = this.ptr.childNodes[number];
+            ptr = ptr.childNodes[number];
         }
 
         public void appendAndGoToChild(Constants.TreeNodeType type)
         {
             SyntaxTreeNode node = new SyntaxTreeNode(type);
 
-            if (this.ptr.childNodes == null)
+            if (ptr.childNodes == null)
             {
-                this.ptr.childNodes = new List<SyntaxTreeNode>();
+                ptr.childNodes = new List<SyntaxTreeNode>();
             }
-            this.ptr.childNodes.Add(node);
-            node.parentNode = this.ptr;
-            this.ptr = node;
+            ptr.childNodes.Add(node);
+            node.parentNode = ptr;
+            ptr = node;
+        }
+
+        public Constants.TreeNodeType getCurrentNodeType()
+        {
+            return ptr.type;
         }
 
         public void appendToken(Token token)
         {
-            if (this.ptr.tokens == null)
+            if (ptr.tokens == null)
             {
-                this.ptr.tokens = new List<Token>();
+                ptr.tokens = new List<Token>();
             }
-            this.ptr.tokens.Add(token);
+            ptr.tokens.Add(token);
         }
 
         public void print()
         {
-            this.root.print(0);
+            root.print(0);
         }
     }
 }

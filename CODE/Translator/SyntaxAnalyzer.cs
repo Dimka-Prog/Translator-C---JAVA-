@@ -294,7 +294,7 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseFieldOrDeclaration(ref tokens, false);
+                        parseFieldOrDeclaration(ref tokens, false);position++;
                         syntaxTree.goToParent();
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                     }
@@ -368,7 +368,7 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseFieldOrDeclaration(ref tokens, false);
+                        parseFieldOrDeclaration(ref tokens, false); position++;
                         syntaxTree.goToParent();
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                         syntaxTree.goToParent();
@@ -953,46 +953,16 @@ namespace CSharpToJavaTranslator
                     }
                     else if (tokens[position].type == Constants.TokenType.IDENTIFIER)
                     {
-                        //Строки, начинающиеся с идентификатора, могут быть
-                        //объявлением, присваиванием или вызовом метода.
-                        //По первому токену отличить эти 3 конструкции
-                        //невозможно.
-
-                        bool declarationFlag = false;
-
-                        int tempPosition = position;
-                        while(tempPosition < tokens.Length &&
-                              tokens[tempPosition].type != Constants.TokenType.SEMICOLON)
-                        {
-                            if(tokens[tempPosition].type == Constants.TokenType.IDENTIFIER)
-                            {
-                                if(tokens[tempPosition - 1].type == Constants.TokenType.IDENTIFIER ||
-                                   tokens[tempPosition - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET &&
-                                   tokens[tempPosition - 2].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
-                                {
-                                    //Два идентификатора подряд - это признак объявления.
-                                    //Также в объявлении возможна ситуация
-                                    //вида <идентификатор>[] <идентификатор>.
-                                    declarationFlag = true;
-                                    break;
-                                }
-                            }
-
-                            tempPosition++;
-                        }
-
-                        //Если ";" находится в самом конце потока, это
-                        //ошибка. Поток всегда должен заканчиваться на "}".
-                        if(tempPosition == tokens.Length - 1)
-                        {
-                            position++;break;
-                        }
-                        if (declarationFlag)
+                        if (isDeclarationAhead(ref tokens))
                         {
                             Console.WriteLine("[SYNTAX][INFO] : переход к парсингу объявления...");
                             parseFieldOrDeclaration(ref tokens, false);
-                            syntaxTree.goToParent();
-                            state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
+                            //Костыль.
+                            if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.DECLARATION)
+                            {
+                                syntaxTree.goToParent();
+                            } 
+                            state = Constants.State.EXPECTING_SEMICOLON;
                             Console.WriteLine("[SYNTAX][INFO] : парсинг объявления завершён.");
                         }
                         else
@@ -1297,7 +1267,7 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.SEMICOLON)
                     {
                         syntaxTree.goToParent();
-                        position++;
+                        //position++;
                         Console.WriteLine("[SYNTAX][INFO] : парсинг объявления завершён.");
                         return;
                     }
@@ -1380,7 +1350,6 @@ namespace CSharpToJavaTranslator
         private void parseFor(ref Token[] tokens)
         {
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.FOR);
-            syntaxTree.appendAndGoToChild(Constants.TreeNodeType.PARAMETER);
             state = Constants.State.EXPECTING_OPENING_BRACKET;
             int semicolonCount = 0;
             
@@ -1390,14 +1359,46 @@ namespace CSharpToJavaTranslator
                 {
                     if (tokens[position].type == Constants.TokenType.OPENING_BRACKET)
                     {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружена \"(\", переход к парсингу выражения...");
+                        Console.WriteLine("[SYNTAX][INFO] : обнаружена \"(\"...");
+                        position++;
+
+                        if(isDeclarationAhead(ref tokens))
+                        {
+                            parseFieldOrDeclaration(ref tokens, false);
+                            state = Constants.State.EXPECTING_SEMICOLON;
+                            //Костыль.
+                            if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.DECLARATION)
+                            {
+                                syntaxTree.goToParent();
+                            }
+                        }
+                        else
+                        {
+                            syntaxTree.appendAndGoToChild(Constants.TreeNodeType.PARAMETER);
+                            parseExpression(ref tokens);
+                            state = Constants.State.EXPECTING_COMMA_OR_SEMICOLON;
+                        }
+                    }
+                    else
+                    {
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
+                        return;
+                    }
+                }
+                else if (state == Constants.State.EXPECTING_SEMICOLON)
+                {
+                    if (tokens[position].type == Constants.TokenType.SEMICOLON)
+                    {
+                        semicolonCount++;
+                        Console.WriteLine("[SYNTAX][INFO] : обнаружена \";\".");
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.PARAMETER);
                         position++;
                         parseExpression(ref tokens);
                         state = Constants.State.EXPECTING_COMMA_OR_SEMICOLON;
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, tokens[position]);
                         return;
                     }
                 }
@@ -1425,7 +1426,7 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "," }, tokens[position]);
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { ",", ";" }, tokens[position]);
                         return;
                     }
                 }
@@ -2248,6 +2249,31 @@ namespace CSharpToJavaTranslator
             }
 
             return true;
+        }
+
+        private bool isDeclarationAhead(ref Token[] tokens)
+        {
+            int tempPosition = position;
+            while (tempPosition < tokens.Length &&
+                  tokens[tempPosition].type != Constants.TokenType.SEMICOLON)
+            {
+                if (tokens[tempPosition].type == Constants.TokenType.IDENTIFIER)
+                {
+                    if (tokens[tempPosition - 1].type == Constants.TokenType.IDENTIFIER ||
+                       tokens[tempPosition - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET &&
+                       tokens[tempPosition - 2].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
+                    {
+                        //Два идентификатора подряд - это признак объявления.
+                        //Также в объявлении возможна ситуация
+                        //вида <идентификатор>[] <идентификатор>.
+                        return true;
+                    }
+                }
+
+                tempPosition++;
+            }
+
+            return false;
         }
 
         //Этот метод используется только для дебага.
