@@ -294,7 +294,7 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseFieldOrDeclaration(ref tokens, false);
+                        parseFieldOrDeclaration(ref tokens, false);position++;
                         syntaxTree.goToParent();
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                     }
@@ -334,7 +334,12 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(new Token(Constants.TokenType.PRIVATE, "private"));
                         parseFieldOrMethod(ref tokens);
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
-                        syntaxTree.goToParent();
+                        //Костыль.
+                        if (syntaxTree.getCurrentNodeType() != Constants.TreeNodeType.CLASS &&
+                            syntaxTree.getCurrentNodeType() != Constants.TreeNodeType.STRUCT)
+                        {
+                            syntaxTree.goToParent();
+                        }
                     }
                     else if (tokens[position].type == Constants.TokenType.CLOSING_CURLY_BRACKET)
                     {
@@ -368,7 +373,7 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseFieldOrDeclaration(ref tokens, false);
+                        parseFieldOrDeclaration(ref tokens, false); position++;
                         syntaxTree.goToParent();
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                         syntaxTree.goToParent();
@@ -480,7 +485,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "имя перечисления" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_OPENING_CURLY_BRACKET)
@@ -494,7 +499,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "{" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_ENUM_CONTENT_OR_CLOSING_CURLY_BRACKET)
@@ -518,7 +523,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { "имя константы", "}" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_ASSIGNMENT_OR_CLOSING_CURLY_BRACKET)
@@ -563,7 +568,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[3] { "=", ",", "}" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_IDENTIFIER)
@@ -579,7 +584,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "имя константы" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_CLOSING_CURLY_BRACKET)
@@ -602,7 +607,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { ",", "}" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -638,8 +643,20 @@ namespace CSharpToJavaTranslator
             {
                 parseFieldOrDeclaration(ref tokens, true);
                 syntaxTree.goToParent();
-                //TODO ожидается ;
-                position++;
+
+                while (position < tokens.Length)
+                {
+                    if(tokens[position].type == Constants.TokenType.SEMICOLON)
+                    {
+                        position++;
+                        break;
+                    }
+                    else
+                    {
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "," }, tokens[position]);
+                    }
+                    position++;
+                }
                 return;
             }
             else
@@ -671,7 +688,7 @@ namespace CSharpToJavaTranslator
                         else
                         {
                             translationResultBus.registerUnexpectedTokenError(new string[2] { "]", "имя метода" }, tokens[position]);
-                            return;
+                            position++;
                         }
                     }
                     else if (state == Constants.State.EXPECTING_CLOSING_SQUARE_BRACKET)
@@ -686,7 +703,7 @@ namespace CSharpToJavaTranslator
                         else
                         {
                             translationResultBus.registerUnexpectedTokenError(new string[1] { "]" }, tokens[position]);
-                            return;
+                            position++;
                         }
                     }
                     if (state == Constants.State.EXPECTING_IDENTIFIER)
@@ -701,7 +718,7 @@ namespace CSharpToJavaTranslator
                         else
                         {
                             translationResultBus.registerUnexpectedTokenError(new string[1] { "имя метода" }, tokens[position]);
-                            return;
+                            position++;
                         }
                     }
                     else if (state == Constants.State.EXPECTING_OPENING_BRACKET)
@@ -721,7 +738,7 @@ namespace CSharpToJavaTranslator
                         else
                         {
                             translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                            return;
+                            position++;
                         }
                     }
                 }
@@ -766,7 +783,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "тип данных" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_IDENTIFIER)
@@ -781,7 +798,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "имя параметра" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_OPENING_SQUARE_BRACKET_OR_IDENTIFIER)
@@ -803,7 +820,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { "имя параметра", "[" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_ASSIGNMENT_OR_CLOSING_BRACKET)
@@ -834,7 +851,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[3] { ",", "=", ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_SQUARE_BRACKET)
@@ -849,7 +866,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "]" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_CLOSING_BRACKET)
@@ -874,7 +891,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[2] { ",", ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -953,46 +970,16 @@ namespace CSharpToJavaTranslator
                     }
                     else if (tokens[position].type == Constants.TokenType.IDENTIFIER)
                     {
-                        //Строки, начинающиеся с идентификатора, могут быть
-                        //объявлением, присваиванием или вызовом метода.
-                        //По первому токену отличить эти 3 конструкции
-                        //невозможно.
-
-                        bool declarationFlag = false;
-
-                        int tempPosition = position;
-                        while(tempPosition < tokens.Length &&
-                              tokens[tempPosition].type != Constants.TokenType.SEMICOLON)
-                        {
-                            if(tokens[tempPosition].type == Constants.TokenType.IDENTIFIER)
-                            {
-                                if(tokens[tempPosition - 1].type == Constants.TokenType.IDENTIFIER ||
-                                   tokens[tempPosition - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET &&
-                                   tokens[tempPosition - 2].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
-                                {
-                                    //Два идентификатора подряд - это признак объявления.
-                                    //Также в объявлении возможна ситуация
-                                    //вида <идентификатор>[] <идентификатор>.
-                                    declarationFlag = true;
-                                    break;
-                                }
-                            }
-
-                            tempPosition++;
-                        }
-
-                        //Если ";" находится в самом конце потока, это
-                        //ошибка. Поток всегда должен заканчиваться на "}".
-                        if(tempPosition == tokens.Length - 1)
-                        {
-                            position++;break;
-                        }
-                        if (declarationFlag)
+                        if (isDeclarationAhead(ref tokens))
                         {
                             Console.WriteLine("[SYNTAX][INFO] : переход к парсингу объявления...");
                             parseFieldOrDeclaration(ref tokens, false);
-                            syntaxTree.goToParent();
-                            state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
+                            //Костыль.
+                            if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.DECLARATION)
+                            {
+                                syntaxTree.goToParent();
+                            } 
+                            state = Constants.State.EXPECTING_SEMICOLON;
                             Console.WriteLine("[SYNTAX][INFO] : парсинг объявления завершён.");
                         }
                         else
@@ -1225,7 +1212,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[3] { "[", ".", "имя типа данных" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_SQUARE_BRACKET)
@@ -1297,7 +1284,7 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.SEMICOLON)
                     {
                         syntaxTree.goToParent();
-                        position++;
+                        //position++;
                         Console.WriteLine("[SYNTAX][INFO] : парсинг объявления завершён.");
                         return;
                     }
@@ -1337,7 +1324,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1365,7 +1352,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1380,7 +1367,6 @@ namespace CSharpToJavaTranslator
         private void parseFor(ref Token[] tokens)
         {
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.FOR);
-            syntaxTree.appendAndGoToChild(Constants.TreeNodeType.PARAMETER);
             state = Constants.State.EXPECTING_OPENING_BRACKET;
             int semicolonCount = 0;
             
@@ -1390,15 +1376,47 @@ namespace CSharpToJavaTranslator
                 {
                     if (tokens[position].type == Constants.TokenType.OPENING_BRACKET)
                     {
-                        Console.WriteLine("[SYNTAX][INFO] : обнаружена \"(\", переход к парсингу выражения...");
+                        Console.WriteLine("[SYNTAX][INFO] : обнаружена \"(\"...");
+                        position++;
+
+                        if(isDeclarationAhead(ref tokens))
+                        {
+                            parseFieldOrDeclaration(ref tokens, false);
+                            state = Constants.State.EXPECTING_SEMICOLON;
+                            //Костыль.
+                            if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.DECLARATION)
+                            {
+                                syntaxTree.goToParent();
+                            }
+                        }
+                        else
+                        {
+                            syntaxTree.appendAndGoToChild(Constants.TreeNodeType.PARAMETER);
+                            parseExpression(ref tokens);
+                            state = Constants.State.EXPECTING_COMMA_OR_SEMICOLON;
+                        }
+                    }
+                    else
+                    {
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
+                        position++;
+                    }
+                }
+                else if (state == Constants.State.EXPECTING_SEMICOLON)
+                {
+                    if (tokens[position].type == Constants.TokenType.SEMICOLON)
+                    {
+                        semicolonCount++;
+                        Console.WriteLine("[SYNTAX][INFO] : обнаружена \";\".");
+                        syntaxTree.appendAndGoToChild(Constants.TreeNodeType.PARAMETER);
                         position++;
                         parseExpression(ref tokens);
                         state = Constants.State.EXPECTING_COMMA_OR_SEMICOLON;
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        translationResultBus.registerUnexpectedTokenError(new string[1] { ";" }, tokens[position]);
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_COMMA_OR_SEMICOLON)
@@ -1425,8 +1443,8 @@ namespace CSharpToJavaTranslator
                     }
                     else
                     {
-                        translationResultBus.registerUnexpectedTokenError(new string[1] { "," }, tokens[position]);
-                        return;
+                        translationResultBus.registerUnexpectedTokenError(new string[2] { ",", ";" }, tokens[position]);
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET_OR_COMMA)
@@ -1452,7 +1470,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1483,7 +1501,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_IN)
@@ -1499,7 +1517,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "in" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1516,7 +1534,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1547,7 +1565,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1565,7 +1583,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1595,7 +1613,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if( state == Constants.State.EXPECTING_WHILE)
@@ -1609,7 +1627,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "while" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_OPENING_BRACKET)
@@ -1624,7 +1642,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1639,7 +1657,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1669,7 +1687,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { "(" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
                 else if (state == Constants.State.EXPECTING_CLOSING_BRACKET)
@@ -1686,7 +1704,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         translationResultBus.registerUnexpectedTokenError(new string[1] { ")" }, tokens[position]);
-                        return;
+                        position++;
                     }
                 }
             }
@@ -1721,7 +1739,7 @@ namespace CSharpToJavaTranslator
             //глубина не равна 0, то эта запятая является
             //разделителем аргументов в вызове функции.
             int functionDepth = 0;
-
+            
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.EXPRESSION);
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.EXPRESSION_RPN);
             syntaxTree.goToParent();
@@ -1737,13 +1755,11 @@ namespace CSharpToJavaTranslator
                     {
                         if(stack.First().type == Constants.TokenType.OPENING_BRACKET)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\".");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\".", stack.First());
                         }
                         else if (stack.First().type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"]\".");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"]\".", stack.First());
                         }
                         else
                         {
@@ -1759,6 +1775,7 @@ namespace CSharpToJavaTranslator
                     Console.WriteLine();
                     Console.WriteLine("[SYNTAX][INFO] : парсинг выражения завершён.");
                     syntaxTree.goToParent();
+                    
                     return;
                 }
                 else if (tokens[position].type == Constants.TokenType.COMMA)
@@ -1783,7 +1800,7 @@ namespace CSharpToJavaTranslator
                         if(stack.Count() == 0)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\" или \",\", разделяющая аргументы функции.");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\" или \",\", разделяющая аргументы функции.", tokens[position]);
                         }
 
                         position++;
@@ -1825,6 +1842,8 @@ namespace CSharpToJavaTranslator
                     syntaxTree.goToChild(0);
                     syntaxTree.appendToken(tokens[position]);
                     syntaxTree.goToParent();
+                    state = Constants.State.EXPECTING_OPERATOR;
+
                     position++;
                 }
                 else if (tokens[position].type == Constants.TokenType.IDENTIFIER)
@@ -1908,7 +1927,12 @@ namespace CSharpToJavaTranslator
                         if (stack.First().type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"]\".");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"]\".", stack.First());
+                        }
+                        if (stack.First().type == Constants.TokenType.OPENING_BRACKET)
+                        {
+                            Console.WriteLine();
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\".", stack.First());
                         }
 
                         syntaxTree.goToChild(0);
@@ -1933,9 +1957,9 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         Console.WriteLine();
-                        //Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущен знак \"?\" тернарного оператора.");
                         Console.WriteLine("[SYNTAX][INFO] : парсинг выражения завершён.");
                         syntaxTree.goToParent();
+
                         return;
                     }
                     position++;
@@ -1956,7 +1980,7 @@ namespace CSharpToJavaTranslator
                         if (stack.First().type == Constants.TokenType.OPENING_BRACKET)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\".");
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\".", stack.First());
                         }
 
                         syntaxTree.goToChild(0);
@@ -1979,7 +2003,7 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         Console.WriteLine();
-                        Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"[\".");
+                        translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"[\".", stack.First());
                     }
 
                     position++;
@@ -2009,7 +2033,7 @@ namespace CSharpToJavaTranslator
                             if (stack.First().type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                             {
                                 Console.WriteLine();
-                                Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"]\".");
+                                translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"]\".", stack.First());
                             }
 
                             syntaxTree.goToChild(0);
@@ -2057,7 +2081,7 @@ namespace CSharpToJavaTranslator
                 {
                     if(functionDepth > 0)
                     {
-                        Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\" в конце перечисления аргументов метода.");
+                        translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\" в конце перечисления аргументов метода.", tokens[position]);
                     }
 
                     while(stack.Count != 0)
@@ -2078,8 +2102,6 @@ namespace CSharpToJavaTranslator
                 {
                     syntaxTree.appendToken(tokens[position]);
                    
-                    //После одинарной кавычки обязательно должна следовать
-                    //лексема символа и ещё одна кавычка, иначе это синтаксическая ошибка.
                     if(position < tokens.Length - 2)
                     {
                         if (tokens[position + 1].type == Constants.TokenType.CHAR &&
@@ -2134,13 +2156,12 @@ namespace CSharpToJavaTranslator
                 }
                 else
                 {
-                    Console.WriteLine("[SYNTAX][ERROR] : лексема \"" + tokens[position].value + "\" не может находиться в выражении. Строка: "
-                                      + tokens[position].numberLine + ", столбец: " + tokens[position].numberColumn + ".");
+                    translationResultBus.registerUnexpectedTokenError(new string[2] { "арифметические или логические операторы", "new" }, tokens[position]);
                     position++;
                 }
             }
 
-            Console.WriteLine("[SYNTAX][ERROR] : незавершённое выражение.");
+            translationResultBus.registerError("[SYNTAX][ERROR] : незавершённое выражение.", tokens[position - 1]);
         }
 
         /// <summary>
@@ -2250,6 +2271,31 @@ namespace CSharpToJavaTranslator
             return true;
         }
 
+        private bool isDeclarationAhead(ref Token[] tokens)
+        {
+            int tempPosition = position;
+            while (tempPosition < tokens.Length &&
+                  tokens[tempPosition].type != Constants.TokenType.SEMICOLON)
+            {
+                if (tokens[tempPosition].type == Constants.TokenType.IDENTIFIER)
+                {
+                    if (tokens[tempPosition - 1].type == Constants.TokenType.IDENTIFIER ||
+                       tokens[tempPosition - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET &&
+                       tokens[tempPosition - 2].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
+                    {
+                        //Два идентификатора подряд - это признак объявления.
+                        //Также в объявлении возможна ситуация
+                        //вида <идентификатор>[] <идентификатор>.
+                        return true;
+                    }
+                }
+
+                tempPosition++;
+            }
+
+            return false;
+        }
+
         //Этот метод используется только для дебага.
         private void printSourceCode(ref Token[] tokens)
         {
@@ -2323,10 +2369,8 @@ namespace CSharpToJavaTranslator
             }
         }
 
-        public SyntaxAnalyzer(CustomRichTextBox console, 
-                              TranslationResultBus translationResultBus)
+        public SyntaxAnalyzer(TranslationResultBus translationResultBus)
         {
-            this.console = console;
             this.translationResultBus = translationResultBus;
         }
 
@@ -2355,7 +2399,6 @@ namespace CSharpToJavaTranslator
         private int position;
         private Constants.State state;
         private SyntaxTree syntaxTree;
-        private CustomRichTextBox console;
         private TranslationResultBus translationResultBus;
     }
 }

@@ -30,15 +30,7 @@ namespace CSharpToJavaTranslator
         private void InitializeComponent()
         {
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.clearInputCustomButton = new CSharpToJavaTranslator.CustomButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.cSharpCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
-            this.javaCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
-            this.clearConsoleCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.saveCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.openCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.translateCustomButton = new CSharpToJavaTranslator.CustomButton();
-            this.consoleCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +41,16 @@ namespace CSharpToJavaTranslator
             this.просмотрСправкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.clearInputCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.cSharpCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
+            this.javaCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
+            this.clearConsoleCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.saveCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.openCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.translateCustomButton = new CSharpToJavaTranslator.CustomButton();
+            this.consoleCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
+            this.cSharpLineColumnNumbersText = new System.Windows.Forms.Label();
+            this.javaLineColumnNumbersText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -61,7 +63,7 @@ namespace CSharpToJavaTranslator
             // 
             this.mainSplitContainer.BackColor = System.Drawing.Color.Gray;
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainSplitContainer.Location = new System.Drawing.Point(0, 28);
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 30);
             this.mainSplitContainer.Name = "mainSplitContainer";
             this.mainSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -79,10 +81,104 @@ namespace CSharpToJavaTranslator
             // 
             this.mainSplitContainer.Panel2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.mainSplitContainer.Panel2.Controls.Add(this.consoleCustomRichTextBox);
-            this.mainSplitContainer.Size = new System.Drawing.Size(852, 475);
-            this.mainSplitContainer.SplitterDistance = 395;
+            this.mainSplitContainer.Size = new System.Drawing.Size(852, 473);
+            this.mainSplitContainer.SplitterDistance = 393;
             this.mainSplitContainer.TabIndex = 0;
             this.mainSplitContainer.TabStop = false;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.javaLineColumnNumbersText, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.cSharpCustomRichTextBox, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.javaCustomRichTextBox, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.cSharpLineColumnNumbersText, 0, 1);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 46);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 299);
+            this.tableLayoutPanel1.TabIndex = 8;
+            // 
+            // mainMenuStrip
+            // 
+            this.mainMenuStrip.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.mainMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.файлToolStripMenuItem,
+            this.справкаToolStripMenuItem});
+            this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.mainMenuStrip.Name = "mainMenuStrip";
+            this.mainMenuStrip.Size = new System.Drawing.Size(852, 30);
+            this.mainMenuStrip.TabIndex = 1;
+            this.mainMenuStrip.Text = "menuStrip1";
+            // 
+            // файлToolStripMenuItem
+            // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openMenuItem,
+            this.saveMenuItem,
+            this.sep1MenuItem,
+            this.exitMenuItem});
+            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
+            this.файлToolStripMenuItem.Text = "Файл";
+            // 
+            // openMenuItem
+            // 
+            this.openMenuItem.Name = "openMenuItem";
+            this.openMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.openMenuItem.Text = "Открыть...";
+            this.openMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
+            // 
+            // saveMenuItem
+            // 
+            this.saveMenuItem.Name = "saveMenuItem";
+            this.saveMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.saveMenuItem.Text = "Сохранить...";
+            this.saveMenuItem.Click += new System.EventHandler(this.saveMenuItem_Click);
+            // 
+            // sep1MenuItem
+            // 
+            this.sep1MenuItem.Name = "sep1MenuItem";
+            this.sep1MenuItem.Size = new System.Drawing.Size(172, 6);
+            // 
+            // exitMenuItem
+            // 
+            this.exitMenuItem.Name = "exitMenuItem";
+            this.exitMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.exitMenuItem.Text = "Выход";
+            this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
+            // 
+            // справкаToolStripMenuItem
+            // 
+            this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.просмотрСправкиToolStripMenuItem});
+            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
+            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
+            this.справкаToolStripMenuItem.Text = "Справка";
+            // 
+            // просмотрСправкиToolStripMenuItem
+            // 
+            this.просмотрСправкиToolStripMenuItem.Name = "просмотрСправкиToolStripMenuItem";
+            this.просмотрСправкиToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.просмотрСправкиToolStripMenuItem.Text = "Просмотр справки";
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "Файлы C#|*.cs|Текстовые файлы|*.txt";
+            this.openFileDialog.Title = "Выберите файл для загрузки кода";
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.Filter = "Файлы Java|*.java|Текстовые файлы|*.txt";
+            this.saveFileDialog.Title = "Выберите файл для сохранения кода";
             // 
             // clearInputCustomButton
             // 
@@ -111,24 +207,6 @@ namespace CSharpToJavaTranslator
             this.clearInputCustomButton.UseVisualStyleBackColor = false;
             this.clearInputCustomButton.Click += new System.EventHandler(this.clearInputCustomButton_Click);
             // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.cSharpCustomRichTextBox, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.javaCustomRichTextBox, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 46);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 301);
-            this.tableLayoutPanel1.TabIndex = 8;
-            // 
             // cSharpCustomRichTextBox
             // 
             this.cSharpCustomRichTextBox.BackColor = System.Drawing.SystemColors.Window;
@@ -142,7 +220,7 @@ namespace CSharpToJavaTranslator
             this.cSharpCustomRichTextBox.Name = "cSharpCustomRichTextBox";
             this.cSharpCustomRichTextBox.Padding = new System.Windows.Forms.Padding(5);
             this.cSharpCustomRichTextBox.PlaceholderText = "Введите сюда код на C#...";
-            this.cSharpCustomRichTextBox.Size = new System.Drawing.Size(420, 295);
+            this.cSharpCustomRichTextBox.Size = new System.Drawing.Size(420, 273);
             this.cSharpCustomRichTextBox.TabIndex = 2;
             // 
             // javaCustomRichTextBox
@@ -158,7 +236,7 @@ namespace CSharpToJavaTranslator
             this.javaCustomRichTextBox.Name = "javaCustomRichTextBox";
             this.javaCustomRichTextBox.Padding = new System.Windows.Forms.Padding(5);
             this.javaCustomRichTextBox.PlaceholderText = "Здесь появится код на Java...";
-            this.javaCustomRichTextBox.Size = new System.Drawing.Size(420, 295);
+            this.javaCustomRichTextBox.Size = new System.Drawing.Size(420, 273);
             this.javaCustomRichTextBox.TabIndex = 3;
             this.javaCustomRichTextBox.TabStop = false;
             // 
@@ -178,7 +256,7 @@ namespace CSharpToJavaTranslator
             this.clearConsoleCustomButton.FlatAppearance.BorderSize = 0;
             this.clearConsoleCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.clearConsoleCustomButton.ForeColor = System.Drawing.Color.Black;
-            this.clearConsoleCustomButton.Location = new System.Drawing.Point(3, 357);
+            this.clearConsoleCustomButton.Location = new System.Drawing.Point(3, 355);
             this.clearConsoleCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.clearConsoleCustomButton.Name = "clearConsoleCustomButton";
             this.clearConsoleCustomButton.Size = new System.Drawing.Size(130, 30);
@@ -288,79 +366,29 @@ namespace CSharpToJavaTranslator
             this.consoleCustomRichTextBox.TabIndex = 8;
             this.consoleCustomRichTextBox.TabStop = false;
             // 
-            // mainMenuStrip
+            // cSharpLineColumnNumbersText
             // 
-            this.mainMenuStrip.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.mainMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.файлToolStripMenuItem,
-            this.справкаToolStripMenuItem});
-            this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
-            this.mainMenuStrip.Name = "mainMenuStrip";
-            this.mainMenuStrip.Size = new System.Drawing.Size(852, 28);
-            this.mainMenuStrip.TabIndex = 1;
-            this.mainMenuStrip.Text = "menuStrip1";
+            this.cSharpLineColumnNumbersText.AutoSize = true;
+            this.cSharpLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cSharpLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cSharpLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.cSharpLineColumnNumbersText.Location = new System.Drawing.Point(3, 279);
+            this.cSharpLineColumnNumbersText.Name = "cSharpLineColumnNumbersText";
+            this.cSharpLineColumnNumbersText.Size = new System.Drawing.Size(420, 20);
+            this.cSharpLineColumnNumbersText.TabIndex = 4;
+            this.cSharpLineColumnNumbersText.Text = "Строка, столбец";
             // 
-            // файлToolStripMenuItem
+            // javaLineColumnNumbersText
             // 
-            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openMenuItem,
-            this.saveMenuItem,
-            this.sep1MenuItem,
-            this.exitMenuItem});
-            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
-            this.файлToolStripMenuItem.Text = "Файл";
-            // 
-            // openMenuItem
-            // 
-            this.openMenuItem.Name = "openMenuItem";
-            this.openMenuItem.Size = new System.Drawing.Size(175, 26);
-            this.openMenuItem.Text = "Открыть...";
-            this.openMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
-            // 
-            // saveMenuItem
-            // 
-            this.saveMenuItem.Name = "saveMenuItem";
-            this.saveMenuItem.Size = new System.Drawing.Size(175, 26);
-            this.saveMenuItem.Text = "Сохранить...";
-            this.saveMenuItem.Click += new System.EventHandler(this.saveMenuItem_Click);
-            // 
-            // sep1MenuItem
-            // 
-            this.sep1MenuItem.Name = "sep1MenuItem";
-            this.sep1MenuItem.Size = new System.Drawing.Size(172, 6);
-            // 
-            // exitMenuItem
-            // 
-            this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(175, 26);
-            this.exitMenuItem.Text = "Выход";
-            this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
-            // 
-            // справкаToolStripMenuItem
-            // 
-            this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.просмотрСправкиToolStripMenuItem});
-            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
-            this.справкаToolStripMenuItem.Text = "Справка";
-            // 
-            // просмотрСправкиToolStripMenuItem
-            // 
-            this.просмотрСправкиToolStripMenuItem.Name = "просмотрСправкиToolStripMenuItem";
-            this.просмотрСправкиToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.просмотрСправкиToolStripMenuItem.Text = "Просмотр справки";
-            // 
-            // openFileDialog
-            // 
-            this.openFileDialog.Filter = "Файлы C#|*.cs|Текстовые файлы|*.txt";
-            this.openFileDialog.Title = "Выберите файл для загрузки кода";
-            // 
-            // saveFileDialog
-            // 
-            this.saveFileDialog.Filter = "Файлы Java|*.java|Текстовые файлы|*.txt";
-            this.saveFileDialog.Title = "Выберите файл для сохранения кода";
+            this.javaLineColumnNumbersText.AutoSize = true;
+            this.javaLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.javaLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.javaLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.javaLineColumnNumbersText.Location = new System.Drawing.Point(429, 279);
+            this.javaLineColumnNumbersText.Name = "javaLineColumnNumbersText";
+            this.javaLineColumnNumbersText.Size = new System.Drawing.Size(420, 20);
+            this.javaLineColumnNumbersText.TabIndex = 5;
+            this.javaLineColumnNumbersText.Text = "Строка, столбец";
             // 
             // mainForm
             // 
@@ -378,6 +406,7 @@ namespace CSharpToJavaTranslator
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
             this.mainSplitContainer.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.mainMenuStrip.ResumeLayout(false);
             this.mainMenuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -407,6 +436,8 @@ namespace CSharpToJavaTranslator
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private CustomButton clearInputCustomButton;
+        private System.Windows.Forms.Label javaLineColumnNumbersText;
+        private System.Windows.Forms.Label cSharpLineColumnNumbersText;
     }
 }
 

@@ -22,6 +22,9 @@ namespace CSharpToJavaTranslator
             this.cSharpCustomRichTextBox.getInnerTextBox().TextChanged += new EventHandler(ehCSharpCustomTextBox_TextChanged);
             this.consoleCustomRichTextBox.getInnerTextBox().TextChanged += new EventHandler(ehConsoleCustomTextBox_TextChanged);
 
+            this.cSharpCustomRichTextBox.getInnerTextBox().SelectionChanged += new EventHandler(ehCSharpCustomRichTextBox_SelectionChanged);
+            this.javaCustomRichTextBox.getInnerTextBox().SelectionChanged += new EventHandler(ehJavaCustomRichTextBox_SelectionChanged);
+
             this.translateCustomButton.Enabled = false;
             this.clearInputCustomButton.Enabled = false;
             this.clearConsoleCustomButton.Enabled = false;
@@ -70,6 +73,30 @@ namespace CSharpToJavaTranslator
             this.clearConsoleCustomButton.Invalidate();
         }
 
+        private void ehCSharpCustomRichTextBox_SelectionChanged(object sender, EventArgs e)
+        {
+            int line = this.cSharpCustomRichTextBox.getInnerTextBox().
+                       GetLineFromCharIndex(this.cSharpCustomRichTextBox.
+                                            getInnerTextBox().
+                                            SelectionStart);
+            int column = this.cSharpCustomRichTextBox.getInnerTextBox().SelectionStart -
+                         this.cSharpCustomRichTextBox.getInnerTextBox().GetFirstCharIndexFromLine(line);
+
+            this.cSharpLineColumnNumbersText.Text = "Строка: " + (line + 1) + ", столбец: " + column;
+        }
+
+        private void ehJavaCustomRichTextBox_SelectionChanged(object sender, EventArgs e)
+        {
+            int line = this.javaCustomRichTextBox.getInnerTextBox().
+                       GetLineFromCharIndex(this.javaCustomRichTextBox.
+                                            getInnerTextBox().
+                                            SelectionStart) + 1;
+            int column = this.javaCustomRichTextBox.getInnerTextBox().SelectionStart -
+                         this.javaCustomRichTextBox.getInnerTextBox().GetFirstCharIndexFromLine(line);
+
+            this.javaLineColumnNumbersText.Text = "Строка: " + line + ", столбец: " + column;
+        }
+
         private void openCustomButton_Click(object sender, EventArgs e)
         {
             if (this.openFileDialog.ShowDialog() == DialogResult.OK)
@@ -111,6 +138,8 @@ namespace CSharpToJavaTranslator
 
         private void translateCustomButton_Click(object sender, EventArgs e)
         {
+            this.consoleCustomRichTextBox.appendText("[INFO] : " + System.DateTime.Now + "- трансляция начата.\n", Color.Black);
+
             TranslationResultBus translationResultBus = 
                 new TranslationResultBus(this.consoleCustomRichTextBox);
 
@@ -120,8 +149,7 @@ namespace CSharpToJavaTranslator
 
             if(tokenArr.Length > 0)
             {
-                SyntaxAnalyzer syntAn = new SyntaxAnalyzer(this.consoleCustomRichTextBox,
-                                                       translationResultBus);
+                SyntaxAnalyzer syntAn = new SyntaxAnalyzer(translationResultBus);
                 SyntaxTree syntTree = syntAn.parse(ref tokenArr);
 
                 SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntTree);
