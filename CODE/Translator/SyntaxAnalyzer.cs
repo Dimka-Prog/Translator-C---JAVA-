@@ -1739,7 +1739,7 @@ namespace CSharpToJavaTranslator
             //глубина не равна 0, то эта запятая является
             //разделителем аргументов в вызове функции.
             int functionDepth = 0;
-
+            
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.EXPRESSION);
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.EXPRESSION_RPN);
             syntaxTree.goToParent();
@@ -1772,15 +1772,10 @@ namespace CSharpToJavaTranslator
                         stack.Pop();
                     }
 
-                    if(tokens[position - 1].type >= Constants.TokenType.ASSIGNMENT &&
-                       tokens[position - 1].type <= Constants.TokenType.SHIFT_TO_RIGHT_ASSIGNMENT)
-                    {
-                        translationResultBus.registerError("[SYNTAX][ERROR] : ожидалось выражение.", tokens[position]);
-                    }
-
                     Console.WriteLine();
                     Console.WriteLine("[SYNTAX][INFO] : парсинг выражения завершён.");
                     syntaxTree.goToParent();
+                    
                     return;
                 }
                 else if (tokens[position].type == Constants.TokenType.COMMA)
@@ -1847,6 +1842,8 @@ namespace CSharpToJavaTranslator
                     syntaxTree.goToChild(0);
                     syntaxTree.appendToken(tokens[position]);
                     syntaxTree.goToParent();
+                    state = Constants.State.EXPECTING_OPERATOR;
+
                     position++;
                 }
                 else if (tokens[position].type == Constants.TokenType.IDENTIFIER)
@@ -1960,9 +1957,9 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         Console.WriteLine();
-                        //Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущен знак \"?\" тернарного оператора.");
                         Console.WriteLine("[SYNTAX][INFO] : парсинг выражения завершён.");
                         syntaxTree.goToParent();
+
                         return;
                     }
                     position++;

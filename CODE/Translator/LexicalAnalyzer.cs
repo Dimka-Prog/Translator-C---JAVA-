@@ -665,7 +665,7 @@ namespace CSharpToJavaTranslator
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(s))
             {
                 translatorOutputBus.registerError("[LEX][ERROR] : обнаружена неизвестная лексема \"" + s + "\", лексема удалена из выходного потока.", 
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));

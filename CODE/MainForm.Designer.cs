@@ -369,7 +369,7 @@ namespace CSharpToJavaTranslator
             // cSharpLineColumnNumbersText
             // 
             this.cSharpLineColumnNumbersText.AutoSize = true;
-            this.cSharpLineColumnNumbersText.BackColor = System.Drawing.Color.White;
+            this.cSharpLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cSharpLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cSharpLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cSharpLineColumnNumbersText.Location = new System.Drawing.Point(3, 279);
@@ -381,7 +381,7 @@ namespace CSharpToJavaTranslator
             // javaLineColumnNumbersText
             // 
             this.javaLineColumnNumbersText.AutoSize = true;
-            this.javaLineColumnNumbersText.BackColor = System.Drawing.Color.White;
+            this.javaLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.javaLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.javaLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.javaLineColumnNumbersText.Location = new System.Drawing.Point(429, 279);
