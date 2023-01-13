@@ -120,8 +120,7 @@ namespace CSharpToJavaTranslator
 
             if(tokenArr.Length > 0)
             {
-                SyntaxAnalyzer syntAn = new SyntaxAnalyzer(this.consoleCustomRichTextBox,
-                                                       translationResultBus);
+                SyntaxAnalyzer syntAn = new SyntaxAnalyzer(translationResultBus);
                 SyntaxTree syntTree = syntAn.parse(ref tokenArr);
             }
             else

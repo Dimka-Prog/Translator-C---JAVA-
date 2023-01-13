@@ -2323,10 +2323,8 @@ namespace CSharpToJavaTranslator
             }
         }
 
-        public SyntaxAnalyzer(CustomRichTextBox console, 
-                              TranslationResultBus translationResultBus)
+        public SyntaxAnalyzer(TranslationResultBus translationResultBus)
         {
-            this.console = console;
             this.translationResultBus = translationResultBus;
         }
 
@@ -2355,7 +2353,6 @@ namespace CSharpToJavaTranslator
         private int position;
         private Constants.State state;
         private SyntaxTree syntaxTree;
-        private CustomRichTextBox console;
         private TranslationResultBus translationResultBus;
     }
 }
