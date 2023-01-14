@@ -294,7 +294,7 @@ namespace CSharpToJavaTranslator
                         syntaxTree.appendToken(tokens[position]);
                         state = Constants.State.EXPECTING_DATA_TYPE;
                         position++;
-                        parseFieldOrDeclaration(ref tokens, false);position++;
+                        parseFieldOrDeclaration(ref tokens, false); position++;
                         syntaxTree.goToParent();
                         state = Constants.State.EXPECTING_CONTENT_OR_CLOSING_CURLY_BRACKET;
                     }
@@ -642,7 +642,11 @@ namespace CSharpToJavaTranslator
             if(isField)
             {
                 parseFieldOrDeclaration(ref tokens, true);
-                syntaxTree.goToParent();
+                if (syntaxTree.getCurrentNodeType() != Constants.TreeNodeType.CLASS &&
+                    syntaxTree.getCurrentNodeType() != Constants.TreeNodeType.STRUCT)
+                {
+                    syntaxTree.goToParent();
+                }
 
                 while (position < tokens.Length)
                 {
@@ -1252,7 +1256,11 @@ namespace CSharpToJavaTranslator
                     {
                         position++;
                         parseExpression(ref tokens);
-                        syntaxTree.goToParent();
+                        if(tokens[position].type == Constants.TokenType.COMMA)
+                        {
+                            syntaxTree.goToParent();
+                        }
+                        
                         state = Constants.State.EXPECTING_COMMA_OR_SEMICOLON;
                     }
                     else if (tokens[position].type == Constants.TokenType.COMMA)
@@ -1800,7 +1808,7 @@ namespace CSharpToJavaTranslator
                         if(stack.Count() == 0)
                         {
                             Console.WriteLine();
-                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\" или \",\", разделяющая аргументы функции.", tokens[position]);
+                            translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"(\" или \",\", разделяющая аргументы функции.", tokens[position]);
                         }
 
                         position++;
@@ -1834,8 +1842,7 @@ namespace CSharpToJavaTranslator
                          tokens[position].type == Constants.TokenType.REAL_NUMBER ||
                          tokens[position].type == Constants.TokenType.TRUE ||
                          tokens[position].type == Constants.TokenType.FALSE ||
-                         tokens[position].type == Constants.TokenType.NULL ||
-                         tokens[position].type == Constants.TokenType.THIS)
+                         tokens[position].type == Constants.TokenType.NULL)
                 {
                     Console.Write(" " + tokens[position].value);
                     syntaxTree.appendToken(tokens[position]);
@@ -1846,7 +1853,8 @@ namespace CSharpToJavaTranslator
 
                     position++;
                 }
-                else if (tokens[position].type == Constants.TokenType.IDENTIFIER)
+                else if (tokens[position].type == Constants.TokenType.IDENTIFIER ||
+                         tokens[position].type == Constants.TokenType.THIS)
                 {
                     syntaxTree.appendToken(tokens[position]);
 
@@ -2269,6 +2277,47 @@ namespace CSharpToJavaTranslator
             }
 
             return true;
+        }
+
+        private bool isMethodCallAhead(ref Token[] tokens)
+        {
+            int tempPosition = position + 1;
+            state = Constants.State.EXPECTING_DOT;
+
+            while (tempPosition < tokens.Length)
+            {
+                if(state == Constants.State.EXPECTING_IDENTIFIER)
+                {
+                    if (tokens[tempPosition].type == Constants.TokenType.IDENTIFIER)
+                    {
+                        state = Constants.State.EXPECTING_DOT;
+                        tempPosition++;
+                    }
+                    else
+                    {
+                        translationResultBus.registerError("[SYNTAX][ERROR] : .", tokens[tempPosition]);
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (tokens[tempPosition].type == Constants.TokenType.DOT)
+                    {
+                        state = Constants.State.EXPECTING_IDENTIFIER;
+                        tempPosition++;
+                    }
+                    else if (tokens[tempPosition].type == Constants.TokenType.OPENING_BRACKET)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private bool isDeclarationAhead(ref Token[] tokens)
