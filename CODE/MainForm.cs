@@ -152,7 +152,7 @@ namespace CSharpToJavaTranslator
                 SyntaxAnalyzer syntAn = new SyntaxAnalyzer(translationResultBus);
                 SyntaxTree syntTree = syntAn.parse(ref tokenArr);
 
-                SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntTree);
+                SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntTree, this.consoleCustomRichTextBox);
                 semanticAnalyzer.semanticAnalysis();
             }
             else
