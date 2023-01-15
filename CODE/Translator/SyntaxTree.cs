@@ -77,7 +77,7 @@ namespace CSharpToJavaTranslator
     /// </summary>
     public class SyntaxTree
     {
-        private SyntaxTreeNode root;
+        public SyntaxTreeNode root;
         private SyntaxTreeNode ptr;
 
         public SyntaxTree()

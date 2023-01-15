@@ -67,7 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="CODE\test_source.txt" />
     <Content Include="proto.png" />
   </ItemGroup>
   <ItemGroup>
