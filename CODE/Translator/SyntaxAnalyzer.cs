@@ -1820,13 +1820,17 @@ namespace CSharpToJavaTranslator
                             if (stack.First().type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                             {
                                 Console.WriteLine();
-                                Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \"]\".");
+                                translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"]\".", stack.First());
                             }
                             if (stack.First().type == Constants.TokenType.OPENING_BRACKET)
                             {
                                 Console.WriteLine();
-                                Console.WriteLine("[SYNTAX][ERROR] : в выражении пропущена \")\".");
+                                translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \")\".", stack.First());
                             }
+
+                            syntaxTree.goToChild(0);
+                            syntaxTree.appendToken(stack.First());
+                            syntaxTree.goToParent();
 
                             Console.Write(" " + stack.First().value);
                             stack.Pop();
@@ -1856,30 +1860,55 @@ namespace CSharpToJavaTranslator
                 else if (tokens[position].type == Constants.TokenType.IDENTIFIER ||
                          tokens[position].type == Constants.TokenType.THIS)
                 {
-                    syntaxTree.appendToken(tokens[position]);
+                    LinkedList<Token> tempStack = new LinkedList<Token>();
 
-                    //Если парсер не дошёл до конца потока токенов и
-                    //следующий токен - скобка, то это функция.
-                    if (position < tokens.Length - 1 &&
-                        tokens[position + 1].type == Constants.TokenType.OPENING_BRACKET)
+                    syntaxTree.appendToken(tokens[position]);
+                    tempStack.AddFirst(tokens[position]);
+                    position++;
+
+                    while (position < tokens.Length && 
+                           (tokens[position].type == Constants.TokenType.IDENTIFIER ||
+                           tokens[position].type == Constants.TokenType.DOT))
                     {
-                        //Внесение функции в стек.
-                        Token token = new Token();
-                        token.type = Constants.TokenType.UTILITY_FUNCTION;
-                        token.value = tokens[position].value;
-                        stack.Push(token);
-                        //Увеличение глубины разбора функции.
-                        functionDepth++;
+                        if(tokens[position].type == Constants.TokenType.IDENTIFIER)
+                        {
+                            tempStack.AddFirst(tokens[position]);
+                            tempStack.AddFirst(tokens[position - 1]);
+                            syntaxTree.appendToken(tokens[position]);
+                        }
+                        else if(tokens[position].type == Constants.TokenType.DOT)
+                        {
+                            syntaxTree.appendToken(tokens[position]);
+                        }
+
                         position++;
-                        continue;
                     }
 
-                    syntaxTree.goToChild(0);
-                    syntaxTree.appendToken(tokens[position]);
-                    syntaxTree.goToParent();
-                    //Не функции автоматически попадают на выход.
-                    Console.Write(" " + tokens[position].value);
-                    position++;
+                    //Встречена открывающая скобка,
+                    //при этом образуется цепочка вида
+                    //<идентификатор>.<идентификатор>...<идентификатор>(
+                    if (position < tokens.Length &&
+                       tokens[position].type == Constants.TokenType.OPENING_BRACKET)
+                    {
+                        while (tempStack.Count > 0)
+                        {
+                            stack.Push(tempStack.First());
+                            tempStack.RemoveFirst();
+                        }
+
+                        functionDepth++;
+                    }
+                    else
+                    {
+                        while (tempStack.Count > 0)
+                        {
+                            syntaxTree.goToChild(0);
+                            syntaxTree.appendToken(tempStack.Last());
+                            syntaxTree.goToParent();
+                            Console.Write(" " + tempStack.Last().value);
+                            tempStack.RemoveLast();
+                        }
+                    }
                 }
                 else if (tokens[position].type >= Constants.TokenType.PLUS &&
                          tokens[position].type <= Constants.TokenType.BIT_SHIFT_TO_RIGHT ||
@@ -2052,15 +2081,23 @@ namespace CSharpToJavaTranslator
                             stack.Pop();
                         }
 
-                        if(stack.Count() != 0)
+                        if (stack.Count() != 0)
                         {
                             syntaxTree.appendToken(tokens[position]);
 
                             stack.Pop();
 
+                            if (stack.Count() != 0 &&
+                                (stack.First().type == Constants.TokenType.IDENTIFIER ||
+                                stack.First().type == Constants.TokenType.DOT))
+                            {
+                                functionDepth = functionDepth > 0 ? functionDepth - 1 : 0;
+                            }
+
                             //Проверка, нет ли идентификатора функции на вершине стека.
-                            if(stack.Count() != 0 && 
-                               stack.First().type == Constants.TokenType.UTILITY_FUNCTION)
+                            while(stack.Count() != 0 && 
+                                  (stack.First().type == Constants.TokenType.IDENTIFIER ||
+                                  stack.First().type == Constants.TokenType.DOT))
                             {
                                 syntaxTree.goToChild(0);
                                 syntaxTree.appendToken(stack.First());
@@ -2068,8 +2105,6 @@ namespace CSharpToJavaTranslator
 
                                 Console.Write(" " + stack.First().value);
                                 stack.Pop();
-
-                                functionDepth = functionDepth > 0 ? functionDepth - 1 : 0;
                             }
                         }
                         else
@@ -2277,47 +2312,6 @@ namespace CSharpToJavaTranslator
             }
 
             return true;
-        }
-
-        private bool isMethodCallAhead(ref Token[] tokens)
-        {
-            int tempPosition = position + 1;
-            state = Constants.State.EXPECTING_DOT;
-
-            while (tempPosition < tokens.Length)
-            {
-                if(state == Constants.State.EXPECTING_IDENTIFIER)
-                {
-                    if (tokens[tempPosition].type == Constants.TokenType.IDENTIFIER)
-                    {
-                        state = Constants.State.EXPECTING_DOT;
-                        tempPosition++;
-                    }
-                    else
-                    {
-                        translationResultBus.registerError("[SYNTAX][ERROR] : .", tokens[tempPosition]);
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (tokens[tempPosition].type == Constants.TokenType.DOT)
-                    {
-                        state = Constants.State.EXPECTING_IDENTIFIER;
-                        tempPosition++;
-                    }
-                    else if (tokens[tempPosition].type == Constants.TokenType.OPENING_BRACKET)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return false;
         }
 
         private bool isDeclarationAhead(ref Token[] tokens)

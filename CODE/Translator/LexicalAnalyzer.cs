@@ -27,13 +27,10 @@ namespace CSharpToJavaTranslator
                                              "select", "set", "unmanaged", "value", 
                                              "var", "when", "where", "with", "yield" };
 
-        CustomRichTextBox console;
-        TranslationResultBus translatorOutputBus;
-        public LexicalAnalyzer(CustomRichTextBox console,
-                               TranslationResultBus translatorOutputBus)
+        TranslationResultBus translationResultBus;
+        public LexicalAnalyzer(TranslationResultBus translationResultBus)
         {
-            this.console = console;
-            this.translatorOutputBus = translatorOutputBus;
+            this.translationResultBus = translationResultBus;
         }
 
         public void PrintToken()
@@ -116,22 +113,20 @@ namespace CSharpToJavaTranslator
                                 {
                                     if (charLen == 0)
                                     {
-                                        //Console.WriteLine("Предупреждение, char пустой: " + "Строка:" + numberLine + "  Столбец:" + numberColumn);
-
-                                        console.appendText("[LEX][WARNING] : пустая символьная лексема. Строка: " + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                                        translationResultBus.registerWarning("[LEX][WARNING] : пустая символьная лексема.", 
+                                                                             new Token("  ", Constants.TokenType.UNKNOWN, numberLine, numberColumn));
                                     }
                                     else
                                     {
                                         if (s[i] == '\'')
                                         {
-                                            //Console.WriteLine("Ошибка, избыток символов в char: " + s.Substring(lexemBegin + 1, i - lexemBegin - 1) + ". Символы были удалены. Строка:" + numberLine + "  Столбец:" + numberColumn);
-
-                                            console.appendText("[LEX][ERROR] : избыток символов в символьной лексеме: " + s.Substring(lexemBegin + 1, i - lexemBegin - 1) + ". Символы были удалены. Строка: " + numberLine + ", столбец: " + numberColumn + ".\n", Color.Red);
+                                            translationResultBus.registerError("[LEX][ERROR] : избыток символов в символьной лексеме: " + s.Substring(lexemBegin + 1, i - lexemBegin - 1) + ". Символы были удалены.",
+                                                                               new Token(" ", Constants.TokenType.UNKNOWN, numberLine, numberColumn));
                                         }
                                         else
                                         {
-                                            //Console.WriteLine("Ошибка, избыток символов в char: " + s.Substring(lexemBegin + 1, i - lexemBegin) + ". Символы были удалены. Строка:" + numberLine + "  Столбец:" + numberColumn);
-                                            console.appendText("[LEX][ERROR] : избыток символов в символьной лексеме: " + s.Substring(lexemBegin + 1, i - lexemBegin) + ". Символы были удалены. Строка: " + numberLine + ", столбец:" + numberColumn + ".\n", Color.Red);
+                                            translationResultBus.registerError("[LEX][ERROR] : избыток символов в символьной лексеме: " + s.Substring(lexemBegin + 1, i - lexemBegin) + ". Символы были удалены.",
+                                                                               new Token(" ", Constants.TokenType.UNKNOWN, numberLine, numberColumn));
                                         }
                                             
                                     }
@@ -604,32 +599,32 @@ namespace CSharpToJavaTranslator
             else if (s == "abstract" || s == "base" || s == "interface" || 
                      s == "override" || s == "sealed" || s == "virtual")
             {
-                translatorOutputBus.registerError("[LEX][ERROR] : наследование не поддерживается данной грамматикой.",
+                translationResultBus.registerError("[LEX][ERROR] : наследование не поддерживается данной грамматикой.",
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "try" || s == "throw" || s == "catch" || s == "finally")
             {
-                translatorOutputBus.registerError("[LEX][ERROR] : исключения не поддерживаются данной грамматикой.",
+                translationResultBus.registerError("[LEX][ERROR] : исключения не поддерживаются данной грамматикой.",
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "operator")
             {
-                translatorOutputBus.registerError("[LEX][ERROR] : перегрузка операторов не поддерживается данной грамматикой.",
+                translationResultBus.registerError("[LEX][ERROR] : перегрузка операторов не поддерживается данной грамматикой.",
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "extern")
             {
-                translatorOutputBus.registerError("[LEX][ERROR] : межфайловые объекты и методы не поддерживаются данной грамматикой.",
+                translationResultBus.registerError("[LEX][ERROR] : межфайловые объекты и методы не поддерживаются данной грамматикой.",
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "out" || s == "ref")
             {
-                translatorOutputBus.registerError("[LEX][ERROR] : ссылки не поддерживаются данной грамматикой.",
+                translationResultBus.registerError("[LEX][ERROR] : ссылки не поддерживаются данной грамматикой.",
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "params")
             {
-                translatorOutputBus.registerError("[LEX][ERROR] : вариационные методы не поддерживаются данной грамматикой.",
+                translationResultBus.registerError("[LEX][ERROR] : вариационные методы не поддерживаются данной грамматикой.",
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "as" || s == "is" || s == "checked" || 
@@ -638,26 +633,26 @@ namespace CSharpToJavaTranslator
                      s == "sizeof" || s == "stackalloc" || s == "typeof" || s == "unchecked" ||
                      s == "unsafe" || s == "volatile")
             {
-                translatorOutputBus.registerError("[LEX][ERROR] : ключевое слово \"" + s + "\" не поддерживается данной грамматикой.", 
+                translationResultBus.registerError("[LEX][ERROR] : ключевое слово \"" + s + "\" не поддерживается данной грамматикой.", 
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (this.contextKeywords.Contains(s))
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
-                translatorOutputBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" является контекстным ключевым словом" +
+                translationResultBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" является контекстным ключевым словом" +
                                                     " в языке C#, но далее будет рассматриваться как идентификатор.", 
                                                     tokens.Last());
             }
             else if (s == "nuint" || s == "nint" || s == "uint")
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
-                translatorOutputBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" будет заменена на \"int\".",
+                translationResultBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" будет заменена на \"int\".",
                                                     tokens.Last());
             }
             else if (s == "ulong")
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
-                translatorOutputBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" заменена на \"long\".",
+                translationResultBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" заменена на \"long\".",
                                                     tokens.Last());
             }
 
@@ -667,7 +662,7 @@ namespace CSharpToJavaTranslator
             }
             else if (!string.IsNullOrWhiteSpace(s))
             {
-                translatorOutputBus.registerError("[LEX][ERROR] : обнаружена неизвестная лексема \"" + s + "\", лексема удалена из выходного потока.", 
+                translationResultBus.registerError("[LEX][ERROR] : обнаружена неизвестная лексема \"" + s + "\", лексема удалена из выходного потока.", 
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             numberColumn++;
