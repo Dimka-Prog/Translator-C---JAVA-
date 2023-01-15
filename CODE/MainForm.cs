@@ -143,14 +143,13 @@ namespace CSharpToJavaTranslator
             TranslationResultBus translationResultBus = 
                 new TranslationResultBus(this.consoleCustomRichTextBox);
 
-            LexicalAnalyzer lexAn = new LexicalAnalyzer(this.consoleCustomRichTextBox,
-                                                        translationResultBus);
+            LexicalAnalyzer lexAn = new LexicalAnalyzer(translationResultBus);
             Token[] tokenArr = lexAn.parse(this.cSharpCustomRichTextBox).ToArray();
 
             if(tokenArr.Length > 0)
             {
-                SyntaxAnalyzer syntAn = new SyntaxAnalyzer(translationResultBus);
-                SyntaxTree syntTree = syntAn.parse(ref tokenArr);
+                SyntaxAnalyzer syntaxAnalyzer = new SyntaxAnalyzer(translationResultBus);
+                SyntaxTree syntTree = syntaxAnalyzer.parse(ref tokenArr);
 
                 SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntTree, this.consoleCustomRichTextBox);
                 semanticAnalyzer.semanticAnalysis();
