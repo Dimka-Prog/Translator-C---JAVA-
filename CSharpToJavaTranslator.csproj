@@ -138,6 +138,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CODE\Program.cs" />
+    <Compile Include="CODE\Translator\CodeGenerator.cs" />
     <Compile Include="CODE\Translator\Constants.cs" />
     <Compile Include="CODE\Translator\LexicalAnalyzer.cs" />
     <Compile Include="CODE\Translator\SemanticAnalyzer.cs" />

@@ -107,6 +107,11 @@ namespace CSharpToJavaTranslator
             ptr = ptr.childNodes[number];
         }
 
+        public void goToRoot()
+        {
+            this.ptr = this.root;
+        }
+
         public void appendAndGoToChild(Constants.TreeNodeType type)
         {
             SyntaxTreeNode node = new SyntaxTreeNode(type);
@@ -123,6 +128,21 @@ namespace CSharpToJavaTranslator
         public Constants.TreeNodeType getCurrentNodeType()
         {
             return ptr.type;
+        }
+
+        public int getChildrenCount()
+        {
+            return ptr.childNodes == null ? 0 : ptr.childNodes.Count;
+        }
+
+        public int getTokensCount()
+        {
+            return ptr.tokens.Count;
+        }
+
+        public Token getToken(int number)
+        {
+            return ptr.tokens[number];
         }
 
         public void appendToken(Token token)

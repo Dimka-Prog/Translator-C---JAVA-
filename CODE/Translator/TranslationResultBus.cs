@@ -18,6 +18,11 @@ namespace CSharpToJavaTranslator
             this.warnings = null;
         }
 
+        public int getErrorCount()
+        {
+            return errors == null ? 0 : errors.Count;
+        }
+
         public void registerUnexpectedTokenError(string[] expectedValues, Token token)
         {
             string message = "[SYNTAX][ERROR] : ожидалось ";

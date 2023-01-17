@@ -143,16 +143,22 @@ namespace CSharpToJavaTranslator
             TranslationResultBus translationResultBus = 
                 new TranslationResultBus(this.consoleCustomRichTextBox);
 
-            LexicalAnalyzer lexAn = new LexicalAnalyzer(translationResultBus);
-            Token[] tokenArr = lexAn.parse(this.cSharpCustomRichTextBox).ToArray();
+            LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(translationResultBus);
+            Token[] tokenArr = lexicalAnalyzer.parse(this.cSharpCustomRichTextBox).ToArray();
 
             if(tokenArr.Length > 0)
             {
                 SyntaxAnalyzer syntaxAnalyzer = new SyntaxAnalyzer(translationResultBus);
-                SyntaxTree syntTree = syntaxAnalyzer.parse(ref tokenArr);
+                SyntaxTree syntaxTree = syntaxAnalyzer.parse(ref tokenArr);
 
-                SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntTree, this.consoleCustomRichTextBox);
+                SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntaxTree, this.consoleCustomRichTextBox);
                 semanticAnalyzer.semanticAnalysis();
+
+                if(translationResultBus.getErrorCount() == 0)
+                {
+                    CodeGenerator codeGenerator = new CodeGenerator(syntaxTree);
+                    javaCustomRichTextBox.setText(codeGenerator.generateCode().ToArray(), Color.Black);
+                }
             }
             else
             {
