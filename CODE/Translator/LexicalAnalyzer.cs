@@ -33,20 +33,6 @@ namespace CSharpToJavaTranslator
             this.translationResultBus = translationResultBus;
         }
 
-        public void PrintToken()
-        {
-            foreach (Token token in tokens)
-                token.Print();
-        }
-
-        public void PrintTokenInFile(string filename)
-        {
-            //System.IO.StreamWriter fs = new StreamWriter(filename);
-            //foreach (Token token in tokens)
-            //    fs.WriteLine(token.GetToken());
-            //fs.Close();
-        }
-
         public List<Token> parse(CustomRichTextBox inputTextBox)
         {
             string[] str = inputTextBox.getInnerTextBox().Lines;
