@@ -160,6 +160,17 @@ namespace CSharpToJavaTranslator
             this.innerRichTextBox.SelectionStart = i;
         }
 
+        public void removeFontFormatting()
+        {
+            int i = this.innerRichTextBox.SelectionStart;
+            this.innerRichTextBox.SelectAll();
+            this.innerRichTextBox.SelectionBackColor = Color.White;
+            this.innerRichTextBox.SelectionFont = new Font("Consolas", 14);
+            this.innerRichTextBox.SelectionColor = Color.Black;
+            this.innerRichTextBox.DeselectAll();
+            this.innerRichTextBox.SelectionStart = i;
+        }
+
         public void appendText(string line, Color color)
         {
             if(this.isPlaceholder)
@@ -193,6 +204,19 @@ namespace CSharpToJavaTranslator
         private void innerRichTextBox_TextChanged(object sender, EventArgs e)
         {
             this.Invalidate();
+        }
+
+        private void innerRichTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool ctrlV = (e.Modifiers == Keys.Control && e.KeyCode == Keys.V);
+            bool shiftInsert = (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Insert);
+
+            if (ctrlV || shiftInsert)
+            {
+                innerRichTextBox.Text += Clipboard.GetText();
+                removeFontFormatting();
+                e.Handled = true;
+            }
         }
     }
 }

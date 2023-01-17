@@ -47,6 +47,7 @@ namespace CSharpToJavaTranslator
             this.innerRichTextBox.WordWrap = false;
             this.innerRichTextBox.TextChanged += new System.EventHandler(this.innerRichTextBox_TextChanged);
             this.innerRichTextBox.Enter += new System.EventHandler(this.innerRichTextBox_Enter);
+            this.innerRichTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.innerRichTextBox_KeyDown);
             this.innerRichTextBox.Leave += new System.EventHandler(this.innerRichTextBox_Leave);
             // 
             // CustomRichTextBox
