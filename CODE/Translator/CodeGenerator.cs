@@ -117,7 +117,7 @@ namespace CSharpToJavaTranslator
                 if(syntaxTree.getChildrenCount() != 0)
                 {
                     syntaxTree.goToChild(0);
-                    translationResultBus.registerWarning("[GEN][WARNING] : синтаксис языка Java не " +
+                    translationResultBus.registerWarning("[GEN][WARNING] : язык Java не " +
                                                          "поддерживает присваивание в перечислениях. Выражение " +
                                                          "будет пропущено, что может привести к некорректной " +
                                                          "работе транслированной программы.", 
@@ -141,7 +141,19 @@ namespace CSharpToJavaTranslator
         {
             for (int i = 0; i < syntaxTree.getTokensCount(); i++)
             {
-                code[code.Count - 1] += syntaxTree.getToken(i).value + " ";
+                if(syntaxTree.getToken(i).type == Constants.TokenType.COLON ||
+                   syntaxTree.getToken(i).type == Constants.TokenType.QUESTION_MARK ||
+                   (syntaxTree.getToken(i).type >= Constants.TokenType.PLUS &&
+                    syntaxTree.getToken(i).type <= Constants.TokenType.MODULO) ||
+                   (syntaxTree.getToken(i).type >= Constants.TokenType.AND &&
+                    syntaxTree.getToken(i).type <= Constants.TokenType.SHIFT_TO_RIGHT_ASSIGNMENT))
+                {
+                    code[code.Count - 1] += " " + syntaxTree.getToken(i).value + " ";
+                }
+                else
+                {
+                    code[code.Count - 1] += syntaxTree.getToken(i).value;
+                }
             }
         }
 
@@ -149,7 +161,11 @@ namespace CSharpToJavaTranslator
         {
             for (int i = 0; i < syntaxTree.getTokensCount(); i++)
             {
-                code[code.Count - 1] += syntaxTree.getToken(i).value + " ";
+                code[code.Count - 1] += syntaxTree.getToken(i).value;
+                if (syntaxTree.getToken(i).type != Constants.TokenType.OPENING_SQUARE_BRACKET)
+                {
+                    code[code.Count - 1] += " ";
+                }
             }
 
             code[code.Count - 1] += "(";
@@ -167,7 +183,11 @@ namespace CSharpToJavaTranslator
 
                     for (int j = 0; j < syntaxTree.getTokensCount(); j++)
                     {
-                        code[code.Count - 1] += syntaxTree.getToken(j).value + " ";
+                        code[code.Count - 1] += syntaxTree.getToken(j).value;
+                        if (syntaxTree.getToken(j).type != Constants.TokenType.OPENING_SQUARE_BRACKET)
+                        {
+                            code[code.Count - 1] += " ";
+                        }
                     }
                 }
                 else
@@ -369,7 +389,7 @@ namespace CSharpToJavaTranslator
 
             traverseCodeBlock(depth, 0, syntaxTree.getChildrenCount() - 2);
 
-            code[code.Count - 1] += "while (";
+            code[code.Count - 1] += " while (";
             syntaxTree.goToChild(syntaxTree.getChildrenCount() - 1);
             traverseExpression();
             code[code.Count - 1] += ");";

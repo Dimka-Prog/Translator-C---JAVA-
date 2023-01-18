@@ -177,10 +177,13 @@ namespace CSharpToJavaTranslator
                 SyntaxAnalyzer syntaxAnalyzer = new SyntaxAnalyzer(translationResultBus);
                 SyntaxTree syntaxTree = syntaxAnalyzer.parse(ref tokenArr);
 
-                SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntaxTree, this.consoleCustomRichTextBox);
-                semanticAnalyzer.semanticAnalysis();
+                if (translationResultBus.getErrorCount() == 0)
+                {
+                    SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntaxTree, this.consoleCustomRichTextBox);
+                    semanticAnalyzer.semanticAnalysis();
+                }
 
-                if(translationResultBus.getErrorCount() == 0)
+                if (translationResultBus.getErrorCount() == 0)
                 {
                     CodeGenerator codeGenerator = new CodeGenerator(syntaxTree, translationResultBus);
                     javaCustomRichTextBox.setText(codeGenerator.generateCode().ToArray(), Color.Black);
