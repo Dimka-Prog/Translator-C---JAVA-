@@ -137,7 +137,7 @@ namespace CSharpToJavaTranslator
 
         public int getTokensCount()
         {
-            return ptr.tokens.Count;
+            return ptr.tokens == null ? 0 : ptr.tokens.Count;
         }
 
         public Token getToken(int number)

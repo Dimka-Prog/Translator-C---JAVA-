@@ -139,6 +139,7 @@ namespace CSharpToJavaTranslator
         private void translateCustomButton_Click(object sender, EventArgs e)
         {
             this.consoleCustomRichTextBox.appendText("[INFO] : " + System.DateTime.Now + "- трансляция начата.\n", Color.Black);
+            javaCustomRichTextBox.getInnerTextBox().Clear();
 
             TranslationResultBus translationResultBus = 
                 new TranslationResultBus(this.consoleCustomRichTextBox);
@@ -156,7 +157,7 @@ namespace CSharpToJavaTranslator
 
                 if(translationResultBus.getErrorCount() == 0)
                 {
-                    CodeGenerator codeGenerator = new CodeGenerator(syntaxTree);
+                    CodeGenerator codeGenerator = new CodeGenerator(syntaxTree, translationResultBus);
                     javaCustomRichTextBox.setText(codeGenerator.generateCode().ToArray(), Color.Black);
                 }
             }

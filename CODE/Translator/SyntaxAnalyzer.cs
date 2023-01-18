@@ -1119,13 +1119,12 @@ namespace CSharpToJavaTranslator
                         position++;
                         if (position < tokens.Length - 1)
                         {
-                            if (tokens[position + 1].type != Constants.TokenType.SEMICOLON)
+                            if (tokens[position].type != Constants.TokenType.SEMICOLON)
                             {
                                 parseExpression(ref tokens);
                             }
                             syntaxTree.goToParent();
                         }
-
                         state = Constants.State.EXPECTING_SEMICOLON;
                         Console.WriteLine("[SYNTAX][INFO] : парсинг оператора \"return\" завершён.");
                     }
