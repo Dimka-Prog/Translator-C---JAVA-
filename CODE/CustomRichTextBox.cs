@@ -199,6 +199,9 @@ namespace CSharpToJavaTranslator
             {
                 this.innerRichTextBox.AppendText(line + "\n");
             }
+
+            this.innerRichTextBox.SelectionStart = 0;
+            this.innerRichTextBox.SelectionLength = 0;
         }
         
         private void innerRichTextBox_TextChanged(object sender, EventArgs e)

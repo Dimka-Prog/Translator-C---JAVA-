@@ -40,7 +40,7 @@ namespace CSharpToJavaTranslator
         public void registerError(string message, Token token)
         {
             message += " Строка: " + token.numberLine +
-                       ", столбец: " + token.numberColumn + ".\n";
+                       ", столбец: " + (token.numberColumn + 1) + ".\n";
             console.appendText(message, Color.Red);
 
             if (errors == null)
@@ -53,7 +53,7 @@ namespace CSharpToJavaTranslator
         public void registerWarning(string message, Token token)
         {
             string message2 = message;
-            message2 += " Строка: " + token.numberLine + ", столбец: " + token.numberColumn + ".\n";
+            message2 += " Строка: " + token.numberLine + ", столбец: " + (token.numberColumn + 1) + ".\n";
 
             console.appendText(message2, Color.Orange);
 

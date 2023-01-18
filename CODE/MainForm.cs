@@ -16,20 +16,20 @@ namespace CSharpToJavaTranslator
         public mainForm()
         {
             InitializeComponent();
-            this.hasUnsavedChanges = false;
-            this.highlighted = false;
+            hasUnsavedChanges = false;
+            highlighted = false;
 
-            this.cSharpCustomRichTextBox.getInnerTextBox().TextChanged += new EventHandler(ehCSharpCustomTextBox_TextChanged);
-            this.consoleCustomRichTextBox.getInnerTextBox().TextChanged += new EventHandler(ehConsoleCustomTextBox_TextChanged);
+            cSharpCustomRichTextBox.getInnerTextBox().TextChanged += new EventHandler(ehCSharpCustomTextBox_TextChanged);
+            consoleCustomRichTextBox.getInnerTextBox().TextChanged += new EventHandler(ehConsoleCustomTextBox_TextChanged);
 
-            this.cSharpCustomRichTextBox.getInnerTextBox().SelectionChanged += new EventHandler(ehCSharpCustomRichTextBox_SelectionChanged);
-            this.javaCustomRichTextBox.getInnerTextBox().SelectionChanged += new EventHandler(ehJavaCustomRichTextBox_SelectionChanged);
+            cSharpCustomRichTextBox.getInnerTextBox().SelectionChanged += new EventHandler(ehCSharpCustomRichTextBox_SelectionChanged);
+            javaCustomRichTextBox.getInnerTextBox().SelectionChanged += new EventHandler(ehJavaCustomRichTextBox_SelectionChanged);
 
-            this.translateCustomButton.Enabled = false;
-            this.clearInputCustomButton.Enabled = false;
-            this.clearConsoleCustomButton.Enabled = false;
+            translateCustomButton.Enabled = false;
+            clearInputCustomButton.Enabled = false;
+            clearConsoleCustomButton.Enabled = false;
 
-            this.mainMenuStrip.Renderer = new ToolStripProfessionalRenderer(new CustomMenuStripColorTable());
+            mainMenuStrip.Renderer = new ToolStripProfessionalRenderer(new CustomMenuStripColorTable());
         }
 
         private bool hasUnsavedChanges;
@@ -38,86 +38,90 @@ namespace CSharpToJavaTranslator
         {
             if(highlighted)
             {
-                this.cSharpCustomRichTextBox.removeHighlight();
-                this.highlighted = false;
+                cSharpCustomRichTextBox.removeHighlight();
+                highlighted = false;
             }
 
-            if (this.cSharpCustomRichTextBox.getInnerTextBox().Text.Length == 0 ||
-                this.cSharpCustomRichTextBox.isInPlaceholderMode())
+            saveCustomButton.Enabled = false;
+
+            if (cSharpCustomRichTextBox.getInnerTextBox().Text.Length == 0 ||
+                cSharpCustomRichTextBox.isInPlaceholderMode())
             {
-                this.clearInputCustomButton.Enabled = false;
-                this.translateCustomButton.Enabled = false;
+                clearInputCustomButton.Enabled = false;
+                translateCustomButton.Enabled = false;
             }
             else
             {
-                this.clearInputCustomButton.Enabled = true;
-                this.translateCustomButton.Enabled = true;
+                clearInputCustomButton.Enabled = true;
+                translateCustomButton.Enabled = true;
             }
 
-            this.clearInputCustomButton.Invalidate();
-            this.translateCustomButton.Invalidate();
+            clearInputCustomButton.Invalidate();
+            translateCustomButton.Invalidate();
         }
 
         private void ehConsoleCustomTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (this.consoleCustomRichTextBox.getInnerTextBox().Text.Length == 0 ||
-                this.consoleCustomRichTextBox.isInPlaceholderMode())
+            if (consoleCustomRichTextBox.getInnerTextBox().Text.Length == 0 ||
+                consoleCustomRichTextBox.isInPlaceholderMode())
             {
-                this.clearConsoleCustomButton.Enabled = false;
+                clearConsoleCustomButton.Enabled = false;
             }
             else
             {
-                this.clearConsoleCustomButton.Enabled = true;
+                clearConsoleCustomButton.Enabled = true;
             }
 
-            this.clearConsoleCustomButton.Invalidate();
+            clearConsoleCustomButton.Invalidate();
         }
 
         private void ehCSharpCustomRichTextBox_SelectionChanged(object sender, EventArgs e)
         {
-            int line = this.cSharpCustomRichTextBox.getInnerTextBox().
-                       GetLineFromCharIndex(this.cSharpCustomRichTextBox.
+            int line = cSharpCustomRichTextBox.getInnerTextBox().
+                       GetLineFromCharIndex(cSharpCustomRichTextBox.
                                             getInnerTextBox().
                                             SelectionStart);
-            int column = this.cSharpCustomRichTextBox.getInnerTextBox().SelectionStart -
-                         this.cSharpCustomRichTextBox.getInnerTextBox().GetFirstCharIndexFromLine(line);
+            int column = cSharpCustomRichTextBox.getInnerTextBox().SelectionStart -
+                         cSharpCustomRichTextBox.getInnerTextBox().GetFirstCharIndexFromLine(line);
 
-            this.cSharpLineColumnNumbersText.Text = "Строка: " + (line + 1) + ", столбец: " + column;
+            this.cSharpLineColumnNumbersText.Text = "Строка: " + (line + 1) + ", столбец: " + (column + 1);
         }
 
         private void ehJavaCustomRichTextBox_SelectionChanged(object sender, EventArgs e)
         {
-            int line = this.javaCustomRichTextBox.getInnerTextBox().
-                       GetLineFromCharIndex(this.javaCustomRichTextBox.
+            int line = javaCustomRichTextBox.getInnerTextBox().
+                       GetLineFromCharIndex(javaCustomRichTextBox.
                                             getInnerTextBox().
-                                            SelectionStart) + 1;
-            int column = this.javaCustomRichTextBox.getInnerTextBox().SelectionStart -
-                         this.javaCustomRichTextBox.getInnerTextBox().GetFirstCharIndexFromLine(line);
+                                            SelectionStart);
+            int column = javaCustomRichTextBox.getInnerTextBox().SelectionStart -
+                         javaCustomRichTextBox.getInnerTextBox().GetFirstCharIndexFromLine(line);
 
-            this.javaLineColumnNumbersText.Text = "Строка: " + line + ", столбец: " + column;
+            this.javaLineColumnNumbersText.Text = "Строка: " + (line + 1) + ", столбец: " + (column + 1);
         }
 
-        private void openCustomButton_Click(object sender, EventArgs e)
+        private void loadFromFile()
         {
             if (this.openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string[] lines = File.ReadAllLines(this.openFileDialog.FileName);
-                
-                if(lines.Length != 0)
+
+                if (lines.Length != 0)
                 {
                     bool isWhitespace = true;
 
-                    foreach(string line in lines)
+                    foreach (string line in lines)
                     {
-                        if(!string.IsNullOrWhiteSpace(line))
+                        if (!string.IsNullOrWhiteSpace(line))
                         {
                             isWhitespace = false;
-                            this.cSharpCustomRichTextBox.setText(lines, Color.Black);
+                            cSharpCustomRichTextBox.setText(lines, Color.Black);
+                            javaCustomRichTextBox.getInnerTextBox().Clear();
+                            saveCustomButton.Enabled = false;
                             break;
                         }
                     }
 
-                    if(isWhitespace)
+                    if (isWhitespace)
                     {
                         MessageBox.Show("Файл пустой или не содержит печатные символы.");
                     }
@@ -127,7 +131,24 @@ namespace CSharpToJavaTranslator
                     MessageBox.Show("Файл пустой или не содержит печатные символы.");
                 }
             }
+        }
 
+        private void saveToFile()
+        {
+            if (this.saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                this.hasUnsavedChanges = false;
+
+                StreamWriter streamWriter = new StreamWriter(this.saveFileDialog.FileName);
+                foreach (string line in this.javaCustomRichTextBox.getInnerTextBox().Lines)
+                    streamWriter.WriteLine(line);
+                streamWriter.Close();
+            }
+        }
+
+        private void openCustomButton_Click(object sender, EventArgs e)
+        {
+            loadFromFile();
             this.openCustomButton.Invalidate();
         }
 
@@ -173,16 +194,7 @@ namespace CSharpToJavaTranslator
 
         private void saveCustomButton_Click(object sender, EventArgs e)
         {
-            if(this.saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                this.hasUnsavedChanges = false;
-
-                StreamWriter streamWriter = new StreamWriter(this.saveFileDialog.FileName);
-                foreach (string line in this.javaCustomRichTextBox.getInnerTextBox().Lines)
-                    streamWriter.WriteLine(line);
-                streamWriter.Close();
-            }
-
+            saveToFile();
             this.saveCustomButton.Invalidate();
         }
 
@@ -193,23 +205,17 @@ namespace CSharpToJavaTranslator
 
         private void openMenuItem_Click(object sender, EventArgs e)
         {
-            //if(this.openFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    string[] lines = File.ReadAllLines(this.openFileDialog.FileName);
-            //    MessageBox.Show(lines.Length + "", "");
-            //}
+            loadFromFile();
         }
 
         private void saveMenuItem_Click(object sender, EventArgs e)
         {
-            this.saveFileDialog.ShowDialog();
+            saveToFile();
         }
 
         private void exitMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
-        
     }
 }
