@@ -31,6 +31,8 @@ namespace CSharpToJavaTranslator
         {
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.javaLineColumnNumbersText = new System.Windows.Forms.Label();
+            this.cSharpLineColumnNumbersText = new System.Windows.Forms.Label();
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,8 +51,6 @@ namespace CSharpToJavaTranslator
             this.openCustomButton = new CSharpToJavaTranslator.CustomButton();
             this.translateCustomButton = new CSharpToJavaTranslator.CustomButton();
             this.consoleCustomRichTextBox = new CSharpToJavaTranslator.CustomRichTextBox();
-            this.cSharpLineColumnNumbersText = new System.Windows.Forms.Label();
-            this.javaLineColumnNumbersText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -105,6 +105,30 @@ namespace CSharpToJavaTranslator
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 299);
             this.tableLayoutPanel1.TabIndex = 8;
+            // 
+            // javaLineColumnNumbersText
+            // 
+            this.javaLineColumnNumbersText.AutoSize = true;
+            this.javaLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.javaLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.javaLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.javaLineColumnNumbersText.Location = new System.Drawing.Point(429, 279);
+            this.javaLineColumnNumbersText.Name = "javaLineColumnNumbersText";
+            this.javaLineColumnNumbersText.Size = new System.Drawing.Size(420, 20);
+            this.javaLineColumnNumbersText.TabIndex = 5;
+            this.javaLineColumnNumbersText.Text = "Строка, столбец";
+            // 
+            // cSharpLineColumnNumbersText
+            // 
+            this.cSharpLineColumnNumbersText.AutoSize = true;
+            this.cSharpLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cSharpLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cSharpLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.cSharpLineColumnNumbersText.Location = new System.Drawing.Point(3, 279);
+            this.cSharpLineColumnNumbersText.Name = "cSharpLineColumnNumbersText";
+            this.cSharpLineColumnNumbersText.Size = new System.Drawing.Size(420, 20);
+            this.cSharpLineColumnNumbersText.TabIndex = 4;
+            this.cSharpLineColumnNumbersText.Text = "Строка, столбец";
             // 
             // mainMenuStrip
             // 
@@ -280,6 +304,7 @@ namespace CSharpToJavaTranslator
             this.saveCustomButton.BorderColorMouseDown = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(126)))), ((int)(((byte)(29)))));
             this.saveCustomButton.BorderColorUnfocused = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(152)))), ((int)(((byte)(83)))));
             this.saveCustomButton.BorderWidth = 1;
+            this.saveCustomButton.Enabled = false;
             this.saveCustomButton.FlatAppearance.BorderSize = 0;
             this.saveCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.saveCustomButton.ForeColor = System.Drawing.Color.Black;
@@ -366,30 +391,6 @@ namespace CSharpToJavaTranslator
             this.consoleCustomRichTextBox.TabIndex = 8;
             this.consoleCustomRichTextBox.TabStop = false;
             // 
-            // cSharpLineColumnNumbersText
-            // 
-            this.cSharpLineColumnNumbersText.AutoSize = true;
-            this.cSharpLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.cSharpLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cSharpLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.cSharpLineColumnNumbersText.Location = new System.Drawing.Point(3, 279);
-            this.cSharpLineColumnNumbersText.Name = "cSharpLineColumnNumbersText";
-            this.cSharpLineColumnNumbersText.Size = new System.Drawing.Size(420, 20);
-            this.cSharpLineColumnNumbersText.TabIndex = 4;
-            this.cSharpLineColumnNumbersText.Text = "Строка, столбец";
-            // 
-            // javaLineColumnNumbersText
-            // 
-            this.javaLineColumnNumbersText.AutoSize = true;
-            this.javaLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.javaLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.javaLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.javaLineColumnNumbersText.Location = new System.Drawing.Point(429, 279);
-            this.javaLineColumnNumbersText.Name = "javaLineColumnNumbersText";
-            this.javaLineColumnNumbersText.Size = new System.Drawing.Size(420, 20);
-            this.javaLineColumnNumbersText.TabIndex = 5;
-            this.javaLineColumnNumbersText.Text = "Строка, столбец";
-            // 
             // mainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -401,6 +402,7 @@ namespace CSharpToJavaTranslator
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "mainForm";
             this.Text = "C# to Java Translator";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainForm_FormClosing);
             this.mainSplitContainer.Panel1.ResumeLayout(false);
             this.mainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();

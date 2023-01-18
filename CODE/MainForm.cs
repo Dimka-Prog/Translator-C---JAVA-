@@ -28,6 +28,7 @@ namespace CSharpToJavaTranslator
             translateCustomButton.Enabled = false;
             clearInputCustomButton.Enabled = false;
             clearConsoleCustomButton.Enabled = false;
+            saveCustomButton.Enabled = false;
 
             mainMenuStrip.Renderer = new ToolStripProfessionalRenderer(new CustomMenuStripColorTable());
         }
@@ -41,8 +42,6 @@ namespace CSharpToJavaTranslator
                 cSharpCustomRichTextBox.removeHighlight();
                 highlighted = false;
             }
-
-            saveCustomButton.Enabled = false;
 
             if (cSharpCustomRichTextBox.getInnerTextBox().Text.Length == 0 ||
                 cSharpCustomRichTextBox.isInPlaceholderMode())
@@ -138,6 +137,7 @@ namespace CSharpToJavaTranslator
             if (this.saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 this.hasUnsavedChanges = false;
+                this.Text = "C# to Java Translator";
 
                 StreamWriter streamWriter = new StreamWriter(this.saveFileDialog.FileName);
                 foreach (string line in this.javaCustomRichTextBox.getInnerTextBox().Lines)
@@ -155,6 +155,10 @@ namespace CSharpToJavaTranslator
         private void clearInputCustomButton_Click(object sender, EventArgs e)
         {
             this.cSharpCustomRichTextBox.getInnerTextBox().Clear();
+            saveCustomButton.Enabled = false;
+            javaCustomRichTextBox.getInnerTextBox().Clear();
+            hasUnsavedChanges = false;
+            this.Text = "C# to Java Translator";
         }
 
         private void translateCustomButton_Click(object sender, EventArgs e)
@@ -180,6 +184,9 @@ namespace CSharpToJavaTranslator
                 {
                     CodeGenerator codeGenerator = new CodeGenerator(syntaxTree, translationResultBus);
                     javaCustomRichTextBox.setText(codeGenerator.generateCode().ToArray(), Color.Black);
+                    saveCustomButton.Enabled = true;
+                    hasUnsavedChanges = true;
+                    this.Text = "C# to Java Translator - есть несохранённые изменения";
                 }
             }
             else
@@ -216,6 +223,24 @@ namespace CSharpToJavaTranslator
         private void exitMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void mainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (hasUnsavedChanges)
+            {
+                DialogResult result = MessageBox.Show("Сохранить транслированный код?",
+                    "Есть несохранённые изменения", MessageBoxButtons.YesNoCancel);
+
+                if (result == DialogResult.Yes)
+                {
+                    saveToFile();
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+            }
         }
     }
 }
