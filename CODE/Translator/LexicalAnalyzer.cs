@@ -642,7 +642,7 @@ namespace CSharpToJavaTranslator
                                                     tokens.Last());
             }
 
-            else if (Regex.IsMatch(s, @"^[_a-zA-Z]\S*$"))
+            else if (Regex.IsMatch(s, @"^[_a-zA-Z][_a-zA-Z0-9]*$"))
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
             }
