@@ -839,6 +839,7 @@ namespace CSharpToJavaTranslator
                     else if (tokens[position].type == Constants.TokenType.ASSIGNMENT)
                     {
                         Console.WriteLine("[SYNTAX][INFO] : обнаружено \"=\", переход к парсингу выражения...");
+                        position++;
                         parseExpression(ref tokens);
                         state = Constants.State.EXPECTING_COMMA_OR_CLOSING_BRACKET;
                     }
