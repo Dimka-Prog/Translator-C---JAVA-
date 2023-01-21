@@ -10,15 +10,15 @@ namespace CSharpToJavaTranslator
     public class SemanticAnalyzer
     {
         private readonly SyntaxTreeNode root;
-        private CustomRichTextBox console;
-        
+        private TranslationResultBus resultBus;
+
         private Dictionary<string, string> identClass = new Dictionary<string, string>();
         private Dictionary<string, string> identEnum = new Dictionary<string, string>();
 
-        public SemanticAnalyzer(SyntaxTree syntTree, CustomRichTextBox console)
+        public SemanticAnalyzer(SyntaxTree syntTree, TranslationResultBus resultBus)
         {
             root = syntTree.root;
-            this.console = console;
+            this.resultBus = resultBus;
         }
 
         public void semanticAnalysis()
@@ -30,16 +30,57 @@ namespace CSharpToJavaTranslator
         {
             SyntaxTreeNode nodeClass = root;
             do
+            {
                 nodeClass = nodeClass.childNodes[0];
+                if (nodeClass.childNodes == null)
+                    return;
+            }
             while (nodeClass.type != Constants.TreeNodeType.CLASS);
 
             identifiersClass(nodeClass);
             identifiersEnum(nodeClass);
+            identifiersMethod(nodeClass);
         }
 
-        private void typeCompatibility(SyntaxTreeNode node)
+        private void typeCompatibility(SyntaxTreeNode node, string identifierLocation)
         {
 
+        }
+
+        private void checkExpression(SyntaxTreeNode current, string messageError)
+        {
+            int numberToken = current.tokens.Count - 1;
+            bool unknownIdent = true;
+            string expression = "";
+
+            if (current.tokens.Count <= 2)
+            {
+                for (int numToken = 0; numToken < current.tokens.Count; numToken++)
+                    expression += current.tokens[numToken].value;
+
+                double number;
+                if (!double.TryParse(expression, out number) && expression != "false" && expression != "true")
+                {
+                    foreach (string key in identClass.Keys)
+                    {
+                        if (key.Equals(current.tokens[numberToken].value))
+                        {
+                            unknownIdent = false;
+                            resultBus.registerError(messageError, current.tokens[numberToken]);
+                            break;
+                        }
+                    }
+                }
+                else
+                    unknownIdent = false;
+            }
+            else
+                unknownIdent = false;
+
+            if (unknownIdent)
+                resultBus.registerError($"[SEMANT][ERROR] : использование неизвестного идентификатора '{current.tokens[numberToken].value}'.", current.tokens[numberToken]);
+            else
+                typeCompatibility(current, "class");
         }
 
         private void identifiersClass(SyntaxTreeNode nodeClass)
@@ -57,7 +98,11 @@ namespace CSharpToJavaTranslator
                 if (current.childNodes[0].type == Constants.TreeNodeType.FIELD)
                 {
                     current = current.childNodes[0];
-                    dataType = current.tokens[0].value;
+
+                    if (current.tokens.Count == 1)
+                        dataType = current.tokens[0].value;
+                    else 
+                        dataType = $"{current.tokens[0].value} array";
 
                     if (current.childNodes[0].type == Constants.TreeNodeType.PARAMETER)
                     {
@@ -72,7 +117,7 @@ namespace CSharpToJavaTranslator
                                 if (key.Equals(identifier))
                                 {
                                     existingIdent = true;
-                                    console.appendText($"[SEMANT][ERROR] : Тип '{nodeClass.tokens[0].value}' уже содержит определение для '{identifier}'. Строка: {current.tokens[0].numberLine}, столбец: {current.tokens[0].numberColumn}.\n", Color.Red);
+                                    resultBus.registerError($"[SEMANT][ERROR] : тип '{nodeClass.tokens[0].value}' уже содержит определение для '{identifier}'.", current.tokens[0]);
                                     break;
                                 }
                             }
@@ -86,39 +131,7 @@ namespace CSharpToJavaTranslator
                         if (current.childNodes != null && current.childNodes[0].type == Constants.TreeNodeType.EXPRESSION && !existingIdent)
                         {
                             current = current.childNodes[0];
-
-                            int numberToken = current.tokens.Count - 1;
-                            bool unknownIdent = true;
-                            identifier = "";
-
-                            if (current.tokens.Count <= 2)
-                            {
-                                for (int numToken = 0; numToken < current.tokens.Count; numToken++)
-                                    identifier += current.tokens[numToken].value;
-
-                                double number;
-                                if (!double.TryParse(identifier, out number))
-                                {
-                                    foreach (string key in identClass.Keys)
-                                    {
-                                        if (key.Equals(current.tokens[numberToken].value))
-                                        {
-                                            unknownIdent = false;
-                                            console.appendText($"[SEMANT][ERROR] : инициализатор поля не может обращаться к нестатичному полю, методу или свойству '{nodeClass.tokens[0].value}.{current.tokens[numberToken].value}'. Строка: {current.tokens[numberToken].numberLine}, столбец: {current.tokens[numberToken].numberColumn}.\n", Color.Red);
-                                            break;
-                                        }
-                                    }
-                                }
-                                else
-                                    unknownIdent = false;
-                            }
-                            else
-                                unknownIdent = false;
-
-                            if (unknownIdent)
-                                console.appendText($"[SEMANT][ERROR] : использование неизвестного идентификатора '{current.tokens[numberToken].value}'. Строка: {current.tokens[numberToken].numberLine}, столбец: {current.tokens[numberToken].numberColumn}.\n", Color.Red);
-                            else
-                                typeCompatibility(current);
+                            checkExpression(current, $"[SEMANT][ERROR] : инициализатор поля не может обращаться к нестатичному полю, методу или свойству '{nodeClass.tokens[0].value}.{current.tokens[current.tokens.Count - 1].value}'.");
                         }
                     }
                 }
@@ -157,7 +170,7 @@ namespace CSharpToJavaTranslator
                                     if (key.Equals(current.tokens[0].value))
                                     {
                                         existingIdent = true;
-                                        console.appendText($"[SEMANT][ERROR] : тип '{nodeClass.tokens[0].value}.{nameEnum}' уже содержит определение для '{current.tokens[0].value}'. Строка: {current.tokens[0].numberLine}, столбец: {current.tokens[0].numberColumn}.\n", Color.Red);
+                                        resultBus.registerError($"[SEMANT][ERROR] : тип '{nodeClass.tokens[0].value}.{nameEnum}' уже содержит определение для '{current.tokens[0].value}'.", current.tokens[0]);
                                         break;
                                     }
                                 }
@@ -174,7 +187,7 @@ namespace CSharpToJavaTranslator
 
                                 int numberToken = current.tokens.Count - 1;
                                 bool unknownIdent = true;
-                                string identifier = "";
+                                string identifier = ""; 
 
                                 if (current.tokens.Count <= 2)
                                 {
@@ -182,7 +195,7 @@ namespace CSharpToJavaTranslator
                                         identifier += current.tokens[numToken].value;
 
                                     double number;
-                                    if (!double.TryParse(identifier, out number))
+                                    if (!double.TryParse(identifier, out number) && identifier != "false" && identifier != "true")
                                     {
                                         foreach (string key in identEnum.Keys)
                                         {
@@ -197,7 +210,7 @@ namespace CSharpToJavaTranslator
                                         if (lastIdent.Equals(current.tokens[numberToken].value))
                                         {
                                             unknownIdent = false;
-                                            console.appendText($"[SEMANT][ERROR] : при оценке постоянного значения для '{nodeClass.tokens[0].value}.{nameEnum}.{lastIdent}' ипользуется циклическое определение. Строка: {current.tokens[numberToken].numberLine}, столбец: {current.tokens[numberToken].numberColumn}.\n", Color.Red);
+                                            resultBus.registerError($"[SEMANT][ERROR] : при оценке постоянного значения для '{nodeClass.tokens[0].value}.{nameEnum}.{lastIdent}' ипользуется циклическое определение.", current.tokens[numberToken]);
                                         }
                                     }
                                     else
@@ -207,13 +220,85 @@ namespace CSharpToJavaTranslator
                                     unknownIdent = false;
 
                                 if (unknownIdent)
-                                    console.appendText($"[SEMANT][ERROR] : использование неизвестного идентификатора '{current.tokens[numberToken].value}'. Строка: {current.tokens[numberToken].numberLine}, столбец: {current.tokens[numberToken].numberColumn}.\n", Color.Red);
+                                    resultBus.registerError($"[SEMANT][ERROR] : использование неизвестного идентификатора '{current.tokens[numberToken].value}'.", current.tokens[numberToken]);
                                 else
-                                    typeCompatibility(current);
+                                    typeCompatibility(current, "enum");
                             }
                         }
                     }
                 }
+            }
+        }
+
+        private void identifiersMethod(SyntaxTreeNode nodeClass)
+        {
+            string identifier = "";
+            string dataTypeIdentifier = "";
+            string dataTypeMethod = "";
+
+            SyntaxTreeNode current;
+            SyntaxTreeNode nodeMethod;
+            Dictionary<string, string> identMethod = new Dictionary<string, string>();
+
+            for (int numChild = 0; numChild < nodeClass.childNodes.Count; numChild++)
+            {
+                current = nodeClass;
+                current = current.childNodes[numChild];
+
+                if (current.childNodes[0].type == Constants.TreeNodeType.METHOD)
+                {
+                    nodeMethod = current.childNodes[0];
+
+                    if (nodeMethod.tokens.Count == 2)
+                        dataTypeMethod = nodeMethod.tokens[0].value;
+                    else
+                        dataTypeMethod = $"{nodeMethod.tokens[0].value} array";
+
+                    if (nodeMethod.childNodes != null)
+                    {
+                        for (int num = 0; num < nodeMethod.childNodes.Count; num++)
+                        {
+                            current = nodeMethod;
+                            current = current.childNodes[num];
+
+                            if (current.type == Constants.TreeNodeType.PARAMETER)
+                            {
+                                if (current.tokens.Count == 2)
+                                    dataTypeIdentifier = current.tokens[0].value;
+                                else
+                                    dataTypeIdentifier = $"{current.tokens[0].value} array";
+
+                                identifier = current.tokens[current.tokens.Count - 1].value;
+
+                                bool existingIdent = false;
+                                if (identMethod.Count != 0)
+                                {
+                                    foreach (string key in identMethod.Keys)
+                                    {
+                                        if (key.Equals(identifier))
+                                        {
+                                            existingIdent = true;
+                                            resultBus.registerError($"[SEMANT][ERROR] : повторяющееся имя параметра '{identifier}'", current.tokens[current.tokens.Count - 1]);
+                                            break;
+                                        }
+                                    }
+
+                                    if (!existingIdent)
+                                        identMethod.Add(identifier, dataTypeIdentifier);
+                                }
+                                else
+                                    identMethod.Add(identifier, dataTypeIdentifier);
+
+                                if (current.childNodes != null && current.childNodes[0].type == Constants.TreeNodeType.EXPRESSION && !existingIdent)
+                                {
+                                    current = current.childNodes[0];
+                                    checkExpression(current, $"[SEMANT][ERROR] : значение параметра по умолчанию для '{identifier}' должно быть константой.");
+                                }
+                            }
+                        }
+                    }
+                }
+                identMethod.Clear();
             }
         }
     }

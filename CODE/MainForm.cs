@@ -179,7 +179,7 @@ namespace CSharpToJavaTranslator
 
                 if (translationResultBus.getErrorCount() == 0)
                 {
-                    SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntaxTree, this.consoleCustomRichTextBox);
+                    SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(syntaxTree, translationResultBus);
                     semanticAnalyzer.semanticAnalysis();
                 }
 
