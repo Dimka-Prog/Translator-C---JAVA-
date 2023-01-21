@@ -243,15 +243,22 @@ namespace CSharpToJavaTranslator
 
         private void CustomButton_MouseLeave(object sender, EventArgs e)
         {
-            this.BackColor = this.backgroundColorUnfocused;
-            this.ForeColor = this.textColorUnfocused;
-            this.currentBorderColor = this.borderColorUnfocused;
+            if (this.Enabled)
+            {
+                this.BackColor = this.backgroundColorUnfocused;
+                this.ForeColor = this.textColorUnfocused;
+                this.currentBorderColor = this.borderColorUnfocused;
+            }
         }
 
         private void CustomButton_MouseUp(object sender, MouseEventArgs e)
         {
-            this.BackColor = this.backgroundColorFocused;
-            this.currentBorderColor = this.borderColorFocused;
+            if (this.Enabled)
+            {
+                this.BackColor = this.backgroundColorFocused;
+                this.ForeColor = this.textColorFocused;
+                this.currentBorderColor = this.borderColorFocused;
+            }
         }
 
         private void CustomButton_EnabledChanged(object sender, EventArgs e)

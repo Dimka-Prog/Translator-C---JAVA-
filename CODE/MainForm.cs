@@ -35,6 +35,7 @@ namespace CSharpToJavaTranslator
 
         private bool hasUnsavedChanges;
         private bool highlighted;
+
         private void ehCSharpCustomTextBox_TextChanged(object sender, EventArgs e)
         {
             if(highlighted)
@@ -146,12 +147,14 @@ namespace CSharpToJavaTranslator
             }
         }
 
+        //TODO:
         private void openCustomButton_Click(object sender, EventArgs e)
         {
             loadFromFile();
             this.openCustomButton.Invalidate();
         }
 
+        //TODO:
         private void clearInputCustomButton_Click(object sender, EventArgs e)
         {
             this.cSharpCustomRichTextBox.getInnerTextBox().Clear();
