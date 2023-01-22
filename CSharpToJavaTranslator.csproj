@@ -125,6 +125,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CODE\CustomMenuStripColorTable.cs" />
+    <Compile Include="CODE\CustomMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CODE\CustomMessageBox.Designer.cs">
+      <DependentUpon>CustomMessageBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="CODE\CustomRichTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -148,6 +154,9 @@
     <Compile Include="CODE\Translator\TranslationResultBus.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CODE\CustomMessageBox.resx">
+      <DependentUpon>CustomMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CODE\CustomRichTextBox.resx">
       <DependentUpon>CustomRichTextBox.cs</DependentUpon>
     </EmbeddedResource>

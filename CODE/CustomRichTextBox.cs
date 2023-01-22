@@ -191,14 +191,11 @@ namespace CSharpToJavaTranslator
             {
                 this.isPlaceholder = false;
             }
-
+            
             this.innerRichTextBox.Clear();
             this.innerRichTextBox.ForeColor = color;
 
-            foreach (string line in lines)
-            {
-                this.innerRichTextBox.AppendText(line + "\n");
-            }
+            this.innerRichTextBox.Lines = lines;
 
             this.innerRichTextBox.SelectionStart = 0;
             this.innerRichTextBox.SelectionLength = 0;

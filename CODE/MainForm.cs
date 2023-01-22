@@ -117,51 +117,127 @@ namespace CSharpToJavaTranslator
                             cSharpCustomRichTextBox.setText(lines, Color.Black);
                             javaCustomRichTextBox.getInnerTextBox().Clear();
                             saveCustomButton.Enabled = false;
+                            saveMenuItem.Enabled = false;
                             break;
                         }
                     }
 
                     if (isWhitespace)
                     {
-                        MessageBox.Show("Файл пустой или не содержит печатные символы.");
+                        CustomMessageBox customMessageBox = new CustomMessageBox("Загрузка кода из файла",
+                                                           "Выбранный файл не содержит печатные символы.",
+                                                           CustomMessageBox.Icons.EXCLAMATION,
+                                                           CustomMessageBox.Buttons.OK);
+                        customMessageBox.ShowDialog();
+                        customMessageBox.Dispose();
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Файл пустой или не содержит печатные символы.");
+                    CustomMessageBox customMessageBox = new CustomMessageBox("Загрузка кода из файла",
+                                                           "Выбранный файл пустой.",
+                                                           CustomMessageBox.Icons.EXCLAMATION,
+                                                           CustomMessageBox.Buttons.OK);
+                    customMessageBox.ShowDialog();
+                    customMessageBox.Dispose();
                 }
             }
         }
 
-        private void saveToFile()
+        private bool saveToFile()
         {
-            if (this.saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.hasUnsavedChanges = false;
+                hasUnsavedChanges = false;
                 this.Text = "C# to Java Translator";
 
-                StreamWriter streamWriter = new StreamWriter(this.saveFileDialog.FileName);
-                foreach (string line in this.javaCustomRichTextBox.getInnerTextBox().Lines)
+                StreamWriter streamWriter = new StreamWriter(saveFileDialog.FileName);
+                foreach (string line in javaCustomRichTextBox.getInnerTextBox().Lines)
                     streamWriter.WriteLine(line);
                 streamWriter.Close();
+                return true;
             }
+
+            return false;
         }
 
-        //TODO:
         private void openCustomButton_Click(object sender, EventArgs e)
         {
-            loadFromFile();
-            this.openCustomButton.Invalidate();
+            if(hasUnsavedChanges)
+            {
+                CustomMessageBox customMessageBox = new CustomMessageBox("Есть несохранённые изменения",
+                                                           "Сохранить транслированный код?",
+                                                           CustomMessageBox.Icons.INFORMATION,
+                                                           CustomMessageBox.Buttons.YES_NO_CANCEL);
+                DialogResult result = customMessageBox.ShowDialog();
+                customMessageBox.Dispose();
+
+                if (result == DialogResult.Yes)
+                {
+                    if(saveToFile())
+                    {
+                        loadFromFile();
+                    }
+                }
+                else if (result == DialogResult.No)
+                {
+                    hasUnsavedChanges = false;
+                    this.Text = "C# to Java Translator";
+                    cSharpCustomRichTextBox.getInnerTextBox().Clear();
+                    javaCustomRichTextBox.getInnerTextBox().Clear();
+                    loadFromFile();
+                }
+            }
+            else
+            {
+                loadFromFile();
+            }
+
+            openCustomButton.Invalidate();
         }
 
-        //TODO:
         private void clearInputCustomButton_Click(object sender, EventArgs e)
         {
-            this.cSharpCustomRichTextBox.getInnerTextBox().Clear();
-            saveCustomButton.Enabled = false;
-            javaCustomRichTextBox.getInnerTextBox().Clear();
-            hasUnsavedChanges = false;
-            this.Text = "C# to Java Translator";
+            if (hasUnsavedChanges)
+            {
+                CustomMessageBox customMessageBox = new CustomMessageBox("Есть несохранённые изменения",
+                                                           "Сохранить транслированный код?",
+                                                           CustomMessageBox.Icons.INFORMATION,
+                                                           CustomMessageBox.Buttons.YES_NO_CANCEL);
+                DialogResult result = customMessageBox.ShowDialog();
+                customMessageBox.Dispose();
+
+                if (result == DialogResult.Yes)
+                {
+                    if (saveToFile())
+                    {
+                        cSharpCustomRichTextBox.getInnerTextBox().Clear();
+                        saveCustomButton.Enabled = false;
+                        saveMenuItem.Enabled = false;
+                        javaCustomRichTextBox.getInnerTextBox().Clear();
+                        hasUnsavedChanges = false;
+                        this.Text = "C# to Java Translator";
+                    }
+                }
+                else if (result == DialogResult.No)
+                {
+                    cSharpCustomRichTextBox.getInnerTextBox().Clear();
+                    saveCustomButton.Enabled = false;
+                    saveMenuItem.Enabled = false;
+                    javaCustomRichTextBox.getInnerTextBox().Clear();
+                    hasUnsavedChanges = false;
+                    this.Text = "C# to Java Translator";
+                }
+            }
+            else
+            {
+                cSharpCustomRichTextBox.getInnerTextBox().Clear();
+                saveCustomButton.Enabled = false;
+                saveMenuItem.Enabled = false;
+                javaCustomRichTextBox.getInnerTextBox().Clear();
+                hasUnsavedChanges = false;
+                this.Text = "C# to Java Translator";
+            }
         }
 
         private void translateCustomButton_Click(object sender, EventArgs e)
@@ -191,6 +267,7 @@ namespace CSharpToJavaTranslator
                     CodeGenerator codeGenerator = new CodeGenerator(syntaxTree, translationResultBus);
                     javaCustomRichTextBox.setText(codeGenerator.generateCode().ToArray(), Color.Black);
                     saveCustomButton.Enabled = true;
+                    saveMenuItem.Enabled = true;
                     hasUnsavedChanges = true;
                     this.Text = "C# to Java Translator - есть несохранённые изменения";
                 }
@@ -218,7 +295,37 @@ namespace CSharpToJavaTranslator
 
         private void openMenuItem_Click(object sender, EventArgs e)
         {
-            loadFromFile();
+            if (hasUnsavedChanges)
+            {
+                CustomMessageBox customMessageBox = new CustomMessageBox("Есть несохранённые изменения",
+                                                           "Сохранить транслированный код?",
+                                                           CustomMessageBox.Icons.INFORMATION,
+                                                           CustomMessageBox.Buttons.YES_NO_CANCEL);
+                DialogResult result = customMessageBox.ShowDialog();
+                customMessageBox.Dispose();
+
+                if (result == DialogResult.Yes)
+                {
+                    if (saveToFile())
+                    {
+                        loadFromFile();
+                    }
+                }
+                else if (result == DialogResult.No)
+                {
+                    hasUnsavedChanges = false;
+                    saveCustomButton.Enabled = false;
+                    saveMenuItem.Enabled = false;
+                    this.Text = "C# to Java Translator";
+                    cSharpCustomRichTextBox.getInnerTextBox().Clear();
+                    javaCustomRichTextBox.getInnerTextBox().Clear();
+                    loadFromFile();
+                }
+            }
+            else
+            {
+                loadFromFile();
+            }
         }
 
         private void saveMenuItem_Click(object sender, EventArgs e)
@@ -235,12 +342,19 @@ namespace CSharpToJavaTranslator
         {
             if (hasUnsavedChanges)
             {
-                DialogResult result = MessageBox.Show("Сохранить транслированный код?",
-                    "Есть несохранённые изменения", MessageBoxButtons.YesNoCancel);
+                CustomMessageBox customMessageBox = new CustomMessageBox("Есть несохранённые изменения",
+                                                           "Сохранить транслированный код?",
+                                                           CustomMessageBox.Icons.INFORMATION,
+                                                           CustomMessageBox.Buttons.YES_NO_CANCEL);
+                DialogResult result = customMessageBox.ShowDialog();
+                customMessageBox.Dispose();
 
                 if (result == DialogResult.Yes)
                 {
-                    saveToFile();
+                    if(!saveToFile())
+                    {
+                        e.Cancel = true;
+                    }
                 }
                 else if (result == DialogResult.Cancel)
                 {

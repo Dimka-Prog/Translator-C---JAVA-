@@ -343,26 +343,27 @@ namespace CSharpToJavaTranslator
             // openMenuItem
             // 
             this.openMenuItem.Name = "openMenuItem";
-            this.openMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.openMenuItem.Size = new System.Drawing.Size(224, 26);
             this.openMenuItem.Text = "Открыть...";
             this.openMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
             // 
             // saveMenuItem
             // 
+            this.saveMenuItem.Enabled = false;
             this.saveMenuItem.Name = "saveMenuItem";
-            this.saveMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.saveMenuItem.Size = new System.Drawing.Size(224, 26);
             this.saveMenuItem.Text = "Сохранить...";
             this.saveMenuItem.Click += new System.EventHandler(this.saveMenuItem_Click);
             // 
             // sep1MenuItem
             // 
             this.sep1MenuItem.Name = "sep1MenuItem";
-            this.sep1MenuItem.Size = new System.Drawing.Size(172, 6);
+            this.sep1MenuItem.Size = new System.Drawing.Size(221, 6);
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.exitMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exitMenuItem.Text = "Выход";
             this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
             // 
