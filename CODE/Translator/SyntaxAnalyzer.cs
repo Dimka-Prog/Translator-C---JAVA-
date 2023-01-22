@@ -973,7 +973,8 @@ namespace CSharpToJavaTranslator
                         position++;
                         return;
                     }
-                    else if (tokens[position].type == Constants.TokenType.IDENTIFIER)
+                    else if (tokens[position].type == Constants.TokenType.IDENTIFIER ||
+                             tokens[position].type == Constants.TokenType.THIS)
                     {
                         if (isDeclarationAhead(ref tokens))
                         {
@@ -2320,7 +2321,12 @@ namespace CSharpToJavaTranslator
             while (tempPosition < tokens.Length &&
                   tokens[tempPosition].type != Constants.TokenType.SEMICOLON)
             {
-                if (tokens[tempPosition].type == Constants.TokenType.IDENTIFIER)
+                if (tokens[tempPosition].type == Constants.TokenType.THIS)
+                {
+                    //Если встречено this, то это однозначно не объявление.
+                    return false;
+                }
+                else if (tokens[tempPosition].type == Constants.TokenType.IDENTIFIER)
                 {
                     if (tokens[tempPosition - 1].type == Constants.TokenType.IDENTIFIER ||
                        tokens[tempPosition - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET &&
