@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,8 +11,8 @@ namespace CSharpToJavaTranslator
     {
         private char[] separators = { ';', '{', '}', '(', ')', 
                                       '[', ']', ':', ',', '+', 
-                                      '-', '*', '/', ' ', '=', '"', '\''};
-
+                                      '-', '*', '/', ' ', '=', '"', '\'', '.'};
+    
         //private char[] ecro = {'\'', '"', };
 
         private List<Token> tokens = new List<Token>();
@@ -33,6 +33,10 @@ namespace CSharpToJavaTranslator
             this.translationResultBus = translationResultBus;
         }
 
+        /// <summary>
+        /// Этот метод разбивает исходный текст на строки и отправляет в analysisLine
+        /// </summary>
+        /// <param name="inputTextBox">Содержит текстбокс с входными данными. </param>
         public List<Token> parse(CustomRichTextBox inputTextBox)
         {
             string[] str = inputTextBox.getInnerTextBox().Lines;
@@ -40,14 +44,21 @@ namespace CSharpToJavaTranslator
 
             foreach (string line in str)
             {
-                checkLine(ref tokens, line, numberLine);
+                analysisLine(ref tokens, line, numberLine);
                 numberLine++;
             }
 
             return tokens;
         }
 
-        private void checkLine(ref List<Token> tokens, string s, int numberLine)
+
+        /// <summary>
+        /// Этот метод выполняет анализ строки на наличие лексем.
+        /// </summary>
+        /// <param name="tokens">Указатель на массив токенов для добавления новых. </param>
+        /// <param name="s">Анализируемая строка. </param>
+        /// <param name="numberLine">Число содержащее номер строки. </param>
+        private void analysisLine(ref List<Token> tokens, string s, int numberLine)
         {
             int lexemBegin = -1;
             int lexemEnd = -1;
@@ -56,8 +67,10 @@ namespace CSharpToJavaTranslator
             bool inChar = false;
             for (int i = 0; i < s.Length; i++)
             {
+                //Данная часть проверяет многосимвольные лексемы(string, char, identify)
                 if (lexemBegin != -1 && lexemEnd == -1)
                 {
+
                     if (inString)
                     {
                         if ((s[i - 1] != '\\' && s[i] == '"') || s.Length - 1 == i)
@@ -125,29 +138,15 @@ namespace CSharpToJavaTranslator
                     }
                     else if (i < s.Length - 1 && separators.Contains(s[i + 1]) || i == s.Length - 1)
                     {
-                        //TODO: убрать эту переменную или как-то переименовать
-                        char zad = s[i];
 
                         string text = s.Substring(lexemBegin, i - lexemBegin + 1);
-                        string[] str = { text };
-                        str = text.Split('.');
                         int colum = lexemBegin;
-                        for (int j = 0; j < str.Length; j++)
-                        {
-                            sepIndifity(ref tokens, str[j], numberLine, ref colum);
-                            colum = lexemBegin + str[j].Length;
-                            if (str.Length > 1 && j < str.Length - 1)
-                            {
-                                tokens.Add(new Token(".", Constants.TokenType.DOT, numberLine, lexemBegin));
-                                numberColumn++;
-                                colum++;
-                            }
-                        }
-
+                        sepIndifity(ref tokens, text, numberLine, ref colum);
                         lexemEnd = i;
                     }
                 }
 
+                //Данная часть проверяет малосимвольные лексемы и находит начало многосимвольных лексем
                 if (lexemBegin == -1)
                 {
                     switch (s[i])
@@ -184,6 +183,14 @@ namespace CSharpToJavaTranslator
                             {
                                 tokens.Add(new Token(s.Substring(i, 2), Constants.TokenType.MINUS_ASSIGNMENT, numberLine, i));
                                 i++;
+                                numberColumn++;
+                            }
+                            else if (i < s.Length - 1 && s[i + 1] != ' ' && s[i+1] != ';' && s[i + 1] != '+' && s[i + 1] != '/' 
+                                && s[i + 1] != '*' && s[i + 1] != '%' && s[i + 1] != ',' && s[i + 1] != ':' &&
+                                ((i==0)||(i>0 && (s[i-1] == ' ' || s[i-1] == '+' || s[i-1] == '-' || s[i - 1] == '/' || s[i - 1] == '*' 
+                                || s[i - 1] == '%' || s[i - 1] == '=' || s[i - 1] == '>' || s[i - 1] == '<'))))
+                            {
+                                tokens.Add(new Token(s.Substring(i, 1), Constants.TokenType.UNARY_MINUS, numberLine, i));
                                 numberColumn++;
                             }
                             else
@@ -300,7 +307,12 @@ namespace CSharpToJavaTranslator
                                 i++;
                                 numberColumn++;
                             }
-                            else
+                            else if(i < s.Length - 1 && s[i + 1] == ' ')
+                            {
+                                tokens.Add(new Token(s.Substring(i, 1), Constants.TokenType.GREATER, numberLine, i));
+                                numberColumn++;
+                            }
+                            else if (i == s.Length - 1)
                             {
                                 tokens.Add(new Token(s.Substring(i, 1), Constants.TokenType.GREATER, numberLine, i));
                                 numberColumn++;
@@ -329,6 +341,13 @@ namespace CSharpToJavaTranslator
                                 numberColumn++;
                             }
                             else
+                            if (i < s.Length - 1 && s[i + 1] == ' ')
+                            {
+                                tokens.Add(new Token(s.Substring(i, 1), Constants.TokenType.LESS, numberLine, i));
+                                numberColumn++;
+                            }
+                            else
+                            if (i == s.Length - 1)
                             {
                                 tokens.Add(new Token(s.Substring(i, 1), Constants.TokenType.LESS, numberLine, i));
                                 numberColumn++;
@@ -450,6 +469,13 @@ namespace CSharpToJavaTranslator
             }
         }
 
+        /// <summary>
+        /// Этот метод выполняет анализ именнованных идентификаторов
+        /// </summary>
+        /// <param name="tokens">Указатель на массив токенов для добавления новых. </param>
+        /// <param name="s">Строка содержащая идентификатор. </param>
+        /// <param name="numberLine">Число содержащее номер строки. </param>
+        /// <param name="numberLine">Указатель на число содержащее номер столбца. </param>
         private void sepIndifity(ref List<Token> tokens, string s, int numberLine, ref int numberColumn)
         {
             if (Regex.IsMatch(s, @"^\d+$"))

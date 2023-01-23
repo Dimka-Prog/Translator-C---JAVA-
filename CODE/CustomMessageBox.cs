@@ -88,6 +88,10 @@ namespace CSharpToJavaTranslator
                 yesButton.Height = 30;
                 yesButton.DialogResult = DialogResult.Yes;
                 flowLayoutPanel.Controls.Add(yesButton);
+
+                yesButton.TabIndex = 1;
+                noButton.TabIndex = 2;
+                cancelButton.TabIndex = 3;
             }
 
             messageLabel.Focus();
