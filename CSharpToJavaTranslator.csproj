@@ -124,6 +124,9 @@
     <Compile Include="CODE\CustomButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CODE\CustomCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CODE\CustomMenuStripColorTable.cs" />
     <Compile Include="CODE\CustomMessageBox.cs">
       <SubType>Form</SubType>

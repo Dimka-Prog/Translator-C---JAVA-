@@ -7,7 +7,7 @@ namespace CSharpToJavaTranslator
     public class SyntaxAnalyzer
     {
         /// <summary>
-        /// Этот метод выполняет синтаксический анализ области
+        /// Этот метод выполняет парсинг области
         /// подключения пространств имён. Согласно грамматике C#,
         /// эти конструкции могут находиться только в начале текста
         /// программы.
@@ -87,7 +87,7 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// Этот метод выполняет синтаксический анализ главного пространства имён.
+        /// Этот метод выполняет парсинг главного пространства имён.
         /// Используется упрощённая грамматика, поэтому внутри пространства имён
         /// может быть только один главный класс программы.
         /// </summary>
@@ -222,7 +222,7 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// Этот метод выполняет синтаксический анализ класса или структуры.
+        /// Этот метод выполняет парсинг класса или структуры.
         /// </summary>
         /// <param name="tokens">Указатель на массив токенов, 
         /// полученных из лексического анализатора.</param>
@@ -459,7 +459,7 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// Этот метод выполняет синтаксический анализ перечисления.
+        /// Этот метод выполняет парсинг перечисления.
         /// </summary>
         /// <param name="tokens">Указатель на массив токенов, 
         /// полученных из лексического анализатора.</param>
@@ -753,6 +753,9 @@ namespace CSharpToJavaTranslator
 
         /// <summary>
         /// Этот метод выполняет парсинг списка параметров методов.
+        /// Парсинг переходит сюда из метода parseFieldOrMethod, если находит
+        /// "(". Когда управление передаётся сюда, "(" пропускается, и парсинг
+        /// начинается со следующего символа после неё.
         /// </summary>
         /// <param name="tokens">Указатель на массив токенов, 
         /// полученных из лексического анализатора.</param>
@@ -1148,9 +1151,11 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// 
+        /// Этот метод выполняет парсинг полей классов и объявлений переменных
+        /// в методах.
         /// </summary>
-        /// <param name="tokens"></param>
+        /// <param name="tokens">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
         private void parseFieldOrDeclaration(ref Token[] tokens, bool isField)
         {
             if(isField)
@@ -1370,9 +1375,10 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// 
+        /// Этот метод выполняет парсинг оператора for.
         /// </summary>
-        /// <param name="tokens"></param>
+        /// <param name="tokens">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
         private void parseFor(ref Token[] tokens)
         {
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.FOR);
@@ -1488,9 +1494,10 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// 
+        /// Этот метод выполняет парсинг оператора foreach.
         /// </summary>
-        /// <param name="tokens"></param>
+        /// <param name="tokens">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
         private void parseForeach(ref Token[] tokens)
         {
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.FOREACH);
@@ -1550,11 +1557,12 @@ namespace CSharpToJavaTranslator
 
             translationResultBus.registerError("[SYNTAX][ERROR] : незавершённая конструкция оператора \"foreach\".", tokens[tokens.Length - 1]);
         }
-        
+
         /// <summary>
-        /// 
+        /// Этот метод выполняет парсинг оператора while.
         /// </summary>
-        /// <param name="tokens"></param>
+        /// <param name="tokens">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
         private void parseWhile(ref Token[] tokens)
         {
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.WHILE);
@@ -1601,9 +1609,10 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// 
+        /// Этот метод выполняет парсинг оператора do-while.
         /// </summary>
-        /// <param name="tokens"></param>
+        /// <param name="tokens">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
         private void parseDoWhile(ref Token[] tokens)
         {
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.DO);
@@ -1675,9 +1684,10 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// 
+        /// Этот метод выполняет парсинг оператора switch.
         /// </summary>
-        /// <param name="tokens"></param>
+        /// <param name="tokens">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
         private void parseSwitch(ref Token[] tokens)
         {
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.SWITCH);
@@ -1722,10 +1732,12 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// Этот метод выполняет синтаксический анализ арифметических и логических
+        /// Этот метод выполняет парсинг арифметических и логических
         /// выражений. При анализе выполняется преобразование из инфиксной формы
         /// в постфиксную (обратная польская запись) с помощью алгоритма
-        /// сортировочной станции (shunting yard).
+        /// сортировочной станции (shunting yard). Это делается для упрощения
+        /// задачи семантическому анализатору, которому нужно будет проверить
+        /// соответствие типов и числа аргументов.
         /// </summary>
         /// <param name="tokens">Указатель на массив токенов, 
         /// полученных из лексического анализатора.</param>
@@ -2212,7 +2224,8 @@ namespace CSharpToJavaTranslator
         /// Этот метод возвращает приоритет 
         /// выполнения оператора в выражении.
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
         /// <returns></returns>
         private int getPriority(Token token)
         {
@@ -2300,7 +2313,8 @@ namespace CSharpToJavaTranslator
         /// <summary>
         /// Этот метод определяет, является ли оператор левоассоциативным.
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
         /// <returns></returns>
         private bool isLeftAssociative(Token token)
         {
@@ -2315,6 +2329,14 @@ namespace CSharpToJavaTranslator
             return true;
         }
 
+        /// <summary>
+        /// Этот метод проверяет, является ли встреченная конструкция
+        /// объявлением. Нужен, потому что сразу отличить объявление от, например,
+        /// вызова метода в текущей архитектуре анализатора невозможно.
+        /// </summary>
+        /// <param name="tokens">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
+        /// <returns></returns>
         private bool isDeclarationAhead(ref Token[] tokens)
         {
             int tempPosition = position;
@@ -2423,6 +2445,13 @@ namespace CSharpToJavaTranslator
             this.translationResultBus = translationResultBus;
         }
 
+        /// <summary>
+        /// Этот метод вызывается первым для выполнения синтаксического анализа.
+        /// </summary>
+        /// <param name="tokens">Указатель на массив токенов, 
+        /// полученных из лексического анализатора.</param>
+        /// <returns>Абстрактное синтаксическое дерево, подготовленное для
+        /// семантического анализатора.</returns>
         public SyntaxTree parse(ref Token[] tokens)
         {
             position = 0;

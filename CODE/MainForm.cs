@@ -242,6 +242,11 @@ namespace CSharpToJavaTranslator
 
         private void translateCustomButton_Click(object sender, EventArgs e)
         {
+            if (this.cleanLogsCustomCheckBox.Checked)
+            {
+                this.consoleCustomRichTextBox.getInnerTextBox().Clear();
+            }
+
             this.consoleCustomRichTextBox.appendText("[INFO] : " + System.DateTime.Now + "- трансляция начата.\n", Color.Black);
             javaCustomRichTextBox.getInnerTextBox().Clear();
 
