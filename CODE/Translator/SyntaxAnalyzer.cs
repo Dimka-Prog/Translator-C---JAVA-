@@ -1861,6 +1861,16 @@ namespace CSharpToJavaTranslator
                          tokens[position].type == Constants.TokenType.FALSE ||
                          tokens[position].type == Constants.TokenType.NULL)
                 {
+                    if (tokens[position - 1].type == Constants.TokenType.INT_NUMBER ||
+                         tokens[position - 1].type == Constants.TokenType.REAL_NUMBER ||
+                         tokens[position - 1].type == Constants.TokenType.TRUE ||
+                         tokens[position - 1].type == Constants.TokenType.FALSE ||
+                         tokens[position - 1].type == Constants.TokenType.NULL ||
+                         tokens[position - 1].type == Constants.TokenType.IDENTIFIER)
+                    {
+                        translationResultBus.registerError("[SYNTAX][ERROR] : требуется оператор.", tokens[position]);
+                    }
+
                     Console.Write(" " + tokens[position].value);
                     syntaxTree.appendToken(tokens[position]);
                     syntaxTree.goToChild(0);
@@ -1932,6 +1942,36 @@ namespace CSharpToJavaTranslator
                          tokens[position].type == Constants.TokenType.NEW)
                 {
                     syntaxTree.appendToken(tokens[position]);
+
+                    //Проверка соответсвия количества операндов и операторов.
+                    if(getArity(tokens[position]) == 2)
+                    {
+                        if (!((tokens[position - 1].type == Constants.TokenType.CLOSING_BRACKET ||
+                            tokens[position - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET ||
+                            tokens[position - 1].type == Constants.TokenType.NULL ||
+                            tokens[position - 1].type == Constants.TokenType.TRUE ||
+                            tokens[position - 1].type == Constants.TokenType.FALSE ||
+                            tokens[position - 1].type == Constants.TokenType.INT_NUMBER ||
+                            tokens[position - 1].type == Constants.TokenType.REAL_NUMBER ||
+                            tokens[position - 1].type == Constants.TokenType.IDENTIFIER ||
+                            tokens[position - 1].type == Constants.TokenType.QUOTATION_MARK ||
+                            tokens[position - 1].type == Constants.TokenType.DOUBLE_QUOTATION_MARK ||
+                            getArity(tokens[position - 1]) == 1) &&
+                            position < tokens.Length - 1 &&
+                            (tokens[position + 1].type == Constants.TokenType.OPENING_BRACKET ||
+                            tokens[position + 1].type == Constants.TokenType.NULL ||
+                            tokens[position + 1].type == Constants.TokenType.TRUE ||
+                            tokens[position + 1].type == Constants.TokenType.FALSE ||
+                            tokens[position + 1].type == Constants.TokenType.INT_NUMBER ||
+                            tokens[position + 1].type == Constants.TokenType.REAL_NUMBER ||
+                            tokens[position + 1].type == Constants.TokenType.IDENTIFIER ||
+                            tokens[position + 1].type == Constants.TokenType.QUOTATION_MARK ||
+                            tokens[position + 1].type == Constants.TokenType.DOUBLE_QUOTATION_MARK ||
+                            getArity(tokens[position + 1]) == 1)))
+                        {
+                            translationResultBus.registerError("[SYNTAX][ERROR] : оператор требует 2 аргумента.", tokens[position]);
+                        }
+                    }
 
                     while (stack.Count() != 0)
                     {
@@ -2016,6 +2056,11 @@ namespace CSharpToJavaTranslator
                 }
                 else if (tokens[position].type == Constants.TokenType.OPENING_SQUARE_BRACKET)
                 {
+                    if (tokens[position - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET)
+                    {
+                        translationResultBus.registerError("[SYNTAX][ERROR] : требуется операнд.", tokens[position - 1]);
+                    }
+
                     syntaxTree.appendToken(tokens[position]);
                     stack.Push(tokens[position]);
                     position++;
@@ -2053,13 +2098,19 @@ namespace CSharpToJavaTranslator
                     else
                     {
                         Console.WriteLine();
-                        translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"[\".", stack.First());
+                        translationResultBus.registerError("[SYNTAX][ERROR] : в выражении пропущена \"[\".", tokens[position]);
                     }
 
                     position++;
                 }
                 else if (tokens[position].type == Constants.TokenType.OPENING_BRACKET)
                 {
+                    if (tokens[position - 1].type == Constants.TokenType.CLOSING_BRACKET ||
+                        tokens[position - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET)
+                    {
+                        translationResultBus.registerError("[SYNTAX][ERROR] : требуется оператор.", tokens[position - 1]);
+                    }
+
                     syntaxTree.appendToken(tokens[position]);
                     stack.Push(tokens[position]);
                     position++;
@@ -2156,6 +2207,7 @@ namespace CSharpToJavaTranslator
                 }
                 else if (tokens[position].type == Constants.TokenType.QUOTATION_MARK)
                 {
+                    //После "'" обязательно должна идти символьная лексема и ещё одна "'".
                     syntaxTree.appendToken(tokens[position]);
                    
                     if(position < tokens.Length - 2)
@@ -2224,8 +2276,7 @@ namespace CSharpToJavaTranslator
         /// Этот метод возвращает приоритет 
         /// выполнения оператора в выражении.
         /// </summary>
-        /// <param name="token">Указатель на массив токенов, 
-        /// полученных из лексического анализатора.</param>
+        /// <param name="token">Токен, содержащий в себе оператор.</param>
         /// <returns></returns>
         private int getPriority(Token token)
         {
@@ -2313,8 +2364,7 @@ namespace CSharpToJavaTranslator
         /// <summary>
         /// Этот метод определяет, является ли оператор левоассоциативным.
         /// </summary>
-        /// <param name="token">Указатель на массив токенов, 
-        /// полученных из лексического анализатора.</param>
+        /// <param name="token">Токен, содержащий в себе оператор.</param>
         /// <returns></returns>
         private bool isLeftAssociative(Token token)
         {
@@ -2327,6 +2377,30 @@ namespace CSharpToJavaTranslator
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Этот метод возвращает арность оператора.
+        /// </summary>
+        /// <param name="token">Токен, содержащий в себе оператор.</param>
+        /// <returns>Арность.</returns>
+        private int getArity(Token token)
+        {
+            if(token.type == Constants.TokenType.NOT ||
+               token.type == Constants.TokenType.UNARY_MINUS ||
+               token.type == Constants.TokenType.INCREMENT ||
+               token.type == Constants.TokenType.DECREMENT ||
+               token.type == Constants.TokenType.BIT_TILDA ||
+               token.type == Constants.TokenType.NEW)
+            {
+                return 1;
+            }
+            else if(token.type == Constants.TokenType.QUESTION_MARK)
+            {
+                return 3;
+            }
+
+            return 2;
         }
 
         /// <summary>
