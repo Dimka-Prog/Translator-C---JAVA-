@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Linq;
+using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,8 @@ namespace CSharpToJavaTranslator
         private Dictionary<string, string> identClass = new Dictionary<string, string>();
         private Dictionary<string, string> identEnum = new Dictionary<string, string>();
         private Dictionary<string, string> identMethod = new Dictionary<string, string>();
+
+        private string nameClass;
 
         public SemanticAnalyzer(SyntaxTree syntTree, TranslationResultBus resultBus)
         {
@@ -37,6 +40,7 @@ namespace CSharpToJavaTranslator
                     return;
             }
             while (nodeClass.type != Constants.TreeNodeType.CLASS);
+            nameClass = nodeClass.tokens[0].value;
 
             identifiersClass(nodeClass);
             identifiersEnum(nodeClass);
@@ -48,37 +52,98 @@ namespace CSharpToJavaTranslator
 
         }
 
-        private void checkExpressionClass(SyntaxTreeNode current, string messageError)
+        private void checkExpressionClass(SyntaxTreeNode current, string identifierLocation)
         {
-            int lastToken = current.tokens.Count - 1;
-            bool unknownIdent = true;
-            string expression = current.tokens[lastToken].value;
+            bool error = false;
+            string expression;
 
-            if (current.tokens.Count <= 2)
+            for (int numToken = 0; numToken < current.tokens.Count; numToken++)
             {
-                double number;
-                if (!double.TryParse(expression, out number) && expression != "false" && expression != "true")
+                expression = current.tokens[numToken].value;
+
+                if (expression == "this")
                 {
-                    foreach (string key in identClass.Keys)
+                    error = true;
+                    resultBus.registerError($"[SEMANT][ERROR] : ключевое слово '{expression}' не пременимо в текущем контексте.", current.tokens[numToken]);
+                    numToken += 2;
+                }
+                else if (Regex.IsMatch(expression, @"^[a-zA-Z0-9_]+$") && expression != "new" && current.tokens[numToken].type != Constants.TokenType.STRING &&
+                    expression != "int" && expression != "double" && expression != "string" && expression != "char") // Только буквы, цифры и подчеркивание
+                {
+                    double number;
+                    if (!double.TryParse(expression, out number) && expression != "false" && expression != "true")
                     {
-                        if (key.Equals(expression))
+                        bool unknownIdent = true;
+                        foreach (string key in identClass.Keys)
                         {
-                            unknownIdent = false;
-                            resultBus.registerError(messageError, current.tokens[lastToken]);
-                            break;
+                            if (key.Equals(expression))
+                            {
+                                unknownIdent = false;
+                                error = true;
+                                if (identifierLocation == "class")
+                                    resultBus.registerError($"[SEMANT][ERROR] : инициализатор поля не может обращаться к нестатичному полю, методу или свойству '{nameClass}.{current.tokens[numToken].value}'.", current.tokens[numToken]);
+                                else if (identifierLocation == "paramMethod")
+                                    resultBus.registerError($"[SEMANT][ERROR] : значение параметра по умолчанию для '{current.parentNode.tokens[current.parentNode.tokens.Count - 1].value}' должно быть константой.", current.tokens[numToken]);
+
+                                break;
+                            }
+                        }
+
+                        if (unknownIdent)
+                        {
+                            error = true;
+                            resultBus.registerError($"[SEMANT][ERROR] : использование неизвестного идентификатора '{expression}'.", current.tokens[numToken]);
+                        } 
+                    }
+                    else if (expression == "false" || expression == "true")
+                    {
+                        string tokenBefore = "";
+                        string tokenAfter = "";
+
+                        if ((numToken - 1) >= 0)
+                            tokenBefore = current.tokens[numToken - 1].value;
+
+                        if ((numToken + 1) < current.tokens.Count)
+                            tokenAfter = current.tokens[numToken + 1].value;
+
+                        if (tokenBefore != "" && !Regex.IsMatch(tokenBefore, @"^[a-zA-Z0-9_]+$"))
+                        {
+                            error = true;
+                            resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenBefore}' невозможно применить к операнду типа 'bool'", current.tokens[numToken]);
+                        }
+                        else if (tokenAfter != "" && !Regex.IsMatch(tokenAfter, @"^[a-zA-Z0-9_]+$"))
+                        {
+                            error = true;
+                            resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenAfter}' невозможно применить к операнду типа 'bool'", current.tokens[numToken]);
                         }
                     }
                 }
-                else
-                    unknownIdent = false;
-            }
-            else
-                unknownIdent = false;
+                else if (current.tokens[numToken].type == Constants.TokenType.STRING)
+                {
+                    string tokenBefore = "";
+                    string tokenAfter = "";
 
-            if (unknownIdent)
-                resultBus.registerError($"[SEMANT][ERROR] : использование неизвестного идентификатора '{expression}'.", current.tokens[lastToken]);
-            else
-                typeCompatibility(current, "class");
+                    if ((numToken - 2) >= 0)
+                        tokenBefore = current.tokens[numToken - 2].value;
+
+                    if ((numToken + 2) < current.tokens.Count)
+                        tokenAfter = current.tokens[numToken + 2].value;
+
+                    if (tokenBefore != "" && tokenBefore != "+")
+                    {
+                        error = true;
+                        resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenBefore}' невозможно применить к операнду типа 'string'", current.tokens[numToken]);
+                    }
+                    if (tokenAfter != "" && tokenAfter != "+")
+                    {
+                        error = true;
+                        resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenAfter}' невозможно применить к операнду типа 'string'", current.tokens[numToken]);
+                    }
+                }
+            }
+
+            if (!error)
+                typeCompatibility(current, identifierLocation);
         }
 
         private bool checkExpressionMethod(string expression)
@@ -146,7 +211,7 @@ namespace CSharpToJavaTranslator
                             if (key.Equals(identifier))
                             {
                                 existingIdent = true;
-                                resultBus.registerError($"[SEMANT][ERROR] : тип '{nodeClass.tokens[0].value}' уже содержит определение для '{identifier}'.", current.tokens[0]);
+                                resultBus.registerError($"[SEMANT][ERROR] : тип '{nameClass}' уже содержит определение для '{identifier}'.", current.tokens[0]);
                                 break;
                             }
                         }
@@ -160,7 +225,7 @@ namespace CSharpToJavaTranslator
                     if (current.childNodes != null && current.childNodes[0].type == Constants.TreeNodeType.EXPRESSION && !existingIdent)
                     {
                         current = current.childNodes[0];
-                        checkExpressionClass(current, $"[SEMANT][ERROR] : инициализатор поля не может обращаться к нестатичному полю, методу или свойству '{nodeClass.tokens[0].value}.{current.tokens[current.tokens.Count - 1].value}'.");
+                        checkExpressionClass(current, "class");
                     }
 
                 }
@@ -317,7 +382,7 @@ namespace CSharpToJavaTranslator
                                 if (current.childNodes != null && current.childNodes[0].type == Constants.TreeNodeType.EXPRESSION && !existingIdent)
                                 {
                                     current = current.childNodes[0];
-                                    checkExpressionClass(current, $"[SEMANT][ERROR] : значение параметра по умолчанию для '{identifier}' должно быть константой.");
+                                    checkExpressionClass(current, "paramMethod");
                                 }
                             }
                             else if (current.type == Constants.TreeNodeType.DECLARATION)
@@ -388,7 +453,7 @@ namespace CSharpToJavaTranslator
                             else if (current.type == Constants.TreeNodeType.EXPRESSION)
                             {
                                 string assignment = current.childNodes[0].tokens[current.childNodes[0].tokens.Count - 1].value;
-                                bool unknownIdent = true;
+                                bool unknownIdent = false;
 
                                 for (int numToken = 0; numToken < current.tokens.Count; numToken++)
                                 {
@@ -402,37 +467,78 @@ namespace CSharpToJavaTranslator
                                         {
                                             if (key.Equals(identifier))
                                             {
-                                                unknownIdent = false;
+                                                unknownIdent = true;
                                                 break;
                                             }
                                         }
 
-                                        if (unknownIdent)
+                                        if (!unknownIdent)
                                             resultBus.registerError($"[SEMANT][ERROR] : использование неизвестного идентификатора '{identifier}'.", current.tokens[numToken]);
+                                        else
+                                            unknownIdent = false;
                                     }
-                                    else if (current.tokens[numToken].type != Constants.TokenType.STRING && current.tokens[numToken].type != Constants.TokenType.DOUBLE_QUOTATION_MARK && 
-                                             identifier != "." && identifier != "+" && identifier != "-" && identifier != "*" && identifier != "/" && identifier != assignment)
+                                    else if (Regex.IsMatch(identifier, @"^[a-zA-Z0-9_]+$") && identifier != "new" && current.tokens[numToken].type != Constants.TokenType.STRING &&
+                                             identifier != "int" && identifier != "double" && identifier != "string" && identifier != "char")
                                     {
                                         if (checkExpressionMethod(identifier))
-                                            resultBus.registerError($"[SEMANT][ERROR] : использование неизвестного идентификатора '{identifier}'.", current.tokens[numToken]);
-
-                                        if (identifier == "false" || identifier == "true")
                                         {
-                                            string tokenBefore = current.tokens[numToken - 1].value;
+                                            unknownIdent = true;
+                                            resultBus.registerError($"[SEMANT][ERROR] : использование неизвестного идентификатора '{identifier}'.", current.tokens[numToken]);
+                                        }
+                                        else if (identifier == "false" || identifier == "true")
+                                        {
+                                            string tokenBefore = "";
                                             string tokenAfter = "";
+
+                                            if ((numToken - 1) >= 0)
+                                                tokenBefore = current.tokens[numToken - 1].value;
 
                                             if ((numToken + 1) < current.tokens.Count)
                                                 tokenAfter = current.tokens[numToken + 1].value;
 
-                                            if (tokenBefore == "+" || tokenBefore == "-" || tokenBefore == "*" || tokenBefore == "/")
+                                            if (tokenBefore != "" && !Regex.IsMatch(tokenBefore, @"^[a-zA-Z0-9_]+$"))
+                                            {
+                                                unknownIdent = true;
                                                 resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenBefore}' невозможно применить к операнду типа 'bool'", current.tokens[numToken]);
-                                            else if (tokenAfter != "" && (tokenAfter == "+" || tokenAfter == "-" || tokenAfter == "*" || tokenAfter == "/"))
+                                            }
+                                            else if (tokenAfter != "" && !Regex.IsMatch(tokenAfter, @"^[a-zA-Z0-9_]+$"))
+                                            {
+                                                unknownIdent = true;
                                                 resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenAfter}' невозможно применить к операнду типа 'bool'", current.tokens[numToken]);
+                                            }
                                             else if (assignment != "=")
+                                            {
+                                                unknownIdent = true;
                                                 resultBus.registerError($"[SEMANT][ERROR] : оператор '{assignment}' невозможно применить к операнду типа 'bool'", current.tokens[numToken]);
+                                            }
+                                        }
+                                    }
+                                    else if (current.tokens[numToken].type == Constants.TokenType.STRING)
+                                    {
+                                        string tokenBefore = "";
+                                        string tokenAfter = "";
+
+                                        if ((numToken - 2) >= 0)
+                                            tokenBefore = current.tokens[numToken - 2].value;
+
+                                        if ((numToken + 2) < current.tokens.Count)
+                                            tokenAfter = current.tokens[numToken + 2].value;
+
+                                        if (tokenBefore != "" && tokenBefore != "+")
+                                        {
+                                            unknownIdent = true;
+                                            resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenBefore}' невозможно применить к операнду типа 'string'", current.tokens[numToken]);
+                                        }
+                                        if (tokenAfter != "" && tokenAfter != "+")
+                                        {
+                                            unknownIdent = true;
+                                            resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenAfter}' невозможно применить к операнду типа 'string'", current.tokens[numToken]);
                                         }
                                     }
                                 }
+
+                                if (!unknownIdent)
+                                    typeCompatibility(current, "method");
                             }
                         }
                     }
