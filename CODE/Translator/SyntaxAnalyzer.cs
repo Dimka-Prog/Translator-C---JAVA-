@@ -1760,7 +1760,10 @@ namespace CSharpToJavaTranslator
             //глубина не равна 0, то эта запятая является
             //разделителем аргументов в вызове функции.
             int functionDepth = 0;
-            
+
+            //Нужно для правильной обработки операторов ++ и --.
+            int expressionStartPosition = position;
+
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.EXPRESSION);
             syntaxTree.appendAndGoToChild(Constants.TreeNodeType.EXPRESSION_RPN);
             syntaxTree.goToParent();
@@ -1861,12 +1864,7 @@ namespace CSharpToJavaTranslator
                          tokens[position].type == Constants.TokenType.FALSE ||
                          tokens[position].type == Constants.TokenType.NULL)
                 {
-                    if (tokens[position - 1].type == Constants.TokenType.INT_NUMBER ||
-                         tokens[position - 1].type == Constants.TokenType.REAL_NUMBER ||
-                         tokens[position - 1].type == Constants.TokenType.TRUE ||
-                         tokens[position - 1].type == Constants.TokenType.FALSE ||
-                         tokens[position - 1].type == Constants.TokenType.NULL ||
-                         tokens[position - 1].type == Constants.TokenType.IDENTIFIER)
+                    if (isOperand(tokens[position - 1], true))
                     {
                         translationResultBus.registerError("[SYNTAX][ERROR] : требуется оператор.", tokens[position]);
                     }
@@ -1888,6 +1886,7 @@ namespace CSharpToJavaTranslator
                     syntaxTree.appendToken(tokens[position]);
                     tempStack.AddFirst(tokens[position]);
                     position++;
+                    state = Constants.State.EXPECTING_DOT;
 
                     while (position < tokens.Length && 
                            (tokens[position].type == Constants.TokenType.IDENTIFIER ||
@@ -1898,13 +1897,25 @@ namespace CSharpToJavaTranslator
                             tempStack.AddFirst(tokens[position]);
                             tempStack.AddFirst(tokens[position - 1]);
                             syntaxTree.appendToken(tokens[position]);
+                            state = Constants.State.EXPECTING_DOT;
                         }
                         else if(tokens[position].type == Constants.TokenType.DOT)
                         {
+                            if (state == Constants.State.EXPECTING_IDENTIFIER)
+                            {
+                                translationResultBus.registerError("[SYNTAX][ERROR] : требуется операнд.", tokens[position]);
+                            }
+
                             syntaxTree.appendToken(tokens[position]);
+                            state = Constants.State.EXPECTING_IDENTIFIER;
                         }
 
                         position++;
+                    }
+
+                    if (state == Constants.State.EXPECTING_IDENTIFIER)
+                    {
+                        translationResultBus.registerError("[SYNTAX][ERROR] : требуется операнд.", tokens[position - 1]);
                     }
 
                     //Встречена открывающая скобка,
@@ -1944,30 +1955,47 @@ namespace CSharpToJavaTranslator
                     syntaxTree.appendToken(tokens[position]);
 
                     //Проверка соответсвия количества операндов и операторов.
-                    if(getArity(tokens[position]) == 2)
+                    if (getArity(tokens[position]) == 1)
                     {
-                        if (!((tokens[position - 1].type == Constants.TokenType.CLOSING_BRACKET ||
-                            tokens[position - 1].type == Constants.TokenType.CLOSING_SQUARE_BRACKET ||
-                            tokens[position - 1].type == Constants.TokenType.NULL ||
-                            tokens[position - 1].type == Constants.TokenType.TRUE ||
-                            tokens[position - 1].type == Constants.TokenType.FALSE ||
-                            tokens[position - 1].type == Constants.TokenType.INT_NUMBER ||
-                            tokens[position - 1].type == Constants.TokenType.REAL_NUMBER ||
-                            tokens[position - 1].type == Constants.TokenType.IDENTIFIER ||
-                            tokens[position - 1].type == Constants.TokenType.QUOTATION_MARK ||
-                            tokens[position - 1].type == Constants.TokenType.DOUBLE_QUOTATION_MARK ||
-                            getArity(tokens[position - 1]) == 1) &&
-                            position < tokens.Length - 1 &&
-                            (tokens[position + 1].type == Constants.TokenType.OPENING_BRACKET ||
-                            tokens[position + 1].type == Constants.TokenType.NULL ||
-                            tokens[position + 1].type == Constants.TokenType.TRUE ||
-                            tokens[position + 1].type == Constants.TokenType.FALSE ||
-                            tokens[position + 1].type == Constants.TokenType.INT_NUMBER ||
-                            tokens[position + 1].type == Constants.TokenType.REAL_NUMBER ||
-                            tokens[position + 1].type == Constants.TokenType.IDENTIFIER ||
-                            tokens[position + 1].type == Constants.TokenType.QUOTATION_MARK ||
-                            tokens[position + 1].type == Constants.TokenType.DOUBLE_QUOTATION_MARK ||
-                            getArity(tokens[position + 1]) == 1)))
+                        //Эти операторы могут стоять как до, так и после операнда.
+                        //Но ситуаций, в которых эти операторы стояли бы между двумя
+                        //операндами, быть не может.
+                        if(tokens[position].type == Constants.TokenType.INCREMENT ||
+                           tokens[position].type == Constants.TokenType.DECREMENT)
+                        {
+                            if (position > expressionStartPosition)
+                            {
+                                if (!((isOperand(tokens[position - 1], true) &&
+                                    !isOperand(tokens[position + 1], false)) ||
+                                    (!isOperand(tokens[position - 1], true) &&
+                                    isOperand(tokens[position + 1], false))))
+                                {
+                                    translationResultBus.registerError("[SYNTAX][ERROR] : требуется операнд.", tokens[position]);
+                                }
+                            }
+                            else
+                            {
+                                if (!isOperand(tokens[position + 1], true))
+                                {
+                                    translationResultBus.registerError("[SYNTAX][ERROR] : требуется операнд.", tokens[position]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (!isOperand(tokens[position + 1], true))
+                            {
+                                translationResultBus.registerError("[SYNTAX][ERROR] : требуется операнд.", tokens[position]);
+                            }
+                        }
+                    }
+                    else if (getArity(tokens[position]) == 2)
+                    {
+                        if (!((getArity(tokens[position - 1]) == 1 ||
+                               isOperand(tokens[position - 1], true)) &&
+                               position < tokens.Length - 1 &&
+                               (getArity(tokens[position + 1]) == 1 ||
+                                isOperand(tokens[position + 1], false))))
                         {
                             translationResultBus.registerError("[SYNTAX][ERROR] : оператор требует 2 аргумента.", tokens[position]);
                         }
@@ -2035,6 +2063,11 @@ namespace CSharpToJavaTranslator
 
                     if (stack.Count() != 0)
                     {
+                        if(!isOperand(tokens[position - 1], true))
+                        {
+                            translationResultBus.registerError("[SYNTAX][ERROR] : требуется операнд.", tokens[position]);
+                        }
+
                         syntaxTree.appendToken(tokens[position]);
 
                         stack.Pop();
@@ -2401,6 +2434,44 @@ namespace CSharpToJavaTranslator
             }
 
             return 2;
+        }
+
+        /// <summary>
+        /// Данный метод проверяет, может ли токен быть операндом в выражениях.
+        /// </summary>
+        /// <param name="token">Токен, предположительно являющийся операндом.</param>
+        /// <param name="previous">Флаг, показывающий, с какой стороны текущего токена
+        /// проверяется данный токен.</param>
+        /// <returns>Является ли токен операндом.</returns>
+        private bool isOperand(Token token, bool previous)
+        {
+            if(previous)
+            {
+                return (token.type == Constants.TokenType.CLOSING_BRACKET ||
+                        token.type == Constants.TokenType.CLOSING_SQUARE_BRACKET ||
+                        token.type == Constants.TokenType.THIS ||
+                        token.type == Constants.TokenType.NULL ||
+                        token.type == Constants.TokenType.TRUE ||
+                        token.type == Constants.TokenType.FALSE ||
+                        token.type == Constants.TokenType.INT_NUMBER ||
+                        token.type == Constants.TokenType.REAL_NUMBER ||
+                        token.type == Constants.TokenType.IDENTIFIER ||
+                        token.type == Constants.TokenType.QUOTATION_MARK ||
+                        token.type == Constants.TokenType.DOUBLE_QUOTATION_MARK);
+            }
+            else
+            {
+                return (token.type == Constants.TokenType.OPENING_BRACKET ||
+                        token.type == Constants.TokenType.THIS ||
+                        token.type == Constants.TokenType.NULL ||
+                        token.type == Constants.TokenType.TRUE ||
+                        token.type == Constants.TokenType.FALSE ||
+                        token.type == Constants.TokenType.INT_NUMBER ||
+                        token.type == Constants.TokenType.REAL_NUMBER ||
+                        token.type == Constants.TokenType.IDENTIFIER ||
+                        token.type == Constants.TokenType.QUOTATION_MARK ||
+                        token.type == Constants.TokenType.DOUBLE_QUOTATION_MARK);
+            }
         }
 
         /// <summary>
