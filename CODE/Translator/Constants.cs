@@ -194,12 +194,12 @@
             DEFAULT,
             RETURN,
             
-            DECLARATION, // тип переменной, класса, функции
-            METHOD, // название функции
-            FIELD, // тип данных
-            EXPRESSION, // присваиваемое значение
+            DECLARATION, 
+            METHOD, 
+            FIELD, 
+            EXPRESSION, 
             EXPRESSION_RPN, 
-            MEMBER, // модификаторы
+            MEMBER,
             PARAMETER
         }
     }
