@@ -208,7 +208,19 @@ namespace CSharpToJavaTranslator
 
             if (ctrlV || shiftInsert)
             {
-                innerRichTextBox.Paste();
+                if (Clipboard.GetText().Contains("\t"))
+                {
+                    innerRichTextBox.Paste();
+                    int line = innerRichTextBox.GetLineFromCharIndex(innerRichTextBox.SelectionStart);
+                    string[] lines = innerRichTextBox.Lines;
+                    lines[line] = lines[line].Replace("\t", "    ");
+                    innerRichTextBox.Lines = lines;
+                }
+                else
+                {
+                    innerRichTextBox.Paste();
+                }
+                
                 removeFontFormatting();
                 e.Handled = true;
             }

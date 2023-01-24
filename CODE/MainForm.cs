@@ -109,16 +109,12 @@ namespace CSharpToJavaTranslator
                 {
                     bool isWhitespace = true;
 
-                    foreach (string line in lines)
+                    for (int i = 0; i < lines.Length; i++)
                     {
-                        if (!string.IsNullOrWhiteSpace(line))
+                        lines[i] = lines[i].Replace("\t", "    ");
+                        if (!string.IsNullOrWhiteSpace(lines[i]))
                         {
                             isWhitespace = false;
-                            cSharpCustomRichTextBox.setText(lines, Color.Black);
-                            javaCustomRichTextBox.getInnerTextBox().Clear();
-                            saveCustomButton.Enabled = false;
-                            saveMenuItem.Enabled = false;
-                            break;
                         }
                     }
 
@@ -130,6 +126,13 @@ namespace CSharpToJavaTranslator
                                                            CustomMessageBox.Buttons.OK);
                         customMessageBox.ShowDialog();
                         customMessageBox.Dispose();
+                    }
+                    else
+                    {
+                        cSharpCustomRichTextBox.setText(lines, Color.Black);
+                        javaCustomRichTextBox.getInnerTextBox().Clear();
+                        saveCustomButton.Enabled = false;
+                        saveMenuItem.Enabled = false;
                     }
                 }
                 else
