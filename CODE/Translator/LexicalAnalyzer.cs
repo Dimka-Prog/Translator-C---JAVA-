@@ -11,7 +11,7 @@ namespace CSharpToJavaTranslator
     {
         private char[] separators = { ';', '{', '}', '(', ')', 
                                       '[', ']', ':', ',', '+', 
-                                      '-', '*', '/', ' ', '=', '"', '\'', '.'};
+                                      '-', '*', '/', ' ', '=', '"', '\'', '.', '?', '!'};
     
         //private char[] ecro = {'\'', '"', };
 
