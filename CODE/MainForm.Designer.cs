@@ -64,7 +64,7 @@ namespace CSharpToJavaTranslator
             // 
             this.mainSplitContainer.BackColor = System.Drawing.Color.Gray;
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainSplitContainer.Location = new System.Drawing.Point(0, 28);
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 30);
             this.mainSplitContainer.Name = "mainSplitContainer";
             this.mainSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -83,8 +83,8 @@ namespace CSharpToJavaTranslator
             // 
             this.mainSplitContainer.Panel2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.mainSplitContainer.Panel2.Controls.Add(this.consoleCustomRichTextBox);
-            this.mainSplitContainer.Size = new System.Drawing.Size(852, 475);
-            this.mainSplitContainer.SplitterDistance = 394;
+            this.mainSplitContainer.Size = new System.Drawing.Size(852, 473);
+            this.mainSplitContainer.SplitterDistance = 392;
             this.mainSplitContainer.TabIndex = 11;
             this.mainSplitContainer.TabStop = false;
             // 
@@ -105,7 +105,7 @@ namespace CSharpToJavaTranslator
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 300);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 298);
             this.tableLayoutPanel1.TabIndex = 8;
             // 
             // javaLineColumnNumbersText
@@ -114,7 +114,7 @@ namespace CSharpToJavaTranslator
             this.javaLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.javaLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.javaLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.javaLineColumnNumbersText.Location = new System.Drawing.Point(429, 280);
+            this.javaLineColumnNumbersText.Location = new System.Drawing.Point(429, 278);
             this.javaLineColumnNumbersText.Name = "javaLineColumnNumbersText";
             this.javaLineColumnNumbersText.Size = new System.Drawing.Size(420, 20);
             this.javaLineColumnNumbersText.TabIndex = 8;
@@ -126,7 +126,7 @@ namespace CSharpToJavaTranslator
             this.cSharpLineColumnNumbersText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cSharpLineColumnNumbersText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cSharpLineColumnNumbersText.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.cSharpLineColumnNumbersText.Location = new System.Drawing.Point(3, 280);
+            this.cSharpLineColumnNumbersText.Location = new System.Drawing.Point(3, 278);
             this.cSharpLineColumnNumbersText.Name = "cSharpLineColumnNumbersText";
             this.cSharpLineColumnNumbersText.Size = new System.Drawing.Size(420, 20);
             this.cSharpLineColumnNumbersText.TabIndex = 7;
@@ -141,7 +141,7 @@ namespace CSharpToJavaTranslator
             this.справкаToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mainMenuStrip.Name = "mainMenuStrip";
-            this.mainMenuStrip.Size = new System.Drawing.Size(852, 28);
+            this.mainMenuStrip.Size = new System.Drawing.Size(852, 30);
             this.mainMenuStrip.TabIndex = 1;
             this.mainMenuStrip.Text = "menuStrip1";
             // 
@@ -247,7 +247,7 @@ namespace CSharpToJavaTranslator
             this.cSharpCustomRichTextBox.Name = "cSharpCustomRichTextBox";
             this.cSharpCustomRichTextBox.Padding = new System.Windows.Forms.Padding(5);
             this.cSharpCustomRichTextBox.PlaceholderText = "Введите сюда код на C#...";
-            this.cSharpCustomRichTextBox.Size = new System.Drawing.Size(420, 274);
+            this.cSharpCustomRichTextBox.Size = new System.Drawing.Size(420, 272);
             this.cSharpCustomRichTextBox.TabIndex = 5;
             // 
             // javaCustomRichTextBox
@@ -263,7 +263,7 @@ namespace CSharpToJavaTranslator
             this.javaCustomRichTextBox.Name = "javaCustomRichTextBox";
             this.javaCustomRichTextBox.Padding = new System.Windows.Forms.Padding(5);
             this.javaCustomRichTextBox.PlaceholderText = "Здесь появится код на Java...";
-            this.javaCustomRichTextBox.Size = new System.Drawing.Size(420, 274);
+            this.javaCustomRichTextBox.Size = new System.Drawing.Size(420, 272);
             this.javaCustomRichTextBox.TabIndex = 6;
             this.javaCustomRichTextBox.TabStop = false;
             // 
@@ -283,7 +283,7 @@ namespace CSharpToJavaTranslator
             this.clearConsoleCustomButton.FlatAppearance.BorderSize = 0;
             this.clearConsoleCustomButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.clearConsoleCustomButton.ForeColor = System.Drawing.Color.Black;
-            this.clearConsoleCustomButton.Location = new System.Drawing.Point(3, 356);
+            this.clearConsoleCustomButton.Location = new System.Drawing.Point(3, 354);
             this.clearConsoleCustomButton.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.clearConsoleCustomButton.Name = "clearConsoleCustomButton";
             this.clearConsoleCustomButton.Size = new System.Drawing.Size(130, 30);
@@ -408,7 +408,7 @@ namespace CSharpToJavaTranslator
             this.cleanLogsCustomCheckBox.BorderWidth = 1;
             this.cleanLogsCustomCheckBox.FlatAppearance.BorderSize = 0;
             this.cleanLogsCustomCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cleanLogsCustomCheckBox.Location = new System.Drawing.Point(155, 356);
+            this.cleanLogsCustomCheckBox.Location = new System.Drawing.Point(155, 354);
             this.cleanLogsCustomCheckBox.Name = "cleanLogsCustomCheckBox";
             this.cleanLogsCustomCheckBox.Size = new System.Drawing.Size(238, 30);
             this.cleanLogsCustomCheckBox.TabIndex = 10;

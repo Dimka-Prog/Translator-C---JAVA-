@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CSharpToJavaTranslator
@@ -15,10 +10,10 @@ namespace CSharpToJavaTranslator
         public CustomRichTextBox()
         {
             InitializeComponent();
-            this.borderColorFocused = Color.Blue;
-            this.borderColorUnfocused = Color.Black;
-            this.isPlaceholder = true;
-            this.innerRichTextBox.ForeColor = Color.Gray;
+            borderColorFocused = Color.Blue;
+            borderColorUnfocused = Color.Black;
+            isPlaceholder = true;
+            innerRichTextBox.ForeColor = Color.Gray;
         }
 
         private Color borderColorFocused;
@@ -30,11 +25,11 @@ namespace CSharpToJavaTranslator
         public Color BorderColorFocused
         {
             get
-            { return this.borderColorFocused; }
+            { return borderColorFocused; }
             set
             {
-                this.borderColorFocused = value;
-                this.Invalidate();
+                borderColorFocused = value;
+                Invalidate();
             }
         }
 
@@ -42,11 +37,11 @@ namespace CSharpToJavaTranslator
         public Color BorderColorUnfocused
         {
             get
-            { return this.borderColorUnfocused; }
+            { return borderColorUnfocused; }
             set
             {
-                this.borderColorUnfocused = value;
-                this.Invalidate();
+                borderColorUnfocused = value;
+                Invalidate();
             }
         }
 
@@ -54,22 +49,22 @@ namespace CSharpToJavaTranslator
         public Color BackgroundColor
         {
             get
-            { return this.innerRichTextBox.BackColor; }
+            { return innerRichTextBox.BackColor; }
             set
             {
-                this.BackColor = value;
-                this.innerRichTextBox.BackColor = value;
-                this.Invalidate();
+                BackColor = value;
+                innerRichTextBox.BackColor = value;
+                Invalidate();
             }
         }
 
         [Category("Дополнительные настройки")]
         public bool Editable
         {
-            get { return !this.innerRichTextBox.ReadOnly; }
+            get { return !innerRichTextBox.ReadOnly; }
             set
             {
-                this.innerRichTextBox.ReadOnly = !value;
+                innerRichTextBox.ReadOnly = !value;
             }
         }
 
@@ -77,23 +72,23 @@ namespace CSharpToJavaTranslator
         public String PlaceholderText
         {
             get
-            { return this.placeholderText; }
+            { return placeholderText; }
             set
             {
-                this.placeholderText = value;
-                this.innerRichTextBox.Text = value;
-                this.Invalidate();
+                placeholderText = value;
+                innerRichTextBox.Text = value;
+                Invalidate();
             }
         }
 
         public RichTextBox getInnerTextBox()
         {
-            return this.innerRichTextBox;
+            return innerRichTextBox;
         }
 
         public bool isInPlaceholderMode()
         {
-            return this.isPlaceholder;
+            return isPlaceholder;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -103,107 +98,107 @@ namespace CSharpToJavaTranslator
             Graphics g = e.Graphics;
             Pen borderPen;
 
-            if (this.innerRichTextBox.Focused)
+            if (innerRichTextBox.Focused)
             {
-                borderPen = new Pen(this.borderColorFocused, 1);
+                borderPen = new Pen(borderColorFocused, 1);
             }
             else
             {
-                borderPen = new Pen(this.borderColorUnfocused, 1);
+                borderPen = new Pen(borderColorUnfocused, 1);
             }
 
-            g.DrawRectangle(borderPen, 1, 1, this.Width - 2, this.Height - 2);
+            g.DrawRectangle(borderPen, 1, 1, Width - 2, Height - 2);
             borderPen.Dispose();
         }
 
         private void innerRichTextBox_Enter(object sender, EventArgs e)
         {
-            if (this.isPlaceholder)
+            if (isPlaceholder)
             {
-                this.innerRichTextBox.Text = "";
-                this.isPlaceholder = false;
-                this.innerRichTextBox.ForeColor = Color.Black;
+                innerRichTextBox.Text = "";
+                isPlaceholder = false;
+                innerRichTextBox.ForeColor = Color.Black;
             }
-            this.Invalidate();
+            Invalidate();
         }
 
         private void innerRichTextBox_Leave(object sender, EventArgs e)
         {
-            if (this.innerRichTextBox.Text.Length == 0)
+            if (innerRichTextBox.Text.Length == 0)
             {
-                this.isPlaceholder = true;
-                this.innerRichTextBox.Text = this.placeholderText;
-                this.innerRichTextBox.ForeColor = Color.Gray;
+                isPlaceholder = true;
+                innerRichTextBox.Text = placeholderText;
+                innerRichTextBox.ForeColor = Color.Gray;
             }
-            this.Invalidate();
+            Invalidate();
         }
 
         private void CustomRichTextBox_Resize(object sender, EventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
         }
 
         public void highlightText(int startPosition, int length, Color color)
         {
-            this.innerRichTextBox.SelectionStart = startPosition;
-            this.innerRichTextBox.SelectionLength = length;
-            this.innerRichTextBox.SelectionBackColor = color;
-            this.innerRichTextBox.SelectionLength = 0;
+            innerRichTextBox.SelectionStart = startPosition;
+            innerRichTextBox.SelectionLength = length;
+            innerRichTextBox.SelectionBackColor = color;
+            innerRichTextBox.SelectionLength = 0;
         }
 
         public void removeHighlight()
         {
-            int i = this.innerRichTextBox.SelectionStart;
-            this.innerRichTextBox.SelectAll();
-            this.innerRichTextBox.SelectionBackColor = Color.White;
-            this.innerRichTextBox.DeselectAll();
-            this.innerRichTextBox.SelectionStart = i;
+            int i = innerRichTextBox.SelectionStart;
+            innerRichTextBox.SelectAll();
+            innerRichTextBox.SelectionBackColor = Color.White;
+            innerRichTextBox.DeselectAll();
+            innerRichTextBox.SelectionStart = i;
         }
 
         public void removeFontFormatting()
         {
-            int i = this.innerRichTextBox.SelectionStart;
-            this.innerRichTextBox.SelectAll();
-            this.innerRichTextBox.SelectionBackColor = Color.White;
-            this.innerRichTextBox.SelectionFont = new Font("Consolas", 14);
-            this.innerRichTextBox.SelectionColor = Color.Black;
-            this.innerRichTextBox.DeselectAll();
-            this.innerRichTextBox.SelectionStart = i;
+            int i = innerRichTextBox.SelectionStart;
+            innerRichTextBox.SelectAll();
+            innerRichTextBox.SelectionBackColor = Color.White;
+            innerRichTextBox.SelectionFont = new Font("Consolas", 14);
+            innerRichTextBox.SelectionColor = Color.Black;
+            innerRichTextBox.DeselectAll();
+            innerRichTextBox.SelectionStart = i;
         }
 
         public void appendText(string line, Color color)
         {
-            if(this.isPlaceholder)
+            if(isPlaceholder)
             {
-                this.isPlaceholder = false;
-                this.innerRichTextBox.Clear();
+                isPlaceholder = false;
+                innerRichTextBox.Clear();
             }
 
-            this.innerRichTextBox.SelectionStart = this.innerRichTextBox.Text.Length;
-            this.innerRichTextBox.SelectionLength = 0;
-            this.innerRichTextBox.SelectionColor = color;
-            this.innerRichTextBox.AppendText(line);
+            innerRichTextBox.SelectionStart = innerRichTextBox.Text.Length;
+            innerRichTextBox.SelectionLength = 0;
+            innerRichTextBox.SelectionColor = color;
+            innerRichTextBox.AppendText(line);
         }
 
         public void setText(string[] lines, Color color)
         {
-            if (this.isPlaceholder)
+            if (isPlaceholder)
             {
-                this.isPlaceholder = false;
+                isPlaceholder = false;
             }
             
-            this.innerRichTextBox.Clear();
-            this.innerRichTextBox.ForeColor = color;
+            innerRichTextBox.Clear();
+            innerRichTextBox.ForeColor = color;
 
-            this.innerRichTextBox.Lines = lines;
+            innerRichTextBox.Lines = lines;
 
-            this.innerRichTextBox.SelectionStart = 0;
-            this.innerRichTextBox.SelectionLength = 0;
+            innerRichTextBox.SelectionStart = 0;
+            innerRichTextBox.SelectionLength = 0;
         }
         
         private void innerRichTextBox_TextChanged(object sender, EventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
         }
 
         private void innerRichTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -213,7 +208,7 @@ namespace CSharpToJavaTranslator
 
             if (ctrlV || shiftInsert)
             {
-                innerRichTextBox.Text += Clipboard.GetText();
+                innerRichTextBox.Paste();
                 removeFontFormatting();
                 e.Handled = true;
             }
