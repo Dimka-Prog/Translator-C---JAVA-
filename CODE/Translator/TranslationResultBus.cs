@@ -64,6 +64,12 @@ namespace CSharpToJavaTranslator
             warnings.Add(token);
         }
 
+        public void registerInfo(string message, Token token)
+        {
+            message += " Строка: " + token.numberLine + ", столбец: " + (token.numberColumn + 1) + ".\n";
+            console.appendText(message, Color.Black);
+        }
+
         public void summarizeTranslation()
         {
             int errorsCount = errors == null ? 0 : errors.Count;

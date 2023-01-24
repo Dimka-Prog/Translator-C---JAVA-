@@ -658,14 +658,16 @@ namespace CSharpToJavaTranslator
             else if (s == "nuint" || s == "nint" || s == "uint")
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
-                translationResultBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" будет заменена на \"int\".",
-                                                    tokens.Last());
+                translationResultBus.registerWarning("[LEX][WARNING] : язык Java не поддерживает беззнаковые и платформозависимые типы данных, " +
+                                                     "лексема \"" + s + "\" будет заменена на \"int\".",
+                                                     tokens.Last());
             }
             else if (s == "ulong")
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
-                translationResultBus.registerWarning("[LEX][WARNING] : лексема \"" + s + "\" заменена на \"long\".",
-                                                    tokens.Last());
+                translationResultBus.registerWarning("[LEX][WARNING] : язык Java не поддерживает беззнаковые типы данных, " +
+                                                     "лексема \"" + s + "\" будет заменена на \"long\".",
+                                                     tokens.Last());
             }
 
             else if (Regex.IsMatch(s, @"^[_a-zA-Z][_a-zA-Z0-9]*$"))

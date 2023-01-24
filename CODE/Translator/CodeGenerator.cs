@@ -120,7 +120,7 @@ namespace CSharpToJavaTranslator
                     translationResultBus.registerWarning("[GEN][WARNING] : язык Java не " +
                                                          "поддерживает присваивание в перечислениях. Выражение " +
                                                          "будет пропущено, что может привести к некорректной " +
-                                                         "работе транслированной программы.", 
+                                                         "работе транслированного кода.", 
                                                          syntaxTree.getToken(0));
                     syntaxTree.goToParent();
                 }
@@ -152,7 +152,7 @@ namespace CSharpToJavaTranslator
                 }
                 else
                 {
-                    code[code.Count - 1] += syntaxTree.getToken(i).value;
+                    code[code.Count - 1] += getEquivalent(syntaxTree.getToken(i));
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace CSharpToJavaTranslator
         {
             for (int i = 0; i < syntaxTree.getTokensCount(); i++)
             {
-                code[code.Count - 1] += syntaxTree.getToken(i).value;
+                code[code.Count - 1] += getEquivalent(syntaxTree.getToken(i));
                 if (syntaxTree.getToken(i).type != Constants.TokenType.OPENING_SQUARE_BRACKET)
                 {
                     code[code.Count - 1] += " ";
@@ -183,7 +183,7 @@ namespace CSharpToJavaTranslator
 
                     for (int j = 0; j < syntaxTree.getTokensCount(); j++)
                     {
-                        code[code.Count - 1] += syntaxTree.getToken(j).value;
+                        code[code.Count - 1] += getEquivalent(syntaxTree.getToken(j));
                         if (syntaxTree.getToken(j).type != Constants.TokenType.OPENING_SQUARE_BRACKET)
                         {
                             code[code.Count - 1] += " ";
@@ -210,7 +210,7 @@ namespace CSharpToJavaTranslator
         {
             for (int i = 0; i < syntaxTree.getTokensCount(); i++)
             {
-                code[code.Count - 1] += syntaxTree.getToken(i).value + " ";
+                code[code.Count - 1] += getEquivalent(syntaxTree.getToken(i)) + " ";
             }
 
             for (int i = 0; i < syntaxTree.getChildrenCount(); i++)
@@ -258,6 +258,11 @@ namespace CSharpToJavaTranslator
                 {
                     addWhiteSpaces(depth + 1);
                     traverseFor(depth + 1);
+                }
+                else if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.FOREACH)
+                {
+                    addWhiteSpaces(depth + 1);
+                    traverseForeach(depth + 1);
                 }
                 else if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.WHILE)
                 {
@@ -368,6 +373,26 @@ namespace CSharpToJavaTranslator
             addWhiteSpaces(depth);
         }
 
+        private void traverseForeach(int depth)
+        {
+            code[code.Count - 1] += "for (";
+
+            syntaxTree.goToChild(0);
+            traverseFieldOrDeclaration();
+            code[code.Count - 1] += " : ";
+            syntaxTree.goToParent();
+
+            syntaxTree.goToChild(1);
+            traverseExpression();
+            syntaxTree.goToParent();
+
+            code[code.Count - 1] += ")";
+
+            traverseCodeBlock(depth, 2, syntaxTree.getChildrenCount() - 1);
+
+            addWhiteSpaces(depth);
+        }
+
         private void traverseWhile(int depth)
         {
             code[code.Count - 1] += "while (";
@@ -450,6 +475,39 @@ namespace CSharpToJavaTranslator
             {
                 code[code.Count - 1] += "    ";
             }
+        }
+
+        private string getEquivalent(Token token)
+        {
+            if (token.value == "nuint" || 
+                token.value == "uint" || 
+                token.value == "nint")
+            {
+                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"" + token.value + 
+                                                     "\" заменена на эквивалентную \"int\".", token);
+                return "int";
+            }
+            else if (token.value == "ulong")
+            {
+                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"" + token.value +
+                                                     "\" заменена на эквивалентную \"long\".", token);
+                return "long";
+            }
+            else if (token.value == "bool")
+            {
+                translationResultBus.registerInfo("[GEN][INFO] : лексема \"" + token.value +
+                                                  "\" заменена на эквивалентную \"boolean\".", token);
+                return "boolean";
+            }
+            else if (token.value == "boolean")
+            {
+                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"boolean\" является типом данных " +
+                                                     "языка Java. Для сохранения работоспособности транслированного " +
+                                                     "кода лексема заменена на \"name_boolean\".", token);
+                return "name_boolean";
+            }
+
+            return token.value;
         }
 
         private void print()
