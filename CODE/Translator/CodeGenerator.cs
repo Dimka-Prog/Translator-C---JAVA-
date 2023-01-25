@@ -53,7 +53,7 @@ namespace CSharpToJavaTranslator
                 addWhiteSpaces(depth);
                 for (int i = 0; i < syntaxTree.getTokensCount(); i++)
                 {
-                    code[code.Count - 1] += syntaxTree.getToken(i).value + " ";
+                    code[code.Count - 1] += getEquivalent(syntaxTree.getToken(i)) + " ";
                 }
             }
 
@@ -73,7 +73,8 @@ namespace CSharpToJavaTranslator
                 {
                     traverseMethod(depth);
                 }
-                else if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.FIELD)
+                else if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.FIELD ||
+                         syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.DECLARATION)
                 {
                     traverseFieldOrDeclaration();
                     code[code.Count - 1] += ";";
@@ -159,9 +160,17 @@ namespace CSharpToJavaTranslator
 
         private void traverseMethod(int depth)
         {
+            bool isMainMethod = false;
+
             for (int i = 0; i < syntaxTree.getTokensCount(); i++)
             {
-                code[code.Count - 1] += getEquivalent(syntaxTree.getToken(i));
+                string temp = getEquivalent(syntaxTree.getToken(i));
+                if (temp == "Main")
+                {
+                    isMainMethod = true;
+                }
+
+                code[code.Count - 1] += temp;
                 if (syntaxTree.getToken(i).type != Constants.TokenType.OPENING_SQUARE_BRACKET)
                 {
                     code[code.Count - 1] += " ";
@@ -170,39 +179,57 @@ namespace CSharpToJavaTranslator
 
             code[code.Count - 1] += "(";
 
-            int tempPos = 0;
-            for (int i = 0; i < syntaxTree.getChildrenCount(); i++)
+            if (isMainMethod)
             {
-                syntaxTree.goToChild(i);
-                if(syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.PARAMETER)
-                {
-                    if (i != 0)
-                    {
-                        code[code.Count - 1] += ", ";
-                    }
+                code[code.Count - 1] += "String[] args)";
+                addWhiteSpaces(depth);
 
-                    for (int j = 0; j < syntaxTree.getTokensCount(); j++)
-                    {
-                        code[code.Count - 1] += getEquivalent(syntaxTree.getToken(j));
-                        if (syntaxTree.getToken(j).type != Constants.TokenType.OPENING_SQUARE_BRACKET)
-                        {
-                            code[code.Count - 1] += " ";
-                        }
-                    }
+                if (syntaxTree.getChildrenCount() > 0)
+                {
+                    traverseCodeBlock(depth, 1, syntaxTree.getChildrenCount() - 1);
                 }
                 else
                 {
+                    code[code.Count - 1] += "{";
+                    addWhiteSpaces(depth);
+                    code[code.Count - 1] += "}";
+                }
+            }
+            else
+            {
+                int tempPos = 0;
+                for (int i = 0; i < syntaxTree.getChildrenCount(); i++)
+                {
+                    syntaxTree.goToChild(i);
+                    if (syntaxTree.getCurrentNodeType() == Constants.TreeNodeType.PARAMETER)
+                    {
+                        if (i != 0)
+                        {
+                            code[code.Count - 1] += ", ";
+                        }
+
+                        for (int j = 0; j < syntaxTree.getTokensCount(); j++)
+                        {
+                            code[code.Count - 1] += getEquivalent(syntaxTree.getToken(j));
+                            if (syntaxTree.getToken(j).type != Constants.TokenType.OPENING_SQUARE_BRACKET)
+                            {
+                                code[code.Count - 1] += " ";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        syntaxTree.goToParent();
+                        tempPos = i;
+                        break;
+                    }
                     syntaxTree.goToParent();
                     tempPos = i;
-                    break;
                 }
-                syntaxTree.goToParent();
-                tempPos = i;
+                code[code.Count - 1] += ")";
+                traverseCodeBlock(depth, tempPos, syntaxTree.getChildrenCount() - 1);
             }
-            code[code.Count - 1] += ")";
-
-            traverseCodeBlock(depth, tempPos, syntaxTree.getChildrenCount() - 1);
-
+            
             addWhiteSpaces(depth);
         }
 
@@ -484,19 +511,37 @@ namespace CSharpToJavaTranslator
                 token.value == "nint")
             {
                 translationResultBus.registerWarning("[GEN][WARNING] : лексема \"" + token.value + 
-                                                     "\" заменена на эквивалентную \"int\".", token);
+                                                     "\" заменена на \"int\".", token);
                 return "int";
             }
             else if (token.value == "ulong")
             {
-                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"" + token.value +
-                                                     "\" заменена на эквивалентную \"long\".", token);
+                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"ulong\" " +
+                                                     "заменена на \"long\".", token);
                 return "long";
+            }
+            else if (token.value == "ushort")
+            {
+                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"ushort\" " +
+                                                     "заменена на \"short\".", token);
+                return "short";
+            }
+            else if (token.value == "sbyte")
+            {
+                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"sbyte\" " +
+                                                     "заменена на \"byte\".", token);
+                return "byte";
+            }
+            else if (token.value == "decimal")
+            {
+                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"decimal\" " +
+                                                     "заменена на \"double\".", token);
+                return "double";
             }
             else if (token.value == "bool")
             {
-                translationResultBus.registerInfo("[GEN][INFO] : лексема \"" + token.value +
-                                                  "\" заменена на эквивалентную \"boolean\".", token);
+                translationResultBus.registerInfo("[GEN][INFO] : лексема \"bool\" " +
+                                                  "заменена на эквивалентную \"boolean\".", token);
                 return "boolean";
             }
             else if (token.value == "boolean")
@@ -505,6 +550,24 @@ namespace CSharpToJavaTranslator
                                                      "языка Java. Для сохранения работоспособности транслированного " +
                                                      "кода лексема заменена на \"name_boolean\".", token);
                 return "name_boolean";
+            }
+            else if (token.value == "const")
+            {
+                translationResultBus.registerInfo("[GEN][INFO] : лексема \"const\" " +
+                                                  "заменена на эквивалентную \"final\".", token);
+                return "final";
+            }
+            else if (token.value == "internal")
+            {
+                translationResultBus.registerWarning("[GEN][WARNING] : лексема \"internal\" " +
+                                                  "заменена на \"private\".", token);
+                return "private";
+            }
+            else if (token.value == "string")
+            {
+                translationResultBus.registerInfo("[GEN][INFO] : лексема \"string\" " +
+                                                  "заменена на \"String\".", token);
+                return "String";
             }
 
             return token.value;

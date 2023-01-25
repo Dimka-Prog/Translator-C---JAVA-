@@ -577,6 +577,9 @@ namespace CSharpToJavaTranslator
             else if (s == "internal")
             {
                 tokens.Add(new Token(s, Constants.TokenType.INTERNAL, numberLine, numberColumn));
+                translationResultBus.registerWarning("[LEX][WARNING] : модификатор доступа \"internal\" " +
+                                                     "отсутствует в языке Java, лексема будет заменена на \"private\".",
+                                                     new Token(s, Constants.TokenType.INTERNAL, numberLine, numberColumn));
             }
             else if (s == "const")
             {
@@ -626,7 +629,7 @@ namespace CSharpToJavaTranslator
             }
             else if (s == "extern")
             {
-                translationResultBus.registerError("[LEX][ERROR] : межфайловые объекты и методы не поддерживаются данной грамматикой.",
+                translationResultBus.registerError("[LEX][ERROR] : глобальные объекты и методы не поддерживаются данной грамматикой.",
                                                   new Token(s, Constants.TokenType.UNKNOWN, numberLine, numberColumn));
             }
             else if (s == "out" || s == "ref")
@@ -666,7 +669,28 @@ namespace CSharpToJavaTranslator
             {
                 tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
                 translationResultBus.registerWarning("[LEX][WARNING] : язык Java не поддерживает беззнаковые типы данных, " +
-                                                     "лексема \"" + s + "\" будет заменена на \"long\".",
+                                                     "лексема \"ulong\" будет заменена на \"long\".",
+                                                     tokens.Last());
+            }
+            else if (s == "ushort")
+            {
+                tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
+                translationResultBus.registerWarning("[LEX][WARNING] : язык Java не поддерживает беззнаковые типы данных, " +
+                                                     "лексема \"ushort\" будет заменена на \"short\".",
+                                                     tokens.Last());
+            }
+            else if (s == "sbyte")
+            {
+                tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
+                translationResultBus.registerWarning("[LEX][WARNING] : язык Java не поддерживает явное указание наличия знака у типа данных, " +
+                                                     "лексема \"sbyte\" будет заменена на \"byte\".",
+                                                     tokens.Last());
+            }
+            else if (s == "decimal")
+            {
+                tokens.Add(new Token(s, Constants.TokenType.IDENTIFIER, numberLine, numberColumn));
+                translationResultBus.registerWarning("[LEX][WARNING] : тип данных \"decimal\" отсутствует в языке Java, " +
+                                                     "лексема будет заменена на \"double\".",
                                                      tokens.Last());
             }
 
