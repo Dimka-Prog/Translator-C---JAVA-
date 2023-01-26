@@ -1455,6 +1455,10 @@ namespace CSharpToJavaTranslator
                         {
                             state = Constants.State.EXPECTING_CLOSING_BRACKET_OR_COMMA;
                         }
+                        else
+                        {
+                            state = Constants.State.EXPECTING_COMMA_OR_SEMICOLON;
+                        }
                     }
                     else
                     {
@@ -1874,7 +1878,6 @@ namespace CSharpToJavaTranslator
                     syntaxTree.goToChild(0);
                     syntaxTree.appendToken(tokens[position]);
                     syntaxTree.goToParent();
-                    state = Constants.State.EXPECTING_OPERATOR;
 
                     position++;
                 }
