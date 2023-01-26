@@ -11,11 +11,12 @@ namespace CSharpToJavaTranslator
     public class SemanticAnalyzer
     {
         private readonly SyntaxTreeNode root;
-        private TranslationResultBus resultBus;
+        private readonly TranslationResultBus resultBus;
 
         private Dictionary<string, string> identClass = new Dictionary<string, string>();
         private Dictionary<string, string> identEnum = new Dictionary<string, string>();
         private Dictionary<string, string> identMethod = new Dictionary<string, string>();
+        private Dictionary<string, string> identLoopsAndConditionalOperators = new Dictionary<string, string>();
 
         private string nameClass;
 
@@ -48,7 +49,7 @@ namespace CSharpToJavaTranslator
         }
 
         /// <summary>
-        /// Выполняет соответсвие типов данных между идентифкатором и присваивыемым ему выражением
+        /// Проверяет соответсвие типов данных между идентифкатором и присваивыемым ему выражением
         /// </summary>
         /// <param name="node"></param>
         /// <param name="identifierLocation"></param>
@@ -121,12 +122,13 @@ namespace CSharpToJavaTranslator
         /// Проверяет присваиваемое выражение идентификатору в теле метода
         /// </summary>
         /// <param name="current"></param>
-        private void expressionMethod(SyntaxTreeNode current)
+        private void expressionMethod(SyntaxTreeNode current, string identLocation)
         {
             bool unknownIdent = true;
             bool error = false;
             string identifier;
-            
+
+
             for (int numToken = 0; numToken < current.tokens.Count; numToken++)
             {
                 identifier = current.tokens[numToken].value;
@@ -158,6 +160,18 @@ namespace CSharpToJavaTranslator
                     double number;
                     if (!double.TryParse(identifier, out number) && identifier != "false" && identifier != "true")
                     {
+                        if (identLocation != "method" && identLoopsAndConditionalOperators.Count != 0)
+                        {
+                            foreach (string key in identLoopsAndConditionalOperators.Keys)
+                            {
+                                if (key.Equals(identifier))
+                                {
+                                    unknownIdent = false;
+                                    break;
+                                }
+                            }
+                        }
+
                         foreach (string key in identMethod.Keys)
                         {
                             if (key.Equals(identifier))
@@ -215,7 +229,7 @@ namespace CSharpToJavaTranslator
             if ((numToken + 2) < current.tokens.Count)
                 tokenAfter = current.tokens[numToken + 2].value;
 
-            if (tokenBefore != "" && tokenBefore != "+")
+            if (tokenBefore != "" && tokenBefore != "+" && tokenBefore != "=" && tokenBefore != "+=")
             {
                 resultBus.registerError($"[SEMANT][ERROR] : оператор '{tokenBefore}' невозможно применить к операнду типа 'string'", current.tokens[numToken]);
                 return true;
@@ -526,10 +540,114 @@ namespace CSharpToJavaTranslator
                                     identMethod.Add(identifier, dataTypeIdentifier);
 
                                 if (current.childNodes != null && current.childNodes[0].type == Constants.TreeNodeType.EXPRESSION && !existingIdent)
-                                    expressionMethod(current.childNodes[0]);
+                                    expressionMethod(current.childNodes[0], "method");
                             }
                             else if (current.type == Constants.TreeNodeType.EXPRESSION)
-                                expressionMethod(current);
+                                expressionMethod(current, "method");
+                            else if (current.type == Constants.TreeNodeType.FOR)
+                            {
+                                SyntaxTreeNode nodeFor = current;
+                                int countParam = 0;
+
+                                for (int childFor = 0; childFor < nodeFor.childNodes.Count; childFor++)
+                                {
+                                    current = nodeFor;
+                                    current = current.childNodes[childFor];
+
+                                    if (current.type == Constants.TreeNodeType.DECLARATION)
+                                    {
+                                        if (childFor == 0)
+                                            countParam++;
+
+                                        if (current.tokens.Count == 2)
+                                            dataTypeIdentifier = current.tokens[0].value;
+                                        else
+                                            dataTypeIdentifier = $"{current.tokens[0].value} array";
+
+                                        current = current.childNodes[0];
+                                        identifier = current.tokens[0].value;
+
+                                        bool existingIdent = false;
+                                        if (identMethod.Count != 0)
+                                        {
+                                            foreach (string key in identMethod.Keys)
+                                            {
+                                                if (key.Equals(identifier))
+                                                {
+                                                    existingIdent = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if (identLoopsAndConditionalOperators.Count != 0 && !existingIdent)
+                                        {
+                                            foreach (string key in identLoopsAndConditionalOperators.Keys)
+                                            {
+                                                if (key.Equals(identifier))
+                                                {
+                                                    existingIdent = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if (!existingIdent)
+                                            identLoopsAndConditionalOperators.Add(identifier, dataTypeIdentifier);
+                                        else
+                                            resultBus.registerError($"[SEMANT][ERROR] : объявление уже существующего локального идентификатора '{identifier}' в методе '{nodeMethod.tokens[nodeMethod.tokens.Count - 1].value}'.", current.tokens[0]);
+
+                                        if (current.childNodes != null && current.childNodes[0].type == Constants.TreeNodeType.EXPRESSION && !existingIdent)
+                                            expressionMethod(current.childNodes[0], "for");
+                                    }
+                                    else if (current.type == Constants.TreeNodeType.PARAMETER)
+                                    {
+                                        string operand;
+
+                                        if (current.childNodes[0].tokens != null)
+                                        {
+                                            current = current.childNodes[0];
+                                            if (countParam == 0)
+                                            {
+                                                if (current.tokens.Count == 1)
+                                                    resultBus.registerError($"[SEMANT][ERROR] : в качестве оператора могут использоваться только выражения назначения, вызова, инкремента, декремента и создания нового объекта.", current.tokens[0]);
+                                                else
+                                                    expressionMethod(current, "for");
+
+                                                countParam++;
+                                            }
+                                            else if (countParam == 1)
+                                            {
+                                                operand = current.childNodes[0].tokens[current.childNodes[0].tokens.Count - 1].value;
+                                                if (operand == "<" || operand == ">" || operand == "<=" || operand == ">=" || operand == "!=" || operand == "==")
+                                                    expressionMethod(current, "for");
+                                                else
+                                                    resultBus.registerError($"[SEMANT][ERROR] : ожидалось логическое выражение, а встречено '{operand}'.", current.childNodes[0].tokens[current.childNodes[0].tokens.Count - 1]);
+
+                                                countParam++;
+                                            }
+                                            else if (countParam == 2)
+                                            {
+                                                operand = current.tokens[0].value;
+                                                if (operand == "int" || operand == "double" || operand == "string" || operand == "char" || operand == "bool")
+                                                    resultBus.registerError($"[SEMANT][ERROR] : недопустимый термин '{operand}' в выражении.", current.tokens[0]);
+                                                else 
+                                                {
+                                                    operand = current.childNodes[0].tokens[current.childNodes[0].tokens.Count - 1].value;
+                                                    if (operand == "<" || operand == ">" || operand == "<=" || operand == ">=" || operand == "!=" || 
+                                                        operand == "==" ||operand == "||" || operand == "&&" || operand == "!" || current.tokens.Count == 1)
+                                                        resultBus.registerError($"[SEMANT][ERROR] : в качестве оператора могут использоваться только выражения назначения, вызова, инкремента, декремента и создания нового объекта.", current.childNodes[0].tokens[current.childNodes[0].tokens.Count - 1]);
+                                                    else
+                                                        expressionMethod(current, "for");
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (current.type == Constants.TreeNodeType.EXPRESSION)
+                                        expressionMethod(current, "for");
+                                }
+                                identLoopsAndConditionalOperators.Clear();
+                            }
                         }
                     }
                 }
