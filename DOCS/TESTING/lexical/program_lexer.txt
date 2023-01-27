@@ -1,0 +1,35 @@
+using Test;
+
+namespace TestNamespace
+{
+    class TestClass
+    {
+        private struct TestStruct
+        {
+            public string testString;
+        }
+        private int TestMethod()
+        {
+            if (2 = 2){
+                int a = 4;
+            }
+            else{
+                int a = 2;
+            }
+        return(a);
+        }
+        private void TestVoidMethod()
+        {
+            int a = 0;
+            while(true)
+            {
+                Console.println("text");
+            }
+        }
+        enum TestEnum{
+            a1,
+            a2,
+            a3
+        }
+    }
+}
