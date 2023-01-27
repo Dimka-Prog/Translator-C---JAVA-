@@ -1,0 +1,31 @@
+namespace test
+{
+    class test
+    {
+        private enum testEnum {c1 = 10.4, c2, c3, c4 = c4, c4=c4 }
+
+        private int i = -10;
+        private int m = i + -10 + "sjdjf hhhf ksd" + k + false;
+        string b = "adc kdjf ldf";
+        private bool a = p;
+        private int[] j = new int[10];
+        
+        private int[] testmethod(int[] param1 = i, bool param2 = false, bool param2) 
+        {
+            this.i += this.m - "jsfk ksjd ksd" + param2 + false;
+            int val = this.g + "jfk skd sld" / param3 + true;
+			
+            for(i = this.m + "jjfsl sld" - val + false - 10; i - this.m; i++)
+            {
+                string str = b;
+                this.i += this.m - "jsfk ksjd ksd" + param2 + false;
+            }
+			
+            for(;;)
+            {
+            }
+			
+            return new int[10];
+        }
+    }
+}

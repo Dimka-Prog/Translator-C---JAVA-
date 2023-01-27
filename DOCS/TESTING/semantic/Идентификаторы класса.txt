@@ -1,0 +1,14 @@
+namespace test
+{
+    class test
+    {
+        private enum testEnum {c1 = 10.4, c2, c3, c4 = c4, c4=c4 }
+
+        private int i = -10;
+        private int m = i + -10 - "sjdjf hhhf ksd" + k + false;
+        string b = "adc kdjf ldf";
+        private bool a = p;
+        private int[] j = new int[10];
+        int i = 5;
+    }
+}
