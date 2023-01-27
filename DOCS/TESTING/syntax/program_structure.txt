@@ -1,0 +1,58 @@
+using Test;
+
+namespace TestNamespace
+{
+    class TestClass
+    {
+        private struct TestStruct
+        {
+            private int field;
+        }
+        
+        enum TestEnum {e1, e2, e3, e4, e5, e6}
+
+        private void test_method()
+        {
+        }
+        
+        static int staticVar = 4;
+
+        internal int test_method2(int[] param1, int[] param2)
+        {
+            bool boolean;
+
+            int a = 1, b = 2, c;
+
+            for(int k = 0; k < 5; k++)
+            {
+                a += k;
+            }
+
+            foreach(int param in param1[])
+            {
+                test_method();
+            }
+
+            while(true)
+            {
+                break;
+            }
+
+            int q = 1;
+            switch(q)
+            {
+                case 1: break;
+                default: break;
+            }
+
+            do
+            {
+            } while(true);
+
+            if(true)
+            {}
+            else
+            {}
+        }
+    }
+}

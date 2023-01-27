@@ -119,6 +119,7 @@
   <ItemGroup>
     <Folder Include=".git\objects\info\" />
     <Folder Include=".git\refs\tags\" />
+    <Folder Include="DOCS\TESTING\UI\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CODE\CustomButton.cs">

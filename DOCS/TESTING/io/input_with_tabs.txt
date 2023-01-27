@@ -1,0 +1,11 @@
+using Test;
+
+	namespace Test
+{
+    public class 		Test 
+    {			
+        private class InnerClass				
+        {				
+        }				
+    }
+}

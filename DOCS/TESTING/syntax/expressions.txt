@@ -1,0 +1,38 @@
+using Test;
+
+namespace TestNamespace
+{
+    class TestClass
+    {
+        private void test_method()
+        {
+            int t = 1, t2, t3 = 5;
+            int[] arr = new int[1];
+            arr[0] = 11111; 
+            t2 = 1 * 2 - (3 * 4) + 5 % 6 << 7 ? 8 : 9 + arr[(1 - 1 + 2 - 2) * (3 - 4 + 1)];
+            t3 = 1000;
+            t3 += 1000;
+            t3 -= 1000;
+            t3 *= 1000;
+            t3 /= 1000;
+            t3 %= 1000;
+            t3 &= 1000;
+            t3 ^= 1000;
+            t3 |= 1000;
+            t3 >>= 1000;
+            t3 <<= 1000;
+            t3 >>>= 1000;
+            ++t3++;
+            --t3--;            
+
+            if (true && false || !true || true == true)
+            {
+                t3 = t + t2;
+            }
+
+            t3 = ~t3;
+
+            t3 = A.B.C.D.E.F.G.H.I.J.K(A1.A2.A3.A4);
+        }
+    }
+}
